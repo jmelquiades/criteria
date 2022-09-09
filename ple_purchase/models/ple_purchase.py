@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import fields, models, api
 from ..reports.purchase_report_xlsx import PurchaseReportXlsx
 from ..reports.purchase_report_txt import PurchaseReportTxt
+import base64
+from odoo.exceptions import UserError
 
 
 class PlePurchase(models.Model):
@@ -17,6 +18,7 @@ class PlePurchase(models.Model):
     #     required=True,
     #     index=True
     # )
+
     line_ids = fields.One2many(
         comodel_name='ple.purchase.line',
         inverse_name='ple_purchase_id',
@@ -33,12 +35,36 @@ class PlePurchase(models.Model):
     error_dialog_8_1 = fields.Text(readonly=True)
     error_dialog_8_2 = fields.Text(readonly=True)
 
-    def action_generate_report(self):
+    def write(self, vals):
+        prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
+        prop2 = vals.get('state', False) == 'draft'
+        if prop1 or prop2:
+            vals.update({
+                'xlsx_binary_8_1': False,
+                'xlsx_binary_8_2': False,
+                'txt_binary_8_1': False,
+                'txt_binary_8_2': False,
+                'state': 'draft',
+            })
+        if prop2:
+            self.line_ids.unlink()
+        return super(PlePurchase, self).write(vals)
+
+    @api.onchange('date_start', 'date_end', 'company_id')
+    def _onchange_date_company(self):
+        self.line_ids.unlink()
+
+    # @api.onchange('state')
+    # def _onchange_state_draft(self):
+    #     if self.state == 'draft':
+    #         self.line_ids.unlink()
+
+    def update_data_lines(self):
         self.line_ids.unlink()
 
         list_invoices = self.env['account.move'].search([
             ('company_id', '=', self.company_id.id),
-            ('type', 'in', ['in_invoice', 'in_refund']),
+            ('move_type', 'in', ['in_invoice', 'in_refund']),
             ('date', '>=', self.date_start),
             ('date', '<=', self.date_end),
             ('state', 'not in', ['draft', 'cancel']),
@@ -66,13 +92,13 @@ class PlePurchase(models.Model):
             values = {
                 'name': invoice.date.strftime('%Y%m00'),
                 'number_origin': self._get_number_origin(invoice),  # depende de : ple_state del invoice (campo nuevo en account.move)
-                'journal_correlative': self._get_journal_correlative(invoice),  # depende de : type_contributor del invoice (campo nuevo de res.company)
+                'journal_correlative': self._get_journal_correlative(invoice.company_id),  # depende de : type_contributor del invoice (campo nuevo de res.company)
                 'date_invoice': invoice.invoice_date,
                 'date_due': date_due,
-                'voucher_sunat_code': invoice.sunat_code,
-                'series': invoice.prefix_val,
-                'year_dua_dsi': invoice.year_aduana,
-                'correlative': invoice.suffix_val,
+                'voucher_sunat_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.sunat_code,
+                'series': invoice.sequence_prefix,  # invoice.prefix_val,
+                'year_dua_dsi': invoice.year_aduana,  # ! creado
+                'correlative': invoice.sequence_number,  # invoice.suffix_val,
                 'customer_document_type': document_type,
                 'customer_document_number': document_number,
                 'customer_name': customer_name,
@@ -87,13 +113,13 @@ class PlePurchase(models.Model):
                 'another_taxes': sum_another_taxes,
                 'amount_total': amount_total,
                 'code_currency': invoice.currency_id.name,
-                'currency_rate': round(invoice.exchange_rate, 3),
+                'currency_rate': round(self.env['res.currency']._get_conversion_rate(invoice.currency_id, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.invoice_date), 4),  # round(invoice.exchange_rate, 3),
                 'origin_date_invoice': origin_date_invoice,
                 'origin_document_code': origin_document_code,
                 'origin_serie': origin_serie,
                 'origin_code_aduana': code_customs_id and code_customs_id.code or '',
                 'origin_correlative': origin_correlative,
-                'voucher_number': invoice.voucher_number,
+                'voucher_number': invoice.voucher_number,  # ! creado
                 'voucher_date': invoice.voucher_payment_date,
                 'retention': retention,
                 'type_pay_invoice': pay_invoice,
@@ -102,25 +128,25 @@ class PlePurchase(models.Model):
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
                 'ple_purchase_id': self.id,
-                'inv_type_document_code': invoice.inv_type_document.code,
-                'inv_serie': invoice.inv_serie,
-                'inv_year_dua_dsi': invoice.inv_year_dua_dsi,
-                'inv_retention_igv': invoice.inv_retention_igv,
-                'inv_correlative': invoice.inv_correlative,
-                'partner_street': partner_street,
-                'linkage_code': invoice.linkage_id and invoice.linkage_id.code or '',
-                'hard_rent': invoice.hard_rent,
-                'deduccion_cost': invoice.deduccion_cost,
-                'rent_neta': invoice.neto_rent,
-                'retention_rate': invoice.retention_rate,
-                'tax_withheld': invoice.tax_withheld,
-                'cdi': invoice.cdi,
-                'exoneration_nodomicilied_code': invoice.exoneration_nodomicilied_id and invoice.exoneration_nodomicilied_id.code or '',
-                'type_rent_code': invoice.type_rent_id and invoice.type_rent_id.code or '',
-                'taken_code': invoice.taken_id and invoice.taken_id.code or '',
-                'application_article': invoice.application_article or ''
+                'inv_type_document_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.inv_type_document.code,
+                # 'inv_serie': invoice.inv_serie,
+                # 'inv_year_dua_dsi': invoice.inv_year_dua_dsi,
+                # 'inv_retention_igv': invoice.inv_retention_igv,
+                # 'inv_correlative': invoice.inv_correlative,
+                # 'partner_street': partner_street,
+                # 'linkage_code': invoice.linkage_id and invoice.linkage_id.code or '',
+                # 'hard_rent': invoice.hard_rent,
+                # 'deduccion_cost': invoice.deduccion_cost,
+                # 'rent_neta': invoice.neto_rent,
+                # 'retention_rate': invoice.retention_rate,
+                # 'tax_withheld': invoice.tax_withheld,
+                # 'cdi': invoice.cdi,
+                # 'exoneration_nodomicilied_code': invoice.exoneration_nodomicilied_id and invoice.exoneration_nodomicilied_id.code or '',
+                # 'type_rent_code': invoice.type_rent_id and invoice.type_rent_id.code or '',
+                # 'taken_code': invoice.taken_id and invoice.taken_id.code or '',
+                # 'application_article': invoice.application_article or ''
             }
-            self.env['ple.report.purchase.line'].create(values)
+            self.env['ple.purchase.line'].create(values)
         return True
 
     def get_data(self):
@@ -231,13 +257,14 @@ class PlePurchase(models.Model):
 
     def action_generate_report(self):
         data = self.get_data()
+        if data:
+            self.get_reports_txt(data)
+            self.get_reports_xlsx(data)
 
-        self.get_reports_txt(data)
-        self.get_reports_xlsx(data)
-
-        self.date_ple = fields.Date.today()
-        self.state = 'load'
-        return True
+            self.date_ple = fields.Date.today()
+            self.state = 'load'
+            return True
+        raise UserError("Debe de user el botón 'Actulizar información'")
 
     # def _get_number_origin(self, invoice):
     #     return self.env['ple.report.base']._get_number_origin(invoice)
@@ -289,12 +316,12 @@ class PlePurchase(models.Model):
         if invoice.state != 'cancel':
             for ml in invoice.line_ids:
                 amount = ml.debit if ml.debit > ml.credit else ml.credit
-                for tag_tax in ml.tag_ids:
+                for tag_tax in ml.tax_tag_ids:  # * tag_ids >> tax_tag_ids
                     if tag_tax.name[1:] in values:
                         values[tag_tax.name[1:]] += amount
                 values['AMOUNT_TOTAL'] += ml.debit
 
-        if invoice.type == 'in_refund':
+        if invoice.move_type == 'in_refund':
             self._refund_amount(values)
         return values
 

@@ -134,7 +134,7 @@ class PurchaseReportTxt(object):
 
     def get_filename_8_1(self, type='01'):
         year, month = self.obj.date_start.strftime('%Y/%m').split('/')
-        return u'LE{vat}{period_year}{period_month}0008{type}00001{has_info}{currency}1.txt'.format(
+        return 'LE{vat}{period_year}{period_month}0008{type}00001{has_info}{currency}1.txt'.format(
             vat=self.obj.company_id.vat,
             period_year=year,
             period_month=month,
@@ -145,7 +145,7 @@ class PurchaseReportTxt(object):
 
     def get_filename_8_2(self):
         year, month = self.obj.date_start.strftime('%Y/%m').split('/')
-        return u'LE{vat}{period_year}{period_month}00080200001{has_info}{currency}1.txt'.format(
+        return 'LE{vat}{period_year}{period_month}00080200001{has_info}{currency}1.txt'.format(
             vat=self.obj.company_id.vat,
             period_year=year,
             period_month=month,

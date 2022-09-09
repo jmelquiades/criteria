@@ -1,5 +1,5 @@
 {
-    'name': 'Ple purchase',
+    'name': 'Reportes de Compras PLE',
     'version': '1.0',
     'description': '',
     'summary': '',

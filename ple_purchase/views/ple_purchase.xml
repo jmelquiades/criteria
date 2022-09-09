@@ -5,6 +5,13 @@
         <field name="model">ple.purchase</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="update_data_lines" string="Actualizar Información" type="object" states="draft"/>
+                    <button name="action_generate_report" string="Generar Reporte" type="object" states="draft"/>
+                    <button name="action_close" string="Declarar a SUNAT" states="load" type="object"/>
+                    <button name="action_rollback" string="Regresar a Borrador" states="closed" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
@@ -13,7 +20,7 @@
                             <field name="company_id"/>
                         </group>
                         <group>
-                            <field name="state"/>
+                            <field name="date_ple"/>
                         </group>
                     </group>
                     <notebook>
@@ -31,20 +38,24 @@
                         <page name="report_8_1" string="Report 8.1">
                             <group>
                                 <group name="txt" string="TXT">
-                                    <field name="txt_binary_8_1"/>
+                                    <field name="txt_filename_8_1" invisible="1"/>
+                                    <field name="txt_binary_8_1" filename="txt_filename_8_1" readonly="1"/>
                                 </group>
                                 <group name="xlsx" string="XLSX">
-                                    <field name="xlsx_binary_8_1"/>
+                                    <field name="xlsx_filename_8_1" invisible="1"/>
+                                    <field name="xlsx_binary_8_1" filename="txt_filename_8_1" readonly="1"/>
                                 </group>
                             </group>
                         </page>
                         <page name="report_8_2" string="Report 8.2">
                             <group>
                                 <group name="txt" string="TXT">
-                                    <field name="txt_binary_8_2"/>
+                                    <field name="txt_filename_8_2" invisible="1"/>
+                                    <field name="txt_binary_8_2" filename="txt_filename_8_2" readonly="1"/>
                                 </group>
                                 <group name="xlsx" string="XLSX">
-                                    <field name="xlsx_binary_8_2"/>
+                                    <field name="xlsx_filename_8_2" invisible="1"/>
+                                    <field name="xlsx_binary_8_2" filename="txt_filename_8_2" readonly="1"/>
                                 </group>
                             </group>
                         </page>
@@ -75,5 +86,5 @@
             <p>Cree un nuevo registro</p>
         </field> -->
     </record>
-    <menuitem id="ple_purchase_menu" name="Ple Purchase" action="ple_purchase_action"/>
+    <menuitem id="ple_purchase_menu" name="Reportes PLE" action="ple_purchase_action" web_icon="ple_purchase,static/img/app.png"/>
 </odoo>

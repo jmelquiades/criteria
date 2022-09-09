@@ -1,6 +1,7 @@
 
 from odoo import fields, models, api
 import pytz
+from datetime import datetime
 
 
 class AccountMove(models.Model):
@@ -26,7 +27,24 @@ class AccountMove(models.Model):
     # origin_invoice_date = fields.Date(
     #     string='Fecha Rectificado'
     # )
+    # !
     code_customs_id = fields.Many2one('code.customs', string='Code Customs')
+    retention_id = fields.Many2one('account.retention', string='Retention')
+    bool_pay_invoice = fields.Char(
+        string='Indicador de comprobante de pago cancelado'
+    )
+    years = []
+
+    for i in range(1981, datetime.today().year + 1):
+        years.append(('{}'.format(i), '{}'.format(i)))
+
+    year_aduana = fields.Selection(
+        string='Año Emisión',
+        selection=years,
+        help='Año de emisión de la Declaración Aduanera de Mercancías - Importación '
+             'definitiva o de la Despacho Simplificado - Importación Simplificada')
+    voucher_number = fields.Char(string='Número de Pago')
+    voucher_payment_date = fields.Date(string='Fecha pago')
 
     @api.model
     def _convert_date_timezone(self, date_order, format_time='%Y-%m-%d %H:%M:%S'):
