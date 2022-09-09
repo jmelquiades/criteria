@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--code.customs-->
+    <record id="view_code_customs_form" model="ir.ui.view">
+        <field name="name">code.customs</field>
+        <field name="model">code.customs</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="code"/>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_code_customs_tree" model="ir.ui.view">
+        <field name="name">code.customs</field>
+        <field name="model">code.customs</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="code_customs_action" model="ir.actions.act_window">
+        <field name="name">[11] Código Dependencia Aduanera (customs)</field>
+        <field name="res_model">code.customs</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- <menuitem id="menu_code_customs_anexo" name="[11] Código Dependencia Aduanera (customs)" action="code_customs_action"/> -->
+</odoo>

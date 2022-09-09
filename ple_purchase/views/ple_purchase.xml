@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ple_purchase_view_form" model="ir.ui.view">
+        <field name="name">ple.purchase.view.form</field>
+        <field name="model">ple.purchase</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="detalle" string="Detalle">
+                            <field name="line_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="invoice_id"/>
+                                    <field name="number_origin"/>
+                                    <field name="date_invoice"/>
+                                    <field name="date_due"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="report_8_1" string="Report 8.1">
+                            <group>
+                                <group name="txt" string="TXT">
+                                    <field name="txt_binary_8_1"/>
+                                </group>
+                                <group name="xlsx" string="XLSX">
+                                    <field name="xlsx_binary_8_1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="report_8_2" string="Report 8.2">
+                            <group>
+                                <group name="txt" string="TXT">
+                                    <field name="txt_binary_8_2"/>
+                                </group>
+                                <group name="xlsx" string="XLSX">
+                                    <field name="xlsx_binary_8_2"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="ple_purchase_view_tree" model="ir.ui.view">
+        <field name="name">ple.purchase.view.tree</field>
+        <field name="model">ple.purchase</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="company_id"/>
+                <field name="state"/>
+                <field name="txt_filename_8_1"/>
+                <field name="txt_filename_8_2"/>
+            </tree>
+        </field>
+    </record>
+    <record id="ple_purchase_action" model="ir.actions.act_window">
+        <field name="name">Ple Purchase</field>
+        <field name="res_model">ple.purchase</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="help" type="html">
+            <p>Cree un nuevo registro</p>
+        </field> -->
+    </record>
+    <menuitem id="ple_purchase_menu" name="Ple Purchase" action="ple_purchase_action"/>
+</odoo>

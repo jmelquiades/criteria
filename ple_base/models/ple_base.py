@@ -1,0 +1,70 @@
+from odoo import _, api, fields, models
+
+
+class PleBase(models.Model):
+    _name = 'ple.base'
+
+    date_start = fields.Date(
+        string='Fecha Inicio',
+        required=True
+    )
+    state = fields.Selection(selection=[
+        ('draft', 'Borrador'),
+        ('load', 'Generado'),
+        ('closed', 'Declarado')
+    ], string='Estado', default='draft', required=True)
+    date_end = fields.Date(
+        string='Fecha Fin',
+        required=True
+    )
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Compañía',
+        required=True
+    )
+
+    def _get_number_origin(self, invoice):
+        number_origin = ''
+        try:
+            if invoice.type in ['out_invoice', 'out_refund']:
+                if invoice.ple_state in ['0', '1', '2', '8', '9']:
+                    number_origin = invoice.name.replace('/', '').replace('-', '')
+
+            elif invoice.type in ['in_invoice', 'in_refund']:
+                if invoice.ple_state in ['0', '1', '6', '7', '9']:
+                    number_origin = invoice.name.replace('/', '').replace('-', '')
+
+        except Exception:
+            number_origin = ''
+        return number_origin
+
+    def _get_data_invoice(self, invoice):  # *
+        ple_state = invoice.ple_state
+        partner = invoice.partner_id
+        if invoice.state != 'cancel':
+            return invoice.invoice_date_due, ple_state, partner.l10n_latam_identification_type_id.code, partner.vat, partner.name  # ! partner.l10n_latam_identification_type_id.sequence >> partner.l10n_latam_identification_type_id.code
+        else:
+            return False, ple_state, partner.l10n_latam_identification_type_id.code, partner.vat, partner.name
+
+    def _get_journal_correlative(self, company, invoice=False, new_name=''):
+        if company.type_contributor == 'CUO':
+
+            if not new_name:
+                new_name = 'M000000001'
+        elif company.type_contributor == 'RER':
+            new_name = 'M-RER'
+        return new_name
+
+    def _get_data_origin(self, invoice):  # ! por analizar
+        # return invoice.origin_invoice_date, invoice.origin_inv_document_type_id.code, invoice.origin_serie, invoice.origin_correlative, invoice.origin_number.code_aduana
+        return invoice.reversed_entry_id.invoice_date, invoice.reversed_entry_id.l10n_latam_document_type_id.sequence, invoice.reversed_entry_id.sequence_prefix, invoice.reversed_entry_id.sequence_number, invoice.reversed_entry_id.code_customs_id  # l10n_pe_dte_rectification_ref_type
+
+    def unlink(self):
+        if self.state == 'closed':
+            raise Warning('Regrese a estado borrador para revertir y permitir eliminar.')
+        return super(PleBase, self).unlink()
+
+    def _refund_amount(self, values):
+        for k in values.keys():
+            values[k] *= -1
+        return values
