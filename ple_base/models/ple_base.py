@@ -1,4 +1,6 @@
 from odoo import _, api, fields, models
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 
 class PleBase(models.Model):
@@ -33,6 +35,17 @@ class PleBase(models.Model):
         company_id = vals.get('company_id', self.company_id.id)
         company = self.env['res.company'].browse(company_id).name
         return str(date_start) + '-' + str(date_end) + ' ' + company
+
+    def default_get(self, fields_list):
+        res = super(PleBase, self).default_get(fields_list)
+        date = fields.date.today()
+        date_start = date.replace(day=1) - relativedelta(months=1)
+        date_end = date.replace(day=1) - timedelta(days=1)
+        res.update({
+            'date_start': date_start,
+            'date_end': date_end,
+        })
+        return res
 
     def write(self, vals):
         vals['name'] = self._get_name(vals)
