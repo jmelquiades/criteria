@@ -24,7 +24,8 @@ class PleBase(models.Model):
         required=True,
         default=lambda self: self.env.user.company_id
     )
-    date_ple = fields.Date('Fecha de creación PLE')
+    date_ple = fields.Date('Fecha de creación de reporte PLE')
+    ple_base_line_ids = fields.One2many('ple.base.line', 'ple_base_id', string='Ple Base Line')
 
     def _get_name(self, vals):
         date_start = vals.get('date_start', self.date_start)
@@ -36,6 +37,10 @@ class PleBase(models.Model):
     def write(self, vals):
         vals['name'] = self._get_name(vals)
         return super(PleBase, self).write(vals)
+
+    @api.onchange('date_start', 'date_end', 'company_id')
+    def _onchange_date_company(self):
+        self.line_ids.unlink()
 
     @api.model
     def create(self, vals):
@@ -63,7 +68,7 @@ class PleBase(models.Model):
         if invoice.state != 'cancel':
             return invoice.invoice_date_due, ple_state, partner.l10n_latam_identification_type_id.sequence, partner.vat, partner.name  # ! partner.l10n_latam_identification_type_id.sequence >> partner.l10n_latam_identification_type_id.code
         else:
-            return False, ple_state, partner.l10n_latam_identification_type_id.code, partner.vat, partner.name
+            return False, ple_state, partner.l10n_latam_identification_type_id.sequence, partner.vat, partner.name
 
     def _get_journal_correlative(self, company, invoice=False, new_name=''):
         if company.type_contributor == 'CUO':
@@ -87,3 +92,20 @@ class PleBase(models.Model):
         for k in values.keys():
             values[k] *= -1
         return values
+
+    def action_close(self):
+        self.ensure_one()
+        self.write({
+            'state': 'closed'
+        })
+        for obj_line in self.line_ids:
+            if obj_line.invoice_id:
+                obj_line.invoice_id.its_declared = True
+        return True
+
+    def action_rollback(self):
+        for obj_line in self.line_ids:
+            if obj_line.invoice_id:
+                obj_line.invoice_id.its_declared = False
+        self.state = 'draft'
+        return True

@@ -18,7 +18,8 @@
         'views/account_retention.xml',
         'views/code_customs.xml',
         'views/res_company.xml',
-        'views/res_partner.xml'
+        'views/res_partner.xml',
+        "views/ple_base.xml"
     ],
     'demo': [
 

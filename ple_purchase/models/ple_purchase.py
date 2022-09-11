@@ -50,14 +50,9 @@ class PlePurchase(models.Model):
             self.line_ids.unlink()
         return super(PlePurchase, self).write(vals)
 
-    @api.onchange('date_start', 'date_end', 'company_id')
-    def _onchange_date_company(self):
-        self.line_ids.unlink()
-
-    # @api.onchange('state')
-    # def _onchange_state_draft(self):
-    #     if self.state == 'draft':
-    #         self.line_ids.unlink()
+    # @api.onchange('date_start', 'date_end', 'company_id')
+    # def _onchange_date_company(self):
+    #     self.line_ids.unlink()
 
     def update_data_lines(self):
         self.line_ids.unlink()
@@ -97,8 +92,8 @@ class PlePurchase(models.Model):
                 'date_due': date_due,
                 'voucher_sunat_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.sunat_code,
                 'series': invoice.sequence_prefix,  # invoice.prefix_val,
-                'year_dua_dsi': invoice.year_aduana,  # ! creado
                 'correlative': invoice.sequence_number,  # invoice.suffix_val,
+                'year_dua_dsi': invoice.year_aduana,  # ! creado
                 'customer_document_type': document_type,
                 'customer_document_number': document_number,
                 'customer_name': customer_name,
@@ -113,7 +108,7 @@ class PlePurchase(models.Model):
                 'another_taxes': sum_another_taxes,
                 'amount_total': amount_total,
                 'code_currency': invoice.currency_id.name,
-                'currency_rate': round(self.env['res.currency']._get_conversion_rate(invoice.currency_id, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.invoice_date), 4),  # round(invoice.exchange_rate, 3),
+                'currency_rate': round(self.env['res.currency']._get_conversion_rate(invoice.currency_id, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date), 4),  # cambié invoice_date por date  # round(invoice.exchange_rate, 3),
                 'origin_date_invoice': origin_date_invoice,
                 'origin_document_code': origin_document_code,
                 'origin_serie': origin_serie,
@@ -133,7 +128,7 @@ class PlePurchase(models.Model):
                 # 'inv_year_dua_dsi': invoice.inv_year_dua_dsi,
                 # 'inv_retention_igv': invoice.inv_retention_igv,
                 # 'inv_correlative': invoice.inv_correlative,
-                # 'partner_street': partner_street,
+                'partner_street': partner_street,
                 # 'linkage_code': invoice.linkage_id and invoice.linkage_id.code or '',
                 # 'hard_rent': invoice.hard_rent,
                 # 'deduccion_cost': invoice.deduccion_cost,
@@ -325,19 +320,19 @@ class PlePurchase(models.Model):
             self._refund_amount(values)
         return values
 
-    def action_close(self):
-        self.ensure_one()
-        self.write({
-            'state': 'closed'
-        })
-        for line in self.line_ids:
-            if line.invoice_id:
-                line.invoice_id.its_declared = True
-        return True
+    # def action_close(self):
+    #     self.ensure_one()
+    #     self.write({
+    #         'state': 'closed'
+    #     })
+    #     for line in self.line_ids:
+    #         if line.invoice_id:
+    #             line.invoice_id.its_declared = True
+    #     return True
 
-    def action_rollback(self):
-        for line in self.line_ids:
-            if line.invoice_id:
-                line.invoice_id.its_declared = False
-        self.state = 'draft'
-        return True
+    # def action_rollback(self):
+    #     for line in self.line_ids:
+    #         if line.invoice_id:
+    #             line.invoice_id.its_declared = False
+    #     self.state = 'draft'
+    #     return True

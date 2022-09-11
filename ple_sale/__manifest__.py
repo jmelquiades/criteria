@@ -1,5 +1,5 @@
 {
-    'name': 'Reportes de Compras PLE',
+    'name': 'Reportes de Ventas PLE',
     'version': '1.0',
     'description': '',
     'summary': '',
@@ -8,11 +8,11 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'base', 'purchase', 'ple_base'
+        'base', 'sale', 'ple_base'
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/ple_purchase.xml'
+        'views/ple_sale.xml'
     ],
     'demo': [
 

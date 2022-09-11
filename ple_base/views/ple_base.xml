@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="ple_base_menu" name="Reportes PLE" web_icon="ple_purchase,static/img/app.png"/>
+</odoo>
