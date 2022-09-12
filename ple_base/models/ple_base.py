@@ -36,8 +36,10 @@ class PleBase(models.Model):
     period_year = fields.Selection(selection=[(str(num), str(num)) for num in reversed(range((fields.Datetime.now().year) - 2, (fields.Datetime.now().year) + 5))], string="Period", required=True)  # , default=str(fields.Datetime.now().year)
 
     def _get_name(self, vals):
-        date_start = vals.get('date_start', self.date_start)
-        date_end = vals.get('date_end', self.date_end)
+        # date_start = vals.get('date_start', self.date_start)
+        # date_end = vals.get('date_end', self.date_end)
+        date_start = self.date_start
+        date_end = self.date_end
         company_id = vals.get('company_id', self.company_id.id)
         company = self.env['res.company'].browse(company_id).name
         return str(date_start) + '-' + str(date_end) + ' ' + company
