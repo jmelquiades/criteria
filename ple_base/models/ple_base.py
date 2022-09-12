@@ -63,7 +63,8 @@ class PleBase(models.Model):
         vals['name'] = self._get_name(vals)
         return super(PleBase, self).write(vals)
 
-    @api.onchange('date_start', 'date_end', 'company_id')
+    # @api.onchange('date_start', 'date_end', 'company_id')
+    @api.onchange('period_year', 'period_month', 'company_id')
     def _onchange_date_company(self):
         self.line_ids.unlink()
 
