@@ -57,7 +57,8 @@ class PleSale(models.Model):
     #     return self.env['ple.report.base']._refund_amount(invoice)
 
     def write(self, vals):
-        prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
+        # prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
+        prop1 = {'period_month', 'period_year', 'company_id'}.intersection(vals.keys())
         prop2 = vals.get('state', False) == 'draft'
         if prop1 or prop2:
             vals.update({

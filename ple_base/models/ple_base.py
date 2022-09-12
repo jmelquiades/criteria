@@ -1,25 +1,27 @@
 from odoo import _, api, fields, models
-from datetime import timedelta
+from datetime import timedelta, datetime, date
 from dateutil.relativedelta import relativedelta
 
 
 class PleBase(models.Model):
     _name = 'ple.base'
 
+    @api.depends('period_year', 'period_month')
+    def _get_date(self):
+        month = int(self.period_month)
+        year = int(self.period_year)
+        date_reference = date(year, month, 1)
+        self.date_start = date_reference
+        self.date_end = date_reference + relativedelta(months=1) - timedelta(days=1)
+
     name = fields.Char('Name')
-    date_start = fields.Date(
-        string='Fecha Inicio',
-        required=True
-    )
+    date_start = fields.Date('Fecha Inicio', required=True, compute=_get_date)
+    date_end = fields.Date('Fecha Fin', required=True, compute=_get_date)
     state = fields.Selection(selection=[
         ('draft', 'Borrador'),
         ('load', 'Generado'),
         ('closed', 'Declarado')
     ], string='Estado', default='draft', required=True)
-    date_end = fields.Date(
-        string='Fecha Fin',
-        required=True
-    )
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Compañía',
@@ -28,6 +30,10 @@ class PleBase(models.Model):
     )
     date_ple = fields.Date('Fecha de creación de reporte PLE')
     ple_base_line_ids = fields.One2many('ple.base.line', 'ple_base_id', string='Ple Base Line')
+
+    period_month = fields.Selection(selection=[('1', 'Ene'), ('2', 'Feb'), ('3', 'Mar'), ('4', 'Abr'), ('5', 'May'), ('6', 'Jun'), ('7', 'Jul'), ('8', 'Ago'), ('9', 'Set'), ('10', 'Oct'), ('11', 'Nov'), ('12', 'Dic')],  required=True)  # default='1',
+
+    period_year = fields.Selection(selection=[(str(num), str(num)) for num in reversed(range((fields.Datetime.now().year) - 2, (fields.Datetime.now().year) + 5))], string="Period", required=True)  # , default=str(fields.Datetime.now().year)
 
     def _get_name(self, vals):
         date_start = vals.get('date_start', self.date_start)
@@ -39,11 +45,15 @@ class PleBase(models.Model):
     def default_get(self, fields_list):
         res = super(PleBase, self).default_get(fields_list)
         date = fields.date.today()
-        date_start = date.replace(day=1) - relativedelta(months=1)
-        date_end = date.replace(day=1) - timedelta(days=1)
+        # date_start = date.replace(day=1) - relativedelta(months=1)
+        # date_end = date.replace(day=1) - timedelta(days=1)
+        period_year = str(date.year)
+        period_month = str(date.month)
         res.update({
-            'date_start': date_start,
-            'date_end': date_end,
+            # 'date_start': date_start,
+            # 'date_end': date_end,
+            'period_year': period_year,
+            'period_month': period_month
         })
         return res
 

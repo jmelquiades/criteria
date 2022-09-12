@@ -15,8 +15,13 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
+                            <!-- <field name="date_start"/>
+                            <field name="date_end"/> -->
+                            <label for="period_year" string="Period"/>
+                            <div>
+                                <field name="period_month" placeholder="Month" class="oe_inline"/>
+                                <field name="period_year" placeholder="Year" class="oe_inline"/>
+                            </div>
                             <field name="company_id"/>
                         </group>
                         <group>
@@ -79,8 +84,10 @@
         <field name="model">ple.sale</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="date_start"/>
-                <field name="date_end"/>
+                <!-- <field name="date_start"/>
+                <field name="date_end"/> -->
+                <field name="period_month"/>
+                <field name="period_year"/>
                 <field name="company_id"/>
                 <field name="state"/>
                 <field name="txt_filename"/>
@@ -96,6 +103,7 @@
             <p>Cree un nuevo registro</p>
         </field>
     </record>
-    <menuitem id="ple_sale_menu" name="Reportes Ventas" action="ple_sale_action" parent="ple_base.ple_base_menu" sequence="2"/>
+    <menuitem id="ple_sale_rmt_menu" name="Reportes Ventas" action="ple_sale_action" parent="ple_base.ple_base_rmt_menu" sequence="2"/>
+    <menuitem id="ple_sale_rg_menu" name="Reportes Ventas" action="ple_sale_action" parent="ple_base.ple_base_rg_menu" sequence="2"/>
     <!-- <menuitem id="ple_sale_menu" name="Reportes PLE" action="ple_sale_action" web_icon="ple_sale,static/img/app.png"/> -->
 </odoo>

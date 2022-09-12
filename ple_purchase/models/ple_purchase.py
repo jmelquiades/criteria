@@ -36,7 +36,8 @@ class PlePurchase(models.Model):
     error_dialog_8_2 = fields.Text(readonly=True)
 
     def write(self, vals):
-        prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
+        # prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
+        prop1 = {'period_month', 'period_year', 'company_id'}.intersection(vals.keys())
         prop2 = vals.get('state', False) == 'draft'
         if prop1 or prop2:
             vals.update({
@@ -49,10 +50,6 @@ class PlePurchase(models.Model):
         if prop2:
             self.line_ids.unlink()
         return super(PlePurchase, self).write(vals)
-
-    # @api.onchange('date_start', 'date_end', 'company_id')
-    # def _onchange_date_company(self):
-    #     self.line_ids.unlink()
 
     def update_data_lines(self):
         self.line_ids.unlink()
