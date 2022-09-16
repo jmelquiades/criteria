@@ -59,7 +59,7 @@
                                 </group>
                                 <group name="xlsx" string="XLSX">
                                     <field name="xlsx_filename_8_1" invisible="1"/>
-                                    <field name="xlsx_binary_8_1" filename="txt_filename_8_1" readonly="1"/>
+                                    <field name="xlsx_binary_8_1" filename="xlsx_filename_8_1" readonly="1"/>
                                 </group>
                             </group>
                         </page>
@@ -71,7 +71,7 @@
                                 </group>
                                 <group name="xlsx" string="XLSX">
                                     <field name="xlsx_filename_8_2" invisible="1"/>
-                                    <field name="xlsx_binary_8_2" filename="txt_filename_8_2" readonly="1"/>
+                                    <field name="xlsx_binary_8_2" filename="xlsx_filename_8_2" readonly="1"/>
                                 </group>
                             </group>
                         </page>
