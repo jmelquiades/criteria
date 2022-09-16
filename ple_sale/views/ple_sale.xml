@@ -96,14 +96,14 @@
         </field>
     </record>
     <record id="ple_sale_action" model="ir.actions.act_window">
-        <field name="name">Reportes Ventas</field>
+        <field name="name">Registro de Ventas</field>
         <field name="res_model">ple.sale</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p>Cree un nuevo registro</p>
         </field>
     </record>
-    <menuitem id="ple_sale_rmt_menu" name="Reportes Ventas" action="ple_sale_action" parent="ple_base.ple_base_rmt_menu" sequence="2"/>
-    <menuitem id="ple_sale_rg_menu" name="Reportes Ventas" action="ple_sale_action" parent="ple_base.ple_base_rg_menu" sequence="2"/>
-    <!-- <menuitem id="ple_sale_menu" name="Reportes PLE" action="ple_sale_action" web_icon="ple_sale,static/img/app.png"/> -->
+    <menuitem id="ple_sale_rmt_menu" name="Registro de Ventas" action="ple_sale_action" parent="ple_base.ple_base_rmt_menu" sequence="2"/>
+    <menuitem id="ple_sale_rg_menu" name="Registro de Ventas" action="ple_sale_action" parent="ple_base.ple_base_rg_menu" sequence="2"/>
+    <!-- <menuitem id="ple_sale_menu" name="Registro PLE" action="ple_sale_action" web_icon="ple_sale,static/img/app.png"/> -->
 </odoo>

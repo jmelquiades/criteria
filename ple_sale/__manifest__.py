@@ -1,5 +1,5 @@
 {
-    'name': 'Reportes de Ventas PLE',
+    'name': 'Registro de Ventas PLE',
     'version': '1.0',
     'description': '',
     'summary': '',
