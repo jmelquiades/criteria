@@ -97,7 +97,7 @@
         </field>
     </record>
     <record id="ple_purchase_action" model="ir.actions.act_window">
-        <field name="name">Registro Compras</field>
+        <field name="name">Registro de Compras</field>
         <field name="res_model">ple.purchase</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
