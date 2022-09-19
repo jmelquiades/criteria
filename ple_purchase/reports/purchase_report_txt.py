@@ -97,7 +97,7 @@ class PurchaseReportTxt(object):
                     c5='',
                     c6=value['document_code'] or '',
                     c7=value['voucher_series'] or '0000',
-                    c8='',
+                    c8='0',
                     c9=value['correlative'].zfill(8) or '',
                     c10='',
                     c11=value['customer_document_type'] or '',
@@ -116,22 +116,22 @@ class PurchaseReportTxt(object):
                     c24='%.2f' % value['amount_total'],
                     c25=value['code_currency'],
                     c26='%.3f' % value['currency_rate'],  # value['code_currency'],
-                    c27='',
-                    c28='',
-                    c29='',
+                    c27=value['origin_date_invoice'],  # '',
+                    c28='00',
+                    c29='-',
                     c30='',
-                    c31='',
-                    c32='',
-                    c33='',
+                    c31='-',
+                    c32='',  # * fecha de retencion
+                    c33='0',
                     c34='',
-                    c35='1',  # or 0
+                    c35='',  # or 0
                     c36='',
                     c37='',
                     c38='',
                     c39='',
                     c40='',
                     c41='',
-                    c42='',
+                    c42='1',
                     c43=''
                 )
         if raw:
