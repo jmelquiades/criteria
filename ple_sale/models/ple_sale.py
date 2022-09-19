@@ -142,7 +142,7 @@ class PleSale(models.Model):
                 'customer_document_number': document_number,
                 'customer_name': customer_name,
                 'amount_export': sum_amount_export,
-                'amount_untaxed': sum_amount_untaxed,
+                'amount_untaxed': invoice.amount_untaxed,  # sum_amount_untaxed,
                 'discount_tax_base': sum_discount_tax_base,
                 'sale_no_gravadas_igv': sum_sale_no_gravadas_igv,
                 'discount_igv': sum_discount_igv,
@@ -164,7 +164,8 @@ class PleSale(models.Model):
                 'ple_sale_id': self.id,
                 ####
                 'journal_name': invoice.journal_id.code,
-                'document_code': invoice.l10n_latam_document_type_id.code
+                'document_code': invoice.l10n_latam_document_type_id.code,
+                # 'tax_totals_json': invoice.tax_totals_json
             }
             self.env['ple.sale.line'].create(values)
         return True
@@ -210,6 +211,7 @@ class PleSale(models.Model):
                 ####
                 'journal_name': obj_line.journal_name,
                 'document_code': obj_line.document_code
+                # 'tax_totals_json': obj_line.tax_totals_json
             }
             list_data.append(value)
         sale_report = SaleReportTxt(self, list_data)

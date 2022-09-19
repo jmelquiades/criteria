@@ -98,7 +98,7 @@ class PurchaseReportTxt(object):
                     c6=value['document_code'] or '',
                     c7=value['voucher_series'] or '0000',
                     c8='',
-                    c9=value['correlative'] or '',
+                    c9=value['correlative'].zfill(8) or '',
                     c10='',
                     c11=value['customer_document_type'] or '',
                     c12=value['customer_document_number'] or '',

@@ -100,7 +100,7 @@ class PlePurchase(models.Model):
                 'tax_gdm': sum_tax_gdm,
                 'base_gdng': sum_base_gdng,
                 'tax_gdng': sum_tax_gdng,
-                'amount_untaxed': sum_amount_untaxed,
+                'amount_untaxed': invoice.amount_untaxed,  # sum_amount_untaxed,
                 'isc': sum_isc,
                 'another_taxes': sum_another_taxes,
                 'amount_total': amount_total,

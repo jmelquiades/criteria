@@ -92,9 +92,9 @@ class PleBase(models.Model):
         ple_state = invoice.ple_state
         partner = invoice.partner_id
         if invoice.state != 'cancel':
-            return invoice.invoice_date_due, ple_state, partner.l10n_latam_identification_type_id.sequence, partner.vat, partner.name  # ! partner.l10n_latam_identification_type_id.sequence >> partner.l10n_latam_identification_type_id.code
+            return invoice.invoice_date_due, ple_state, partner.l10n_latam_identification_type_id.l10n_pe_vat_code, partner.vat, partner.name  # ! partner.l10n_latam_identification_type_id.sequence >> partner.l10n_latam_identification_type_id.code
         else:
-            return False, ple_state, partner.l10n_latam_identification_type_id.sequence, partner.vat, partner.name
+            return False, ple_state, partner.l10n_latam_identification_type_id.l10n_pe_vat_code, partner.vat, partner.name
 
     def _get_journal_correlative(self, company, invoice=False, new_name=''):
         if company.type_contributor == 'CUO':
