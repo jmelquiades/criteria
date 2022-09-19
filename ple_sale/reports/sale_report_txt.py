@@ -34,7 +34,8 @@ class SaleReportTxt(object):
                    '{c25}|{c26}|{c27}|' \
                    '{c28}|{c29}|' \
                    '{c30}|{c31}|' \
-                   '{c32}|{c33}|{c34}|\r\n'
+                   '{c32}|{c33}|{c34}|' \
+                   '{c35}|{c36}\r\n'
 
         for value in self.data:
             # raw += template.format(
@@ -75,11 +76,11 @@ class SaleReportTxt(object):
             # )
             raw += template.format(
                 c1=value['period'],
-                c2=value['period'].replace('00', '')+value['voucher_series']+value['correlative'],
-                c3='M'+value['correlative'],
+                c2=value['period'].replace('00', '') + value['journal_name'] + value['voucher_series'] + '-' + value['correlative'].zfill(8),
+                c3='M'+value['correlative'].zfill(8),
                 c4=value['date_invoice'],
                 c5='',
-                c6='',
+                c6=value['document_code'] or '',
                 c7=value['voucher_series'] or '0000',
                 c8=value['correlative'] or '',
                 c9='',
@@ -89,7 +90,7 @@ class SaleReportTxt(object):
                 c13='0.00',
                 c14='%.2f' % value['amount_untaxed'],
                 c15='0.00',
-                c16='0.00',
+                c16='%.2f' % (value['amount_total'] - value['amount_untaxed']),
                 c17='0.00',
                 c18='0.00',
                 c19='0.00',
@@ -98,16 +99,18 @@ class SaleReportTxt(object):
                 c22='0.00',
                 c23='0.00',
                 c24='0.00',
-                c25=value['amount_total'],
+                c25='%.2f' % value['amount_total'],
                 c26=value['code_currency'],
-                c27=value['currency_rate'],
+                c27='%.3f' % value['currency_rate'],
                 c28='',
                 c29='',
                 c30='',
                 c31='',
                 c32='',
                 c33='',
-                c34=''
+                c34='',
+                c35='',
+                c36=''
             )
         return raw
 

@@ -70,3 +70,6 @@ class PlePurchaseLine(models.Model):
     retention = fields.Char(
         string='Retención'
     )
+    ###
+    journal_name = fields.Char('Journal Name')
+    document_code = fields.Char('Document Code')

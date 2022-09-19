@@ -162,6 +162,9 @@ class PleSale(models.Model):
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
                 'ple_sale_id': self.id,
+                ####
+                'journal_name': invoice.journal_id.code,
+                'document_code': invoice.l10n_latam_document_type_id.code
             }
             self.env['ple.sale.line'].create(values)
         return True
@@ -203,7 +206,10 @@ class PleSale(models.Model):
                 'contract_name': obj_line.contract_name,
                 'inconsistency_type_change': obj_line.inconsistency_type_change,
                 'payment_voucher': obj_line.payment_voucher,
-                'ple_state': obj_line.ple_state
+                'ple_state': obj_line.ple_state,
+                ####
+                'journal_name': obj_line.journal_name,
+                'document_code': obj_line.document_code
             }
             list_data.append(value)
         sale_report = SaleReportTxt(self, list_data)

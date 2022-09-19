@@ -137,6 +137,9 @@ class PlePurchase(models.Model):
                 # 'type_rent_code': invoice.type_rent_id and invoice.type_rent_id.code or '',
                 # 'taken_code': invoice.taken_id and invoice.taken_id.code or '',
                 # 'application_article': invoice.application_article or ''
+                ###
+                'journal_name': invoice.journal_id.code,
+                'document_code': invoice.l10n_latam_document_type_id.code
             }
             self.env['ple.purchase.line'].create(values)
         return True
@@ -204,7 +207,9 @@ class PlePurchase(models.Model):
                 'type_rent': line.type_rent_code,
                 'taken_code': line.taken_code,
                 'application_article': line.application_article,
-                'partner_nodomicilied': line.partner_nodomicilied
+                'partner_nodomicilied': line.partner_nodomicilied,
+                'journal_name': line.journal_name,
+                'document_code': line.document_code
             }
             data.append(value)
         return data

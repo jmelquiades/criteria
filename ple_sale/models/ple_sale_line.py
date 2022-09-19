@@ -124,3 +124,5 @@ class PleSaleLine(models.Model):
         string='Estado',
         default='1'
     )
+    journal_name = fields.Char('Journal Name')
+    document_code = fields.Char('Document Code')
