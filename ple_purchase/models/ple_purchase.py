@@ -88,7 +88,7 @@ class PlePurchase(models.Model):
                 'date_invoice': invoice.invoice_date,
                 'date_due': date_due,
                 'voucher_sunat_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.sunat_code,
-                'series': invoice.sequence_prefix.split()[1].replace('-', ''),  # invoice.prefix_val,
+                'series': invoice.sequence_prefix.split()[-1].replace('-', ''),  # invoice.prefix_val,
                 'correlative': invoice.sequence_number,  # invoice.suffix_val,
                 'year_dua_dsi': invoice.year_aduana,  # ! creado
                 'customer_document_type': document_type,

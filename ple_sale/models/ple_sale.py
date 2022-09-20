@@ -136,7 +136,7 @@ class PleSale(models.Model):
                 'date_invoice': invoice.invoice_date,
                 'date_due': date_due,
                 'voucher_sunat_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.sunat_code,
-                'series': invoice.sequence_prefix.split()[1].replace('-', ''),  # invoice.prefix_val,
+                'series': invoice.sequence_prefix.split()[-1].replace('-', ''),  # invoice.prefix_val,
                 'correlative': invoice.sequence_number,  # invoice.suffix_val,
                 'customer_document_type': document_type,
                 'customer_document_number': document_number,
