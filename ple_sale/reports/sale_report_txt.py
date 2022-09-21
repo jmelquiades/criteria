@@ -117,7 +117,7 @@ class SaleReportTxt(object):
     def get_filename(self, type='01'):
         year, month = self.obj.date_start.strftime('%Y/%m').split('/')
         # u'LE{vat}{period_year}{period_month}0014{type}0000{state_send}{has_info}{currency}1.txt'
-        return u'LE{vat}{period_year}{period_month}0014{type}0000{has_info}{currency}1.txt'.format(
+        return u'LE{vat}{period_year}{period_month}0014{type}0000{has_info}{currency}11.txt'.format(
             vat=self.obj.company_id.vat,
             period_year=year,
             period_month=month,
