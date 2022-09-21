@@ -110,7 +110,7 @@ class PleSale(models.Model):
             ('journal_id.no_include_ple', '=', False),
             ('journal_id.type', '=', 'sale'),
             ('its_declared', '=', False),
-            ('document_code', 'in', ['07', '08', '87', '88'])
+            # ('document_code', 'in', ['07', '08', '87', '88'])
         ])
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
