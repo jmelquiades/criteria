@@ -109,7 +109,7 @@ class SaleReportTxt(object):
                 c32='',
                 c33='',
                 c34='',
-                c35='',
+                c35='1',
                 c36=''
             )
         return raw
