@@ -107,7 +107,8 @@ class PleBase(models.Model):
 
     def _get_data_origin(self, invoice):  # * corregido
         # ! return invoice.origin_invoice_date, invoice.origin_inv_document_type_id.code, invoice.origin_serie, invoice.origin_correlative, invoice.origin_number.code_aduana
-        return invoice.reversed_entry_id.invoice_date, invoice.reversed_entry_id.l10n_latam_document_type_id.sequence, invoice.reversed_entry_id.sequence_prefix, invoice.reversed_entry_id.sequence_number, invoice.reversed_entry_id.code_customs_id  # l10n_pe_dte_rectification_ref_type
+        # l10n_pe_dte_rectification_ref_type
+        return invoice.reversed_entry_id.invoice_date, invoice.reversed_entry_id.l10n_latam_document_type_id.code, invoice.reversed_entry_id.sequence_prefix.split()[-1].replace('-', '') if type(invoice.reversed_entry_id.sequence_prefix) == str else '', invoice.reversed_entry_id.sequence_number, invoice.reversed_entry_id.code_customs_id
 
     def unlink(self):
         if self.state == 'closed':
