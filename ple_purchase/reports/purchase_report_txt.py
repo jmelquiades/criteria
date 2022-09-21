@@ -94,7 +94,7 @@ class PurchaseReportTxt(object):
                     c2=value['period'].replace('00', '') + value['journal_name'] + value['voucher_series'] + '-' + value['correlative'].zfill(8),
                     c3='M'+value['correlative'].zfill(8),
                     c4=value['date_invoice'],
-                    c5='',
+                    c5=value['date_due'] if value['document_code'] == '14' else '',  # '',
                     c6=value['document_code'] or '',
                     c7=value['voucher_series'] or '0000',
                     c8='0',
@@ -121,7 +121,7 @@ class PurchaseReportTxt(object):
                     c29='-',
                     c30='',
                     c31='-',
-                    c32='',  # * fecha de retencion
+                    c32='01/01/0001',  # * fecha de retencion
                     c33='0',
                     c34='',
                     c35='',  # or 0

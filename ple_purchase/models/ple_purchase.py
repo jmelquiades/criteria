@@ -62,7 +62,8 @@ class PlePurchase(models.Model):
             ('state', 'not in', ['draft', 'cancel']),
             ('journal_id.no_include_ple', '=', False),
             ('journal_id.type', '=', 'purchase'),
-            ('its_declared', '=', False)
+            ('its_declared', '=', False),
+            ('l10n_latam_document_type_id.code', '!=', '02')
         ])
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
