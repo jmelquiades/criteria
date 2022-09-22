@@ -4,7 +4,7 @@
         <field name="name">ple.sale.purchase.view.form</field>
         <field name="model">ple.sale.purchase</field>
         <field name="arch" type="xml">
-            <form create="0" edit="0">
+            <form create="0" edit="0" delete="0">
                 <sheet>
                     <group>
                         <group>
@@ -27,7 +27,7 @@
         <field name="name">ple.sale.purchase.view.tree</field>
         <field name="model">ple.sale.purchase</field>
         <field name="arch" type="xml">
-            <tree create="0" edit="0">
+            <tree create="0" edit="0" delete="0">
                 <field name="period_year"/>
                 <field name="period_month"/>
                 <field name="company_id"/>

@@ -1,6 +1,6 @@
 {
     'name': 'Ple ventas y compras',
-    'version': '1.0.202209221',
+    'version': '1.0.202209222',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
