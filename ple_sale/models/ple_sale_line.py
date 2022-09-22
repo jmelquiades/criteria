@@ -29,7 +29,7 @@ class PleSaleLine(models.Model):
     )
     invoice_id = fields.Many2one(
         comodel_name='account.move',
-        string='Comprobante'
+        string='Factura'
     )
     series = fields.Char(
         string='Series'

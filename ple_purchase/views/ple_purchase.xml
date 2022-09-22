@@ -29,6 +29,7 @@
                             <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="row" string="Fila"/>
+                                    <field name="invoice_id" optional="show"/>
                                     <field name="document_code" string="TP Doc."/>
                                     <field name="series" string="Serie"/>
                                     <field name="correlative" string="# Comp"/>
@@ -47,6 +48,18 @@
                                     <field name="code_currency" string="Divisa"/>
                                     <field name="currency_rate" string="T.C."/>
                                     <field name="ref" string="Ref."/>
+                                    <!--  -->
+                                    <field name="voucher_number" optional="hide"/>
+                                    <field name="voucher_date" optional="hide"/>
+                                    <field name="retention" optional="hide"/>
+                                    <field name="type_pay_invoice" optional="hide"/>
+                                    <field name="country_code" optional="hide"/>
+                                    <field name="partner_nodomicilied" optional="hide"/>
+                                    <field name="ple_state" optional="hide"/>
+                                    <field name="inv_type_document_code" optional="hide"/>
+                                    <field name="isc" optional="hide"/>
+                                    <field name="voucher_sunat_code" optional="hide"/>
+                                    <field name="partner_street" optional="hide"/>
                                 </tree>
                             </field>
                         </page>

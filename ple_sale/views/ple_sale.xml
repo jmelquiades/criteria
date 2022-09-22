@@ -29,6 +29,7 @@
                             <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="row" string="Fila"/>
+                                    <field name="invoice_id" optional="show"/>
                                     <field name="document_code" string="TP Doc."/>
                                     <field name="series" string="Serie"/>
                                     <field name="correlative" string="# Comp"/>
@@ -47,6 +48,18 @@
                                     <field name="code_currency" string="Divisa"/>
                                     <field name="currency_rate" string="T.C."/>
                                     <field name="ref" string="Ref."/>
+                                    <!--  -->
+                                    <field name="amount_export" optional="hide"/>
+                                    <field name="discount_tax_base" optional="hide"/>
+                                    <field name="sale_no_gravadas_igv" optional="hide"/>
+                                    <field name="discount_igv" optional="hide"/>
+                                    <field name="amount_exonerated" optional="hide"/>
+                                    <field name="amount_no_effect" optional="hide"/>
+                                    <field name="isc" optional="hide"/>
+                                    <field name="rice_tax_base" optional="hide"/>
+                                    <field name="rice_igv" optional="hide"/>
+                                    <field name="ple_state" optional="hide"/>
+                                    <field name="journal_name" optional="hide"/>
                                 </tree>
                             </field>
                         </page>
