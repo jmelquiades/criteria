@@ -28,7 +28,7 @@ class PleBase(models.Model):
         required=True,
         default=lambda self: self.env.user.company_id
     )
-    date_ple = fields.Date('Fecha de creación de reporte PLE')
+    date_ple = fields.Datetime('Fecha de generación de reporte PLE')
     ple_base_line_ids = fields.One2many('ple.base.line', 'ple_base_id', string='Ple Base Line')
 
     period_month = fields.Selection(selection=[('1', 'Ene'), ('2', 'Feb'), ('3', 'Mar'), ('4', 'Abr'), ('5', 'May'), ('6', 'Jun'), ('7', 'Jul'), ('8', 'Ago'), ('9', 'Set'), ('10', 'Oct'), ('11', 'Nov'), ('12', 'Dic')],  required=True)  # default='1',
