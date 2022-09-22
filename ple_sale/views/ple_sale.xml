@@ -10,15 +10,15 @@
                     <button name="action_close" string="Declarar a SUNAT" states="draft" type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
-                <sheet attrs="{'readonly': [('state', '=', 'closed')]}">
+                <sheet>
                     <group>
                         <group>
                             <label for="period_year" string="Period"/>
                             <div>
-                                <field name="period_month" placeholder="Month" class="oe_inline"/>
-                                <field name="period_year" placeholder="Year" class="oe_inline"/>
+                                <field name="period_month" placeholder="Month" class="oe_inline" attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="period_year" placeholder="Year" class="oe_inline" attrs="{'readonly': [('state', '=', 'closed')]}"/>
                             </div>
-                            <field name="company_id"/>
+                            <field name="company_id" attrs="{'readonly': [('state', '=', 'closed')]}"/>
                         </group>
                         <group>
                             <field name="datetime_ple" readonly="1"/>
@@ -26,7 +26,7 @@
                     </group>
                     <notebook>
                         <page name="detalle" string="Detalle">
-                            <field name="line_ids">
+                            <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="row" string="Fila"/>
                                     <field name="document_code" string="TP Doc."/>

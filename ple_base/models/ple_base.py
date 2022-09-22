@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from datetime import timedelta, datetime, date
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
 
 
 class PleBase(models.Model):
@@ -158,12 +159,14 @@ class PleBase(models.Model):
 
     def action_close(self):
         self.ensure_one()
-        self.write({
-            'state': 'closed'
-        })
+        if not self.line_ids:
+            raise UserError('No hay registros para declarar.')
         for obj_line in self.line_ids:
             if obj_line.invoice_id:
                 obj_line.invoice_id.its_declared = True
+        self.write({
+            'state': 'closed'
+        })
         return True
 
     def action_rollback(self):

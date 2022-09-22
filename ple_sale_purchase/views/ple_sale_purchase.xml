@@ -4,7 +4,7 @@
         <field name="name">ple.sale.purchase.view.form</field>
         <field name="model">ple.sale.purchase</field>
         <field name="arch" type="xml">
-            <form string="Registros de Ventas y Compras" create="0" edit="0">
+            <form create="0" edit="0">
                 <sheet>
                     <group>
                         <group>
@@ -27,7 +27,7 @@
         <field name="name">ple.sale.purchase.view.tree</field>
         <field name="model">ple.sale.purchase</field>
         <field name="arch" type="xml">
-            <tree string="Registros de Ventas y Compras" create="0" edit="0">
+            <tree create="0" edit="0">
                 <field name="period_year"/>
                 <field name="period_month"/>
                 <field name="company_id"/>
@@ -37,7 +37,7 @@
         </field>
     </record>
     <record id="ple_sale_purchase_action" model="ir.actions.act_window">
-        <field name="name">Registro de Ventas y Compras</field>
+        <field name="name">Registro de Compras y Ventas</field>
         <field name="res_model">ple.sale.purchase</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
@@ -46,6 +46,5 @@
             <p>Crear un nuevo registro</p>
         </field>
     </record>
-    <menuitem id="ple_sale_purchase_menu" action="ple_sale_purchase_action" parent="ple_base.ple_base_menu" sequence="1"/>
-    <!-- <menuitem id="ple_sale_purchase_menu" name="Registro de Ventas y Compras" action="ple_sale_purchase_action" parent="ple_base.ple_base_rg_menu" sequence="3"/> -->
+    <menuitem id="ple_sale_purchase_menu" name=" " action="ple_sale_purchase_action" parent="ple_base.ple_base_menu" sequence="1"/>
 </odoo>
