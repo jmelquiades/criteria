@@ -265,7 +265,7 @@ class PlePurchase(models.Model):
             self.get_reports_txt(data)
             self.get_reports_xlsx(data)
 
-            self.date_ple = fields.Datetime.now()
+            self.datetime_ple = fields.Datetime.now()
             # self.state = 'load'
             return True
         # raise UserError("Debe de user el botón 'Actulizar información'")

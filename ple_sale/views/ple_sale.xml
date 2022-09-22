@@ -26,7 +26,7 @@
                             <field name="company_id"/>
                         </group>
                         <group>
-                            <field name="date_ple"/>
+                            <field name="datetime_ple"/>
                         </group>
                     </group>
                     <notebook>

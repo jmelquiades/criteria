@@ -236,7 +236,7 @@ class PleSale(models.Model):
         values_content_xls = sale_report_xls.get_content()
         self.xlsx_binary = base64.b64encode(values_content_xls)
         self.xlsx_filename = sale_report_xls.get_filename()
-        self.date_ple = fields.Datetime.now()
+        self.datetime_ple = fields.Datetime.now()
         # self.state = 'load'
         return True
 
