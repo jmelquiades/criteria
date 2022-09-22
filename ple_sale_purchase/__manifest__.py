@@ -1,6 +1,6 @@
 {
-    'name': 'Registro de Ventas PLE',
-    'version': '1.0.202209221',
+    'name': 'Ple ventas y compras',
+    'version': '1.0.20220922',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
@@ -8,11 +8,11 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'base', 'sale', 'ple_base'
+        'ple_base', 'ple_purchase', 'ple_sale'
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/ple_sale.xml'
+        'views/ple_sale_purchase.xml'
     ],
     'demo': [
 

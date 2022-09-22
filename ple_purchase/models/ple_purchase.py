@@ -49,6 +49,7 @@ class PlePurchase(models.Model):
             })
         if prop2:
             self.line_ids.unlink()
+        self.create_report(vals, model=self._name)
         return super(PlePurchase, self).write(vals)
 
     def update_data_lines(self):
@@ -329,3 +330,14 @@ class PlePurchase(models.Model):
         if invoice.move_type == 'in_refund':
             self._refund_amount(values)
         return values
+
+    @api.model
+    def create(self, vals):
+        res = super(PlePurchase, self).create(vals)
+        res.create_report(vals, model=self._name)
+        return res
+
+    def unlink(self):
+        for record in self:
+            record.delete_old_record(model=self._name)
+        return super(PlePurchase, self).unlink()

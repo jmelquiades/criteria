@@ -10,7 +10,7 @@
                     <button name="action_close" string="Declarar a SUNAT" states="draft" type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
-                <sheet>
+                <sheet attrs="{'readonly': [('state', '=', 'closed')]}">
                     <group>
                         <group>
                             <label for="period_year" string="Period"/>

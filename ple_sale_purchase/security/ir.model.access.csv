@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ple_sale_purchase,ple.sale.purchase,model_ple_sale_purchase,account.group_account_user,1,1,1,1
+
+
+

@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 from ..reports.sale_report_xlsx import SaleReportXlsx
 from ..reports.sale_report_txt import SaleReportTxt
 import base64
@@ -31,6 +31,7 @@ class PleSale(models.Model):
             })
         if prop2:
             self.line_ids.unlink()
+        self.create_report(vals, model=self._name)
         return super(PleSale, self).write(vals)
 
     def _get_tax(self, invoice):
@@ -185,7 +186,7 @@ class PleSale(models.Model):
             values_content.encode() or '\n'.encode()
         )
         period_month = dict(self._fields.get('period_month').selection).get(self.period_month)
-        self.txt_filename = sale_report.get_filename(self.period_year, period_month, self.company_id.name)
+        self.txt_filename = sale_report.get_filename()
         if not values_content:
             self.error_dialog = 'No hay contenido para presentar en el registro de ventas electrónicos de este periodo.'
         else:
@@ -198,3 +199,14 @@ class PleSale(models.Model):
         self.datetime_ple = fields.Datetime.now()
         # self.state = 'load'
         return True
+
+    @api.model
+    def create(self, vals):
+        res = super(PleSale, self).create(vals)
+        res.create_report(vals, model=self._name)
+        return res
+
+    def unlink(self):
+        for record in self:
+            record.delete_old_record(model=self._name)
+        return super(PleSale, self).unlink()
