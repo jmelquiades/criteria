@@ -5,12 +5,14 @@ class PlePurchaseLine(models.Model):
 
     _name = 'ple.purchase.line'
 
+    row = fields.Integer('row')
     name = fields.Char(string='Periodo', required=True)
     ple_purchase_id = fields.Many2one('ple.purchase', string='Ple Purchase')
     invoice_id = fields.Many2one(comodel_name='account.move', string='Comprobante', required=True)
     ple_report_purchase_id = fields.Many2one(comodel_name='ple.report.purchase', string='Reporte de Compras')
     number_origin = fields.Char(string='Número Origen')
-    date_invoice = fields.Date(string='Fecha Contable')
+    date_invoice = fields.Date(string='Fecha de emisión')
+    date = fields.Date(string='Fecha factura')
     date_due = fields.Date(string='Fecha de Vencimiento')
     voucher_sunat_code = fields.Char(string='Tipo de Comprobante')
     series = fields.Char(string='Series')
@@ -29,6 +31,7 @@ class PlePurchaseLine(models.Model):
     isc = fields.Float(string='Impuesto Selectivo al Consumo')
     another_taxes = fields.Float(string='Otros Conceptos, tributos y cargos')
     amount_total = fields.Float(string='Total')
+    amount_taxed = fields.Float(string='Impuesto')
     code_currency = fields.Char(string='Código de la moneda')
     currency_rate = fields.Float(string='Tipo de Cambio', digits=(12, 3))
     origin_date_invoice = fields.Date(string='Fecha Pago')

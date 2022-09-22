@@ -112,6 +112,7 @@ class PleSale(models.Model):
             ('its_declared', '=', False),
             # ('document_code', 'in', ['07', '08', '87', '88'])
         ])
+        row = 1
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
             origin_date_invoice, origin_document_code, origin_serie, origin_correlative, _ = self._get_data_origin(invoice)
@@ -131,10 +132,12 @@ class PleSale(models.Model):
             amount_total = v['AMOUNT_TOTAL']
 
             values = {
+                'row': row,
                 'name': invoice.date.strftime('%Y%m00'),
                 'number_origin': self._get_number_origin(invoice),
                 'journal_correlative': self._get_journal_correlative(invoice.company_id),
                 'date_invoice': invoice.invoice_date,
+                'date': invoice.date,
                 'date_due': date_due,
                 'voucher_sunat_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.sunat_code,
                 'series': invoice.sequence_prefix.split()[-1].replace('-', ''),  # invoice.prefix_val,
@@ -153,6 +156,7 @@ class PleSale(models.Model):
                 'rice_tax_base': sum_rice_tax_base,
                 'rice_igv': sum_rice_igv,
                 'another_taxes': sum_another_taxes,
+                'amount_taxed': invoice.currency_id._convert(invoice.amount_total - invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),
                 'amount_total': invoice.currency_id._convert(invoice.amount_total, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # amount_total,
                 'code_currency': invoice.currency_id.name,
                 'currency_rate': round(self.env['res.currency']._get_conversion_rate(invoice.currency_id, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date), 4),  # invoice_date lo cambié por date # round(invoice.exchange_rate, 3),
@@ -169,7 +173,8 @@ class PleSale(models.Model):
                 # 'tax_totals_json': invoice.tax_totals_json
             }
             self.env['ple.sale.line'].create(values)
-        return True
+            row += 1
+        return self.action_generate_report()
 
     def action_generate_report(self):
         list_data = []
@@ -231,7 +236,7 @@ class PleSale(models.Model):
         self.xlsx_binary = base64.b64encode(values_content_xls)
         self.xlsx_filename = sale_report_xls.get_filename()
         self.date_ple = fields.Date.today()
-        self.state = 'load'
+        # self.state = 'load'
         return True
 
     # def action_close(self):

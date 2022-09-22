@@ -65,6 +65,7 @@ class PlePurchase(models.Model):
             ('its_declared', '=', False),
             ('l10n_latam_document_type_id.code', '!=', '02')
         ])
+        row = 1
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
             country_code, is_nodomicilied, partner_street = self._get_partner(invoice)
@@ -83,10 +84,12 @@ class PlePurchase(models.Model):
 
             retention, pay_invoice = self._get_retention(invoice)
             values = {
+                'row': row,
                 'name': invoice.date.strftime('%Y%m00'),
                 'number_origin': self._get_number_origin(invoice),  # depende de : ple_state del invoice (campo nuevo en account.move)
                 'journal_correlative': self._get_journal_correlative(invoice.company_id),  # depende de : type_contributor del invoice (campo nuevo de res.company)
                 'date_invoice': invoice.invoice_date,
+                'date': invoice.date,
                 'date_due': date_due,
                 'voucher_sunat_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.sunat_code,
                 'series': invoice.sequence_prefix.split()[-1].replace('-', ''),  # invoice.prefix_val,
@@ -104,6 +107,7 @@ class PlePurchase(models.Model):
                 'amount_untaxed': invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # invoice.amount_untaxed,  # sum_amount_untaxed,
                 'isc': sum_isc,
                 'another_taxes': sum_another_taxes,
+                'amount_taxed': invoice.currency_id._convert(invoice.amount_total - invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),
                 'amount_total': invoice.currency_id._convert(invoice.amount_total, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # amount_total,
                 'code_currency': invoice.currency_id.name,
                 'currency_rate': round(self.env['res.currency']._get_conversion_rate(invoice.currency_id, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date), 4),  # cambié invoice_date por date  # round(invoice.exchange_rate, 3),
@@ -143,7 +147,8 @@ class PlePurchase(models.Model):
                 'document_code': invoice.l10n_latam_document_type_id.code
             }
             self.env['ple.purchase.line'].create(values)
-        return True
+            row += 1
+        return self.action_generate_report()
 
     def get_data(self):
         data = []
@@ -260,9 +265,9 @@ class PlePurchase(models.Model):
             self.get_reports_xlsx(data)
 
             self.date_ple = fields.Date.today()
-            self.state = 'load'
+            # self.state = 'load'
             return True
-        raise UserError("Debe de user el botón 'Actulizar información'")
+        # raise UserError("Debe de user el botón 'Actulizar información'")
 
     # def _get_number_origin(self, invoice):
     #     return self.env['ple.report.base']._get_number_origin(invoice)

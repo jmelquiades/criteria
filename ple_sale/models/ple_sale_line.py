@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 class PleSaleLine(models.Model):
     _name = 'ple.sale.line'
 
+    row = fields.Integer('row')
     name = fields.Char(
         string='Periodo',
         required=True
@@ -18,9 +19,8 @@ class PleSaleLine(models.Model):
     journal_correlative = fields.Char(
         string='Correlativo Asiento'
     )
-    date_invoice = fields.Date(
-        string='Fecha Contable'
-    )
+    date_invoice = fields.Date(string='Fecha de emisión')
+    date = fields.Date(string='Fecha factura')
     date_due = fields.Date(
         string='Fecha de Vencimiento'
     )
@@ -85,6 +85,7 @@ class PleSaleLine(models.Model):
     amount_total = fields.Float(
         string='Total'
     )
+    amount_taxed = fields.Float(string='Impuesto')
     code_currency = fields.Char(
         string='Código de la moneda'
     )

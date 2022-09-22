@@ -18,8 +18,8 @@ class PleBase(models.Model):
     date_start = fields.Date('Fecha Inicio', required=True, compute=_get_date)
     date_end = fields.Date('Fecha Fin', required=True, compute=_get_date)
     state = fields.Selection(selection=[
-        ('draft', 'Borrador'),
-        ('load', 'Generado'),
+        ('draft', 'No declarado'),
+        # ('load', 'Generado'),
         ('closed', 'Declarado')
     ], string='Estado', default='draft', required=True)
     company_id = fields.Many2one(
@@ -34,6 +34,10 @@ class PleBase(models.Model):
     period_month = fields.Selection(selection=[('1', 'Ene'), ('2', 'Feb'), ('3', 'Mar'), ('4', 'Abr'), ('5', 'May'), ('6', 'Jun'), ('7', 'Jul'), ('8', 'Ago'), ('9', 'Set'), ('10', 'Oct'), ('11', 'Nov'), ('12', 'Dic')],  required=True)  # default='1',
 
     period_year = fields.Selection(selection=[(str(num), str(num)) for num in reversed(range((fields.Datetime.now().year) - 2, (fields.Datetime.now().year) + 5))], string="Period", required=True)  # , default=str(fields.Datetime.now().year)
+
+    _sql_constraints = [
+        ("year_month_unique", "unique(period_year, period_month)", "El periodo debe de ser único."),
+    ]
 
     def _get_name(self, vals):
         # date_start = vals.get('date_start', self.date_start)

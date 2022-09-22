@@ -7,9 +7,10 @@
             <form>
                 <header>
                     <button name="update_data_lines" string="Actualizar Información" type="object" states="draft"/>
-                    <button name="action_generate_report" string="Generar Reporte" type="object" states="draft"/>
-                    <button name="action_close" string="Declarar a SUNAT" states="load" type="object"/>
-                    <button name="action_rollback" string="Regresar a Borrador" states="closed" type="object"/>
+                    <!-- <button name="action_generate_report" string="Generar Reporte" type="object" states="draft"/> -->
+                    <!-- <button name="action_close" string="Declarar a SUNAT" states="load" type="object"/> -->
+                    <button name="action_close" string="Declarar a SUNAT" states="draft" type="object"/>
+                    <!-- <button name="action_rollback" string="Regresar a Borrador" states="closed" type="object"/> -->
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -32,20 +33,23 @@
                         <page name="detalle" string="Detalle">
                             <field name="line_ids">
                                 <tree>
-                                    <field name="name"/>
-                                    <field name="invoice_id"/>
-                                    <field name="number_origin"/>
-                                    <field name="date_invoice"/>
-                                    <field name="date_due"/>
-                                    <field name="voucher_sunat_code"/>
+                                    <field name="row"/>
+                                    <field name="document_code"/>
                                     <field name="series"/>
                                     <field name="correlative"/>
-                                    <field name="customer_document_type"/>
+                                    <field name="date_invoice"/>
+                                    <field name="date"/>
+                                    <field name="date_due"/>
+                                    <field name="origin_date_invoice"/>
+                                    <field name="origin_document_code"/>
+                                    <field name="origin_serie"/>
+                                    <field name="origin_correlative"/>
                                     <field name="customer_document_number"/>
                                     <field name="customer_name"/>
-                                    <field name="amount_export"/>
                                     <field name="amount_untaxed"/>
-                                    <field name="discount_tax_base"/>
+                                    <field name="amount_taxed"/>
+                                    <field name="amount_total"/>
+                                    <field name="code_currency"/>
                                     <field name="currency_rate"/>
                                 </tree>
                             </field>
@@ -86,11 +90,11 @@
             <tree>
                 <!-- <field name="date_start"/>
                 <field name="date_end"/> -->
-                <field name="period_month"/>
                 <field name="period_year"/>
+                <field name="period_month"/>
                 <field name="company_id"/>
                 <field name="state"/>
-                <field name="txt_filename"/>
+                <!-- <field name="txt_filename"/> -->
                 <!-- <field name="txt_filename"/> -->
             </tree>
         </field>
