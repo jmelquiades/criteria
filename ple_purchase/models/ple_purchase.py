@@ -252,12 +252,13 @@ class PlePurchase(models.Model):
         # 8.1
         value_content_xlsx_8_1 = purchase_report_xlsx.get_content()
         self.xlsx_binary_8_1 = base64.b64encode(value_content_xlsx_8_1)
-        self.xlsx_filename_8_1 = purchase_report_xlsx.get_filename()
+        period_month = dict(self._fields.get('period_month').selection).get(self.period_month)
+        self.xlsx_filename_8_1 = purchase_report_xlsx.get_filename(self.period_year, period_month, self.company_id.name)
 
         # 8.2
         value_content_xlsx_8_2 = purchase_report_xlsx.get_content('2')
         self.xlsx_binary_8_2 = base64.b64encode(value_content_xlsx_8_2)
-        self.xlsx_filename_8_2 = purchase_report_xlsx.get_filename('2')
+        self.xlsx_filename_8_2 = purchase_report_xlsx.get_filename(self.period_year, period_month, self.company_id.name, '2')
 
     def action_generate_report(self):
         data = self.get_data()
@@ -328,20 +329,3 @@ class PlePurchase(models.Model):
         if invoice.move_type == 'in_refund':
             self._refund_amount(values)
         return values
-
-    # def action_close(self):
-    #     self.ensure_one()
-    #     self.write({
-    #         'state': 'closed'
-    #     })
-    #     for line in self.line_ids:
-    #         if line.invoice_id:
-    #             line.invoice_id.its_declared = True
-    #     return True
-
-    # def action_rollback(self):
-    #     for line in self.line_ids:
-    #         if line.invoice_id:
-    #             line.invoice_id.its_declared = False
-    #     self.state = 'draft'
-    #     return True

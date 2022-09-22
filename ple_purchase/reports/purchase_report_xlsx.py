@@ -410,8 +410,8 @@ class PurchaseReportXlsx(object):
         output.seek(0)
         return output.read()
 
-    def get_filename(self, type='01'):
+    def get_filename(self, month, year, company, type='01'):
         if type == '01':
-            return 'Reporte_compras_8.1.xlsx'
+            return f'RC_{year}_{month}_{company}_8.1.xlsx'
         else:
-            return 'Reporte_compras_8.2.xlsx'
+            return f'RC_{year}_{month}_{company}_8.2.xlsx'

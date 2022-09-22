@@ -6,16 +6,8 @@ import base64
 
 class PleSale(models.Model):
     _name = 'ple.sale'
-    # _inherits = {'ple.report.base': 'ple_id'}
     _inherit = 'ple.base'
 
-    # ple_id = fields.Many2one(
-    #     comodel_name='ple.report.base',
-    #     auto_join=True,
-    #     ondelete="cascade",
-    #     required=True,
-    #     index=True
-    # )
     line_ids = fields.One2many(
         comodel_name='ple.sale.line',
         inverse_name='ple_sale_id',
@@ -28,36 +20,7 @@ class PleSale(models.Model):
     xlsx_filename = fields.Char()
     error_dialog = fields.Text('Error dialog')
 
-    # def unlink(self):
-    #     unlink_ple_sale = self.env['ple.report.sale']
-    #     unlink_ple_base = self.env['ple.base']
-    #     for obj in self:
-    #         if not obj.exists():
-    #             continue
-    #         unlink_ple_base |= obj.ple_id
-    #         unlink_ple_sale |= obj
-    #     res = super(PleReportSale, unlink_ple_sale).unlink()
-    #     unlink_ple_base.unlink()
-    #     return res
-
-    # def _get_data_invoice(self, invoice):
-    #     return self.env['ple.report.base']._get_data_invoice(invoice)
-
-    # def _get_journal_correlative(self, invoice):
-    #     obj_company = self.company_id
-    #     return self.env['ple.report.base']._get_journal_correlative(obj_company, invoice)
-
-    # def _get_data_origin(self, invoice):
-    #     return self.env['ple.report.base']._get_data_origin(invoice)
-
-    # def _get_number_origin(self, invoice):
-    #     return self.env['ple.report.base']._get_number_origin(invoice)
-
-    # def _refund_amount(self, invoice):
-    #     return self.env['ple.report.base']._refund_amount(invoice)
-
     def write(self, vals):
-        # prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
         prop1 = {'period_month', 'period_year', 'company_id'}.intersection(vals.keys())
         prop2 = vals.get('state', False) == 'draft'
         if prop1 or prop2:
@@ -110,7 +73,6 @@ class PleSale(models.Model):
             ('journal_id.no_include_ple', '=', False),
             ('journal_id.type', '=', 'sale'),
             ('its_declared', '=', False),
-            # ('document_code', 'in', ['07', '08', '87', '88'])
         ])
         row = 1
         for invoice in list_invoices:
@@ -167,10 +129,8 @@ class PleSale(models.Model):
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
                 'ple_sale_id': self.id,
-                ####
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
-                # 'tax_totals_json': invoice.tax_totals_json
                 'ref': invoice.ref
             }
             self.env['ple.sale.line'].create(values)
@@ -217,16 +177,15 @@ class PleSale(models.Model):
                 'ple_state': obj_line.ple_state,
                 ####
                 'journal_name': obj_line.journal_name,
-                'document_code': obj_line.document_code
-                # 'tax_totals_json': obj_line.tax_totals_json
-            }
+                'document_code': obj_line.document_code}
             list_data.append(value)
         sale_report = SaleReportTxt(self, list_data)
         values_content = sale_report.get_content()
         self.txt_binary = base64.b64encode(
             values_content.encode() or '\n'.encode()
         )
-        self.txt_filename = sale_report.get_filename()
+        period_month = dict(self._fields.get('period_month').selection).get(self.period_month)
+        self.txt_filename = sale_report.get_filename(self.period_year, period_month, self.company_id.name)
         if not values_content:
             self.error_dialog = 'No hay contenido para presentar en el registro de ventas electrónicos de este periodo.'
         else:
@@ -235,24 +194,7 @@ class PleSale(models.Model):
         sale_report_xls = SaleReportXlsx(self, list_data)
         values_content_xls = sale_report_xls.get_content()
         self.xlsx_binary = base64.b64encode(values_content_xls)
-        self.xlsx_filename = sale_report_xls.get_filename()
+        self.xlsx_filename = sale_report_xls.get_filename(self.period_year, period_month, self.company_id.name)
         self.datetime_ple = fields.Datetime.now()
         # self.state = 'load'
         return True
-
-    # def action_close(self):
-    #     self.ensure_one()
-    #     self.write({
-    #         'state': 'closed'
-    #     })
-    #     for obj_line in self.line_ids:
-    #         if obj_line.invoice_id:
-    #             obj_line.invoice_id.its_declared = True
-    #     return True
-
-    # def action_rollback(self):
-    #     for obj_line in self.line_ids:
-    #         if obj_line.invoice_id:
-    #             obj_line.invoice_id.its_declared = False
-    #     self.state = 'draft'
-    #     return True

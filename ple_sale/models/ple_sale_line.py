@@ -4,7 +4,7 @@ from odoo import _, api, fields, models
 class PleSaleLine(models.Model):
     _name = 'ple.sale.line'
 
-    row = fields.Integer('row')
+    row = fields.Integer('Fila')
     name = fields.Char(
         string='Periodo',
         required=True
@@ -125,7 +125,7 @@ class PleSaleLine(models.Model):
         string='Estado',
         default='1'
     )
-    journal_name = fields.Char('Journal Name')
-    document_code = fields.Char('Document Code')
+    journal_name = fields.Char('Nombre de diario')
+    document_code = fields.Char('Código de Documento')
     # tax_totals_json = fields.Char('Tax TOtals Json')
-    ref = fields.Char('Ref')
+    ref = fields.Char('Referencia')

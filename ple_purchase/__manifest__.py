@@ -1,6 +1,6 @@
 {
     'name': 'Registro de Compras PLE',
-    'version': '1.0',
+    'version': '1.0.20220922',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',

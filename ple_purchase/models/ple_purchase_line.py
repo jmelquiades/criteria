@@ -5,7 +5,7 @@ class PlePurchaseLine(models.Model):
 
     _name = 'ple.purchase.line'
 
-    row = fields.Integer('row')
+    row = fields.Integer('Fila')
     name = fields.Char(string='Periodo', required=True)
     ple_purchase_id = fields.Many2one('ple.purchase', string='Ple Purchase')
     invoice_id = fields.Many2one(comodel_name='account.move', string='Comprobante', required=True)
@@ -74,6 +74,6 @@ class PlePurchaseLine(models.Model):
         string='Retención'
     )
     ###
-    journal_name = fields.Char('Journal Name')
-    document_code = fields.Char('Document Code')
-    ref = fields.Char('Ref')
+    journal_name = fields.Char('Nombre de diario')
+    document_code = fields.Char('Código de Documento')
+    ref = fields.Char('Referencia')

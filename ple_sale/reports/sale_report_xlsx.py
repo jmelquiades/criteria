@@ -142,6 +142,5 @@ class SaleReportXlsx(object):
         output.seek(0)
         return output.read()
 
-    def get_filename(self):
-        name = self.obj.date_start.strftime('%Y%m')
-        return 'Reporte_ventas_{}_{}.xlsx'.format(self.obj.company_id.name, name)
+    def get_filename(self, month, year, company):
+        return f'RV_{year}_{month}_{company}.xlsx'
