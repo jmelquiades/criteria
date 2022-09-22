@@ -51,6 +51,7 @@
                                     <field name="amount_total"/>
                                     <field name="code_currency"/>
                                     <field name="currency_rate"/>
+                                    <field name="ref"/>
                                 </tree>
                             </field>
                         </page>

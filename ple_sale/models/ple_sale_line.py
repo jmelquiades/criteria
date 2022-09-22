@@ -128,3 +128,4 @@ class PleSaleLine(models.Model):
     journal_name = fields.Char('Journal Name')
     document_code = fields.Char('Document Code')
     # tax_totals_json = fields.Char('Tax TOtals Json')
+    ref = fields.Char('Ref')

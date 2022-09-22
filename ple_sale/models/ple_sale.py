@@ -171,6 +171,7 @@ class PleSale(models.Model):
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
                 # 'tax_totals_json': invoice.tax_totals_json
+                'ref': invoice.ref
             }
             self.env['ple.sale.line'].create(values)
             row += 1

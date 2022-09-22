@@ -76,3 +76,4 @@ class PlePurchaseLine(models.Model):
     ###
     journal_name = fields.Char('Journal Name')
     document_code = fields.Char('Document Code')
+    ref = fields.Char('Ref')

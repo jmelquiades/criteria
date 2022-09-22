@@ -144,7 +144,8 @@ class PlePurchase(models.Model):
                 # 'application_article': invoice.application_article or ''
                 ###
                 'journal_name': invoice.journal_id.code,
-                'document_code': invoice.l10n_latam_document_type_id.code
+                'document_code': invoice.l10n_latam_document_type_id.code,
+                'ref': invoice.ref
             }
             self.env['ple.purchase.line'].create(values)
             row += 1
