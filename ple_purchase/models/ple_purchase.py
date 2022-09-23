@@ -36,7 +36,6 @@ class PlePurchase(models.Model):
     error_dialog_8_2 = fields.Text(readonly=True)
 
     def write(self, vals):
-        # prop1 = {'date_end', 'date_start', 'company_id'}.intersection(vals.keys())
         prop1 = {'period_month', 'period_year', 'company_id'}.intersection(vals.keys())
         prop2 = vals.get('state', False) == 'draft'
         if prop1 or prop2:
@@ -67,6 +66,7 @@ class PlePurchase(models.Model):
             ('l10n_latam_document_type_id.code', '!=', '02')
         ])
         row = 1
+        records = []
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
             country_code, is_nodomicilied, partner_street = self._get_partner(invoice)
@@ -148,9 +148,9 @@ class PlePurchase(models.Model):
                 'document_code': invoice.l10n_latam_document_type_id.code,
                 'ref': invoice.ref
             }
-            # self.env['ple.purchase.line'].create(values)
-            self.line_ids = [(0, 0, values)]
+            records.append((0, 0, values))
             row += 1
+        self.line_ids = records
         return self.action_generate_report()
 
     def get_data(self):
@@ -269,25 +269,7 @@ class PlePurchase(models.Model):
             self.get_reports_xlsx(data)
 
             self.datetime_ple = fields.Datetime.now()
-            # self.state = 'load'
             return True
-        # raise UserError("Debe de user el botón 'Actulizar información'")
-
-    # def _get_number_origin(self, invoice):
-    #     return self.env['ple.report.base']._get_number_origin(invoice)
-
-    # def _get_journal_correlative(self, invoice):
-    #     company = self.company_id
-    #     return self.env['ple.report.base']._get_journal_correlative(company, invoice)
-
-    # def _get_data_invoice(self, invoice):
-    #     return self.env['ple.report.base']._get_data_invoice(invoice)
-
-    # def _get_data_origin(self, invoice):
-    #     return self.env['ple.report.base']._get_data_origin(invoice)
-
-    # def _refund_amount(self, invoice):
-    #     return self.env['ple.report.base']._refund_amount(invoice)
 
     def _get_retention(self, invoice):
         retention = invoice.retention_id

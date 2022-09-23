@@ -76,6 +76,7 @@ class PleSale(models.Model):
             ('its_declared', '=', False),
         ])
         row = 1
+        records = []
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
             origin_date_invoice, origin_document_code, origin_serie, origin_correlative, _ = self._get_data_origin(invoice)
@@ -134,9 +135,9 @@ class PleSale(models.Model):
                 'document_code': invoice.l10n_latam_document_type_id.code,
                 'ref': invoice.ref
             }
-            # self.env['ple.sale.line'].create(values)
-            self.line_ids = [(0, 0, values)]
+            records.append((0, 0, values))
             row += 1
+        self.line_ids = records
         return self.action_generate_report()
 
     def action_generate_report(self):
