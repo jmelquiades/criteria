@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 class PleBase(models.Model):
     _name = 'ple.base'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
     @api.depends('period_year', 'period_month')
     def _get_date(self):
