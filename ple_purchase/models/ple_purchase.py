@@ -36,6 +36,10 @@ class PlePurchase(models.Model):
     error_dialog_8_1 = fields.Text(readonly=True)
     error_dialog_8_2 = fields.Text(readonly=True)
 
+    def _get_name(self, vals):
+        name = 'RC_' + super(PlePurchase, self)._get_name(vals)
+        return name
+
     def write(self, vals):
         prop1 = {'period_month', 'period_year', 'company_id'}.intersection(vals.keys())
         prop2 = vals.get('state', False) == 'draft'

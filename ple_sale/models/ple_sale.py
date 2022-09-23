@@ -21,6 +21,10 @@ class PleSale(models.Model):
     xlsx_filename = fields.Char()
     error_dialog = fields.Text('Error dialog')
 
+    def _get_name(self, vals):
+        name = 'RV_' + super(PleSale, self)._get_name(vals)
+        return name
+
     def write(self, vals):
         prop1 = {'period_month', 'period_year', 'company_id'}.intersection(vals.keys())
         prop2 = vals.get('state', False) == 'draft'
