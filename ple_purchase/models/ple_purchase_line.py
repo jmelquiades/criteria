@@ -9,7 +9,6 @@ class PlePurchaseLine(models.Model):
     name = fields.Char(string='Periodo', required=True)
     ple_purchase_id = fields.Many2one('ple.purchase', string='Ple Purchase')
     invoice_id = fields.Many2one(comodel_name='account.move', string='Factura', required=True)
-    ple_report_purchase_id = fields.Many2one(comodel_name='ple.report.purchase', string='Reporte de Compras')
     number_origin = fields.Char(string='Número Origen')
     date_invoice = fields.Date(string='Fecha de emisión')
     date = fields.Date(string='Fecha factura')
