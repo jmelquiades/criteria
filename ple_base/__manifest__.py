@@ -1,6 +1,6 @@
 {
     'name': 'PLE base',
-    'version': '1.0.202209223',
+    'version': '1.0.20220923',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
