@@ -1,6 +1,6 @@
 {
     'name': 'Registro de Ventas PLE',
-    'version': '1.0.202209225',
+    'version': '1.0.202209226',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',

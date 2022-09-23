@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 from ..reports.sale_report_xlsx import SaleReportXlsx
 from ..reports.sale_report_txt import SaleReportTxt
+from ..reports.sale_report import SaleReport
 import base64
 
 
@@ -140,8 +141,8 @@ class PleSale(models.Model):
         self.line_ids = records
         return self.action_generate_report()
 
-    def action_generate_report(self):
-        list_data = []
+    def get_data(self):
+        data = []
         for obj_line in self.line_ids:
             value = {
                 'period': obj_line.name,
@@ -181,8 +182,13 @@ class PleSale(models.Model):
                 ####
                 'journal_name': obj_line.journal_name,
                 'document_code': obj_line.document_code}
-            list_data.append(value)
-        sale_report = SaleReportTxt(self, list_data)
+            data.append(value)
+        return data
+
+    def action_generate_report(self):
+        data = self.get_data()
+        data = SaleReport(data)._get_data()
+        sale_report = SaleReportTxt(self, data)
         values_content = sale_report.get_content()
         self.txt_binary = base64.b64encode(
             values_content.encode() or '\n'.encode()
@@ -194,7 +200,7 @@ class PleSale(models.Model):
         else:
             self.error_dialog = ''
 
-        sale_report_xls = SaleReportXlsx(self, list_data)
+        sale_report_xls = SaleReportXlsx(self, data)
         values_content_xls = sale_report_xls.get_content()
         self.xlsx_binary = base64.b64encode(values_content_xls)
         self.xlsx_filename = sale_report_xls.get_filename(self.period_year, period_month, self.company_id.name)

@@ -1,7 +1,6 @@
 
 class PurchaseReport(object):
     def __init__(self, data):
-
         self.data_8_1 = self.get_data_8_1(data)
         self.data_8_2 = self.get_data_8_2(data)
 

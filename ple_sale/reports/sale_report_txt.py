@@ -7,7 +7,7 @@ class SaleReportTxt(object):
 
     def __init__(self, obj, data):
         self.obj = obj
-        self.data = data
+        self.data_14_1, self.data_14_2 = data
 
     def get_content(self):
         raw = ''
@@ -23,21 +23,21 @@ class SaleReportTxt(object):
         #            '{amendment_invoice_voucher_sunat_code}|{amendment_invoice_voucher_series}|' \
         #            '{amendment_invoice_correlative}|{contract_name}|' \
         #            '{inconsistency_type_change}|{payment_voucher}|{ple_state_sale}|\r\n'
-        template = '{c1}|{c2}|' \
-                   '{c3}|{c4}|{c5}|' \
-                   '{c6}|{c7}|{c8}|' \
-                   '{c9}|{c10}|{c11}|' \
-                   '{c12}|{c13}|{c14}|'  \
-                   '{c15}|{c16}|{c17}|' \
-                   '{c18}|{c19}|{c20}|{c21}|' \
-                   '{c22}|{c23}|{c24}|' \
-                   '{c25}|{c26}|{c27}|' \
-                   '{c28}|{c29}|' \
-                   '{c30}|{c31}|' \
-                   '{c32}|{c33}|{c34}|' \
-                   '{c35}|{c36}\r\n'
+        template = '{field_1}|{field_2}|' \
+            '{field_3}|{field_4}|{field_5}|' \
+            '{field_6}|{field_7}|{field_8}|' \
+                   '{field_9}|{field_10}|{field_11}|' \
+                   '{field_12}|{field_13}|{field_14}|'  \
+                   '{field_15}|{field_16}|{field_17}|' \
+                   '{field_18}|{field_19}|{field_20}|{field_21}|' \
+                   '{field_22}|{field_23}|{field_24}|' \
+                   '{field_25}|{field_26}|{field_27}|' \
+                   '{field_28}|{field_29}|' \
+                   '{field_30}|{field_31}|' \
+                   '{field_32}|{field_33}|{field_34}|' \
+                   '{field_35}|{field_36}\r\n'
 
-        for value in self.data:
+        for value in self.data_14_1:
             # raw += template.format(
             #     period=value['period'],
             #     number_origin=value['number_origin'],
@@ -74,44 +74,7 @@ class SaleReportTxt(object):
             #     payment_voucher=value['payment_voucher'] or '',
             #     ple_state_sale=value['ple_state'] or ''
             # )
-            raw += template.format(
-                c1=value['period'],
-                c2=value['period'].replace('00', '') + value['journal_name'] + value['voucher_series'] + '-' + value['correlative'].zfill(8),
-                c3='M'+value['correlative'].zfill(8),
-                c4=value['date_invoice'],
-                c5='',
-                c6=value['document_code'] or '',
-                c7=value['voucher_series'] or '0000',
-                c8=value['correlative'].zfill(8) or '',
-                c9='',
-                c10=value['customer_document_type'] or '',
-                c11=value['customer_document_number'] or '',
-                c12=value['customer_name'] or '',
-                c13='0.00',
-                c14='%.2f' % value['amount_untaxed'],
-                c15='0.00',
-                c16='%.2f' % (value['amount_total'] - value['amount_untaxed']),  # value['tax_totals_json'],
-                c17='0.00',
-                c18='0.00',
-                c19='0.00',
-                c20='0.00',
-                c21='0.00',
-                c22='0.00',
-                c23='0.00',
-                c24='0.00',
-                c25='%.2f' % value['amount_total'],
-                c26=value['code_currency'],
-                c27='%.3f' % value['currency_rate'],
-                c28=value['origin_date_invoice'] if value['document_code'] in ['07', '08', '87', '88'] and 1 == 1 else '',  # '',
-                c29=value['origin_document_code'] if value['document_code'] in ['07', '08', '87', '88'] and 1 == 1 else '',  # '',
-                c30=value['origin_serie'] if value['document_code'] in ['07', '08', '87', '88'] and 1 == 1 else '',  # '',
-                c31=value['origin_correlative'] if value['document_code'] in ['07', '08', '87', '88'] and 1 == 1 else '',  # '',
-                c32='',
-                c33='',
-                c34='',
-                c35='1',
-                c36=''
-            )
+            raw += template.format(**value)
         return raw
 
     def get_filename(self, type='01'):
@@ -124,5 +87,5 @@ class SaleReportTxt(object):
             type=type,
             # state_send=self.obj.state_send or '',
             currency='1' if self.obj.company_id.currency_id.name == 'PEN' else '2',
-            has_info=int(bool(self.data))
+            has_info=int(bool(self.data_14_1))
         )
