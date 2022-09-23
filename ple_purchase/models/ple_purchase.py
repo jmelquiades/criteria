@@ -125,7 +125,7 @@ class PlePurchase(models.Model):
                 'partner_nodomicilied': is_nodomicilied,
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
-                'ple_purchase_id': self.id,
+                # 'ple_purchase_id': self.id,
                 'inv_type_document_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.inv_type_document.code,
                 # 'inv_serie': invoice.inv_serie,
                 # 'inv_year_dua_dsi': invoice.inv_year_dua_dsi,
@@ -148,7 +148,8 @@ class PlePurchase(models.Model):
                 'document_code': invoice.l10n_latam_document_type_id.code,
                 'ref': invoice.ref
             }
-            self.env['ple.purchase.line'].create(values)
+            # self.env['ple.purchase.line'].create(values)
+            self.line_ids = [(0, 0, values)]
             row += 1
         return self.action_generate_report()
 

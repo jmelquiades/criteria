@@ -129,12 +129,13 @@ class PleSale(models.Model):
                 'origin_correlative': origin_correlative,
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
-                'ple_sale_id': self.id,
+                # 'ple_sale_id': self.id,
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
                 'ref': invoice.ref
             }
-            self.env['ple.sale.line'].create(values)
+            # self.env['ple.sale.line'].create(values)
+            self.line_ids = [(0, 0, values)]
             row += 1
         return self.action_generate_report()
 

@@ -149,7 +149,7 @@ class PleBase(models.Model):
     def unlink(self):
         for record in self:
             if record.state == 'closed':
-                raise Warning('Regrese a estado borrador para revertir y permitir eliminar.')
+                raise UserError('Regrese a estado borrador para revertir y permitir eliminar.')
             return super(PleBase, self).unlink()
 
     def _refund_amount(self, values):
