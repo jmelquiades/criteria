@@ -12,7 +12,8 @@ class PurchaseReportXlsx(object):
 
     def __init__(self, obj, data):
         self.obj = obj
-        self.data = data
+        # self.data = data
+        self.data_8_1, self.data_8_2 = data
 
     def _get_content_8_1(self, ws, style_header, style_column, style_number, style_number_bold, style_content, style_date):
         ws.set_column(0, 0, 4)
@@ -130,73 +131,118 @@ class PurchaseReportXlsx(object):
         total_another_taxes = 0
         total_amount_total = 0
 
-        for value in self.data:
-            if value['voucher_sunat_code'] not in ['91', '97', '98']:
-                ws.write(row_i + i, 0, i + 1, style_content)
-                ws.write(row_i + i, 1, value['period'], style_content)
-                ws.write(row_i + i, 2, value['number_origin'] or '', style_content)
-                ws.write(row_i + i, 3, value['journal_correlative'] or '', style_content)
-                ws.write(row_i + i, 4, value['date_invoice'] or '', style_date)
-                ws.write(row_i + i, 5, value['date_due'] or '', style_date)
-                ws.write(row_i + i, 6, value['voucher_sunat_code'] or '', style_content)
-                ws.write(row_i + i, 7, value['voucher_series'] or '', style_content)
-                ws.write(row_i + i, 8, value['voucher_year_dua_dsi'] or '', style_content)
-                ws.write(row_i + i, 9, value['correlative'] or '', style_content)
-                ws.write(row_i + i, 10, '', style_content)
-                ws.write(row_i + i, 11, value['customer_document_type'] or '', style_content)
-                ws.write(row_i + i, 12, value['customer_document_number'] or '', style_content)
-                ws.write(row_i + i, 13, value['customer_name'] or '', style_content)
-                ws.write(row_i + i, 14, value['base_gdg'], style_number)
-                ws.write(row_i + i, 15, value['tax_gdg'], style_number)
-                ws.write(row_i + i, 16, value['base_gdm'], style_number)
-                ws.write(row_i + i, 17, value['tax_gdm'], style_number)
-                ws.write(row_i + i, 18, value['base_gdng'], style_number)
-                ws.write(row_i + i, 19, value['tax_gdng'], style_number)
-                ws.write(row_i + i, 20, value['amount_untaxed'], style_number)
-                ws.write(row_i + i, 21, value['isc'], style_number)
-                ws.write(row_i + i, 22, value['another_taxes'], style_number)
-                ws.write(row_i + i, 23, value['amount_total'], style_number)
-                ws.write(row_i + i, 24, value['code_currency'] or '', style_content)
-                ws.write(row_i + i, 25, value['currency_rate'], style_number)
-                ws.write(row_i + i, 26, value['origin_date_invoice'] or '', style_date)
-                ws.write(row_i + i, 27, value['origin_document_code'] or '', style_content)
-                ws.write(row_i + i, 28, value['origin_serie'] or '', style_content)
-                ws.write(row_i + i, 29, value['origin_code_aduana'] or '', style_content)
-                ws.write(row_i + i, 30, value['origin_correlative'] or '', style_content)
-                ws.write(row_i + i, 31, value['voucher_date'] or '', style_date)
-                ws.write(row_i + i, 32, value['voucher_number'] or '', style_content)
-                ws.write(row_i + i, 33, value['retention'], style_number)
-                ws.write(row_i + i, 34, value['class_good_services'] or '', style_content)
-                ws.write(row_i + i, 35, value['irregular_societies'] or '', style_content)
-                ws.write(row_i + i, 36, value['error_exchange_rate'] or '', style_content)
-                ws.write(row_i + i, 37, value['supplier_not_found'] or '', style_content)
-                ws.write(row_i + i, 38, value['suppliers_resigned'] or '', style_content)
-                ws.write(row_i + i, 39, value['dni_ruc'] or '', style_content)
-                ws.write(row_i + i, 40, value['type_pay_invoice'] or '', style_content)
-                ws.write(row_i + i, 41, value['ple_state'] or '', style_content)
+        for value in self.data_8_1:
+            # if value['voucher_sunat_code'] not in ['91', '97', '98']:
+            # ws.write(row_i + i, 0, i + 1, style_content)
+            # ws.write(row_i + i, 1, value['period'], style_content)
+            # ws.write(row_i + i, 2, value['number_origin'] or '', style_content)
+            # ws.write(row_i + i, 3, value['journal_correlative'] or '', style_content)
+            # ws.write(row_i + i, 4, value['date_invoice'] or '', style_date)
+            # ws.write(row_i + i, 5, value['date_due'] or '', style_date)
+            # ws.write(row_i + i, 6, value['voucher_sunat_code'] or '', style_content)
+            # ws.write(row_i + i, 7, value['voucher_series'] or '', style_content)
+            # ws.write(row_i + i, 8, value['voucher_year_dua_dsi'] or '', style_content)
+            # ws.write(row_i + i, 9, value['correlative'] or '', style_content)
+            # ws.write(row_i + i, 10, '', style_content)
+            # ws.write(row_i + i, 11, value['customer_document_type'] or '', style_content)
+            # ws.write(row_i + i, 12, value['customer_document_number'] or '', style_content)
+            # ws.write(row_i + i, 13, value['customer_name'] or '', style_content)
+            # ws.write(row_i + i, 14, value['base_gdg'], style_number)
+            # ws.write(row_i + i, 15, value['tax_gdg'], style_number)
+            # ws.write(row_i + i, 16, value['base_gdm'], style_number)
+            # ws.write(row_i + i, 17, value['tax_gdm'], style_number)
+            # ws.write(row_i + i, 18, value['base_gdng'], style_number)
+            # ws.write(row_i + i, 19, value['tax_gdng'], style_number)
+            # ws.write(row_i + i, 20, value['amount_untaxed'], style_number)
+            # ws.write(row_i + i, 21, value['isc'], style_number)
+            # ws.write(row_i + i, 22, value['another_taxes'], style_number)
+            # ws.write(row_i + i, 23, value['amount_total'], style_number)
+            # ws.write(row_i + i, 24, value['code_currency'] or '', style_content)
+            # ws.write(row_i + i, 25, value['currency_rate'], style_number)
+            # ws.write(row_i + i, 26, value['origin_date_invoice'] or '', style_date)
+            # ws.write(row_i + i, 27, value['origin_document_code'] or '', style_content)
+            # ws.write(row_i + i, 28, value['origin_serie'] or '', style_content)
+            # ws.write(row_i + i, 29, value['origin_code_aduana'] or '', style_content)
+            # ws.write(row_i + i, 30, value['origin_correlative'] or '', style_content)
+            # ws.write(row_i + i, 31, value['voucher_date'] or '', style_date)
+            # ws.write(row_i + i, 32, value['voucher_number'] or '', style_content)
+            # ws.write(row_i + i, 33, value['retention'], style_number)
+            # ws.write(row_i + i, 34, value['class_good_services'] or '', style_content)
+            # ws.write(row_i + i, 35, value['irregular_societies'] or '', style_content)
+            # ws.write(row_i + i, 36, value['error_exchange_rate'] or '', style_content)
+            # ws.write(row_i + i, 37, value['supplier_not_found'] or '', style_content)
+            # ws.write(row_i + i, 38, value['suppliers_resigned'] or '', style_content)
+            # ws.write(row_i + i, 39, value['dni_ruc'] or '', style_content)
+            # ws.write(row_i + i, 40, value['type_pay_invoice'] or '', style_content)
+            # ws.write(row_i + i, 41, value['ple_state'] or '', style_content)
+            ws.write(row_i + i, 0, i + 1, style_content)
+            ws.write(row_i + i, 1, value['field_1'], style_content)
+            ws.write(row_i + i, 2, value['field_2'] or '', style_content)
+            ws.write(row_i + i, 3, value['field_3'] or '', style_content)
+            ws.write(row_i + i, 4, value['field_4'] or '', style_date)
+            ws.write(row_i + i, 5, value['field_5'] or '', style_date)
+            ws.write(row_i + i, 6, value['field_6'] or '', style_content)
+            ws.write(row_i + i, 7, value['field_7'] or '', style_content)
+            ws.write(row_i + i, 8, value['field_8'] or '', style_content)
+            ws.write(row_i + i, 9, value['field_9'] or '', style_content)
+            ws.write(row_i + i, 10, value['field_10'], style_content)
+            ws.write(row_i + i, 11, value['field_11'] or '', style_content)
+            ws.write(row_i + i, 12, value['field_12'] or '', style_content)
+            ws.write(row_i + i, 13, value['field_13'] or '', style_content)
+            ws.write(row_i + i, 14, value['field_14'], style_number)
+            ws.write(row_i + i, 15, value['field_15'], style_number)
+            ws.write(row_i + i, 16, value['field_16'], style_number)
+            ws.write(row_i + i, 17, value['field_17'], style_number)
+            ws.write(row_i + i, 18, value['field_18'], style_number)
+            ws.write(row_i + i, 19, value['field_19'], style_number)
+            ws.write(row_i + i, 20, value['field_20'], style_number)
+            ws.write(row_i + i, 21, value['field_21'], style_number)
+            ws.write(row_i + i, 22, value['field_22'], style_number)
+            ws.write(row_i + i, 23, value['field_23'], style_number)
+            ws.write(row_i + i, 24, value['field_24'], style_number)
+            ws.write(row_i + i, 25, value['field_25'], style_content)
+            ws.write(row_i + i, 26, value['field_26'] or '', style_content)
+            ws.write(row_i + i, 27, value['field_27'] or '', style_date)
+            ws.write(row_i + i, 28, value['field_28'] or '', style_content)
+            ws.write(row_i + i, 29, value['field_29'] or '', style_content)
+            ws.write(row_i + i, 30, value['field_30'] or '', style_content)
+            ws.write(row_i + i, 31, value['field_31'] or '', style_content)
+            ws.write(row_i + i, 32, value['field_32'] or '', style_date)
+            ws.write(row_i + i, 33, value['field_33'], style_number)
+            ws.write(row_i + i, 34, value['field_34'], style_content)
+            ws.write(row_i + i, 35, value['field_35'], style_content)
 
-                total_base_gdg += value['base_gdg']
-                total_tax_gdg += value['tax_gdg']
-                total_base_gdm += value['base_gdm']
-                total_tax_gdm += value['tax_gdm']
-                total_base_gdng += value['base_gdng']
-                total_tax_gdng += value['tax_gdng']
-                total_amount_untaxed += value['amount_untaxed']
-                total_isc += value['isc']
-                total_another_taxes += value['another_taxes']
-                total_amount_total += value['amount_total']
-                i += 1
+            ws.write(row_i + i, 36, value['field_36'], style_content)
+            ws.write(row_i + i, 37, value['field_37'], style_content)
+            ws.write(row_i + i, 38, value['field_38'], style_content)
+            ws.write(row_i + i, 39, value['field_39'], style_content)
+            ws.write(row_i + i, 40, value['field_40'], style_content)
+            ws.write(row_i + i, 41, value['field_41'], style_content)
+            ws.write(row_i + i, 42, value['field_42'], style_content)
+            ws.write(row_i + i, 43, value['field_43'], style_content)
 
-        ws.write(total, 14, total_base_gdg, style_number_bold)
-        ws.write(total, 15, total_tax_gdg, style_number_bold)
-        ws.write(total, 16, total_base_gdm, style_number_bold)
-        ws.write(total, 17, total_tax_gdm, style_number_bold)
-        ws.write(total, 18, total_base_gdng, style_number_bold)
-        ws.write(total, 19, total_tax_gdng, style_number_bold)
-        ws.write(total, 20, total_amount_untaxed, style_number_bold)
-        ws.write(total, 21, total_isc, style_number_bold)
-        ws.write(total, 22, total_another_taxes, style_number_bold)
-        ws.write(total, 23, total_amount_total, style_number_bold)
+            # total_base_gdg += value['base_gdg']
+            # total_tax_gdg += value['tax_gdg']
+            # total_base_gdm += value['base_gdm']
+            # total_tax_gdm += value['tax_gdm']
+            # total_base_gdng += value['base_gdng']
+            # total_tax_gdng += value['tax_gdng']
+            # total_amount_untaxed += value['amount_untaxed']
+            # total_isc += value['isc']
+            # total_another_taxes += value['another_taxes']
+            # total_amount_total += value['amount_total']
+            i += 1
+
+        # ws.write(total, 14, total_base_gdg, style_number_bold)
+        # ws.write(total, 15, total_tax_gdg, style_number_bold)
+        # ws.write(total, 16, total_base_gdm, style_number_bold)
+        # ws.write(total, 17, total_tax_gdm, style_number_bold)
+        # ws.write(total, 18, total_base_gdng, style_number_bold)
+        # ws.write(total, 19, total_tax_gdng, style_number_bold)
+        # ws.write(total, 20, total_amount_untaxed, style_number_bold)
+        # ws.write(total, 21, total_isc, style_number_bold)
+        # ws.write(total, 22, total_another_taxes, style_number_bold)
+        # ws.write(total, 23, total_amount_total, style_number_bold)
         return True
 
     def _get_content_8_2(self, ws, style_header, style_column, style_number, style_number_bold, style_content, style_date):
@@ -296,55 +342,89 @@ class PurchaseReportXlsx(object):
         total_amount_total = 0
         total_inv_retention_igv = 0
 
-        for value in self.data:
-            if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['partner_nodomicilied']:
-                ws.write(row_i + i, 0, i + 1, style_content)
-                ws.write(row_i + i, 1, value['period'] or '', style_content)
-                ws.write(row_i + i, 2, value['number_origin'] or '', style_content)
-                ws.write(row_i + i, 3, value['journal_correlative'] or '', style_content)
-                ws.write(row_i + i, 4, value['date_invoice'] or '', style_date)
-                ws.write(row_i + i, 5, value['voucher_sunat_code'] or '', style_content)
-                ws.write(row_i + i, 6, value['voucher_series'] or '', style_content)
-                ws.write(row_i + i, 7, value['correlative'] or '', style_content)
-                ws.write(row_i + i, 8, value['amount_untaxed'], style_number)
-                ws.write(row_i + i, 9, value['another_taxes'], style_number)
-                ws.write(row_i + i, 10, value['amount_total'], style_number)
-                ws.write(row_i + i, 11, value['inv_type_document'] or '', style_content)
-                ws.write(row_i + i, 12, value['inv_serie'] or '', style_content)
-                ws.write(row_i + i, 13, value['inv_year_dua_dsi'] or '', style_content)
-                ws.write(row_i + i, 14, value['inv_correlative'] or '', style_content)
-                ws.write(row_i + i, 15, value['inv_retention_igv'], style_number)
-                ws.write(row_i + i, 16, value['code_currency'] or '', style_content)
-                ws.write(row_i + i, 17, value['currency_rate'], style_number)
-                ws.write(row_i + i, 18, value['country_code'] or '', style_content)
-                ws.write(row_i + i, 19, value['customer_name'] or '', style_content)
-                ws.write(row_i + i, 20, value['partner_street'] or '', style_content)
-                ws.write(row_i + i, 21, '', style_content)
-                ws.write(row_i + i, 22, '', style_content)
-                ws.write(row_i + i, 23, '', style_content)
-                ws.write(row_i + i, 24, value['linkage_code'] or '', style_content)
-                ws.write(row_i + i, 25, value['hard_rent'], style_number)
-                ws.write(row_i + i, 26, value['deduccion_cost'], style_number)
-                ws.write(row_i + i, 27, value['rent_neta'], style_number)
-                ws.write(row_i + i, 28, value['retention_rate'], style_number)
-                ws.write(row_i + i, 29, value['tax_withheld'], style_number)
-                ws.write(row_i + i, 30, value['cdi'] or '', style_content)
-                ws.write(row_i + i, 31, value['exoneration_nodomicilied_code'] or '', style_content)
-                ws.write(row_i + i, 32, value['type_rent'] or '', style_content)
-                ws.write(row_i + i, 33, value['taken_code'] or '', style_content)
-                ws.write(row_i + i, 34, value['application_article'] or '', style_content)
-                ws.write(row_i + i, 35, value['ple_state'] or '', style_content)
+        for value in self.data_8_2:
+            # if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['partner_nodomicilied']:
+            # ws.write(row_i + i, 0, i + 1, style_content)
+            # ws.write(row_i + i, 1, value['period'] or '', style_content)
+            # ws.write(row_i + i, 2, value['number_origin'] or '', style_content)
+            # ws.write(row_i + i, 3, value['journal_correlative'] or '', style_content)
+            # ws.write(row_i + i, 4, value['date_invoice'] or '', style_date)
+            # ws.write(row_i + i, 5, value['voucher_sunat_code'] or '', style_content)
+            # ws.write(row_i + i, 6, value['voucher_series'] or '', style_content)
+            # ws.write(row_i + i, 7, value['correlative'] or '', style_content)
+            # ws.write(row_i + i, 8, value['amount_untaxed'], style_number)
+            # ws.write(row_i + i, 9, value['another_taxes'], style_number)
+            # ws.write(row_i + i, 10, value['amount_total'], style_number)
+            # ws.write(row_i + i, 11, value['inv_type_document'] or '', style_content)
+            # ws.write(row_i + i, 12, value['inv_serie'] or '', style_content)
+            # ws.write(row_i + i, 13, value['inv_year_dua_dsi'] or '', style_content)
+            # ws.write(row_i + i, 14, value['inv_correlative'] or '', style_content)
+            # ws.write(row_i + i, 15, value['inv_retention_igv'], style_number)
+            # ws.write(row_i + i, 16, value['code_currency'] or '', style_content)
+            # ws.write(row_i + i, 17, value['currency_rate'], style_number)
+            # ws.write(row_i + i, 18, value['country_code'] or '', style_content)
+            # ws.write(row_i + i, 19, value['customer_name'] or '', style_content)
+            # ws.write(row_i + i, 20, value['partner_street'] or '', style_content)
+            # ws.write(row_i + i, 21, '', style_content)
+            # ws.write(row_i + i, 22, '', style_content)
+            # ws.write(row_i + i, 23, '', style_content)
+            # ws.write(row_i + i, 24, value['linkage_code'] or '', style_content)
+            # ws.write(row_i + i, 25, value['hard_rent'], style_number)
+            # ws.write(row_i + i, 26, value['deduccion_cost'], style_number)
+            # ws.write(row_i + i, 27, value['rent_neta'], style_number)
+            # ws.write(row_i + i, 28, value['retention_rate'], style_number)
+            # ws.write(row_i + i, 29, value['tax_withheld'], style_number)
+            # ws.write(row_i + i, 30, value['cdi'] or '', style_content)
+            # ws.write(row_i + i, 31, value['exoneration_nodomicilied_code'] or '', style_content)
+            # ws.write(row_i + i, 32, value['type_rent'] or '', style_content)
+            # ws.write(row_i + i, 33, value['taken_code'] or '', style_content)
+            # ws.write(row_i + i, 34, value['application_article'] or '', style_content)
+            # ws.write(row_i + i, 35, value['ple_state'] or '', style_content)
+            ws.write(row_i + i, 0, i + 1, style_content)
+            ws.write(row_i + i, 1, value['field_1'], style_content)
+            ws.write(row_i + i, 2, value['field_2'] or '', style_content)
+            ws.write(row_i + i, 3, value['field_3'] or '', style_content)
+            ws.write(row_i + i, 4, value['field_4'] or '', style_date)
+            ws.write(row_i + i, 5, value['field_5'] or '', style_date)
+            ws.write(row_i + i, 6, value['field_6'] or '', style_content)
+            ws.write(row_i + i, 7, value['field_7'] or '', style_content)
+            ws.write(row_i + i, 8, value['field_8'] or '', style_content)
+            ws.write(row_i + i, 9, value['field_9'] or '', style_content)
+            ws.write(row_i + i, 10, value['field_10'], style_content)
+            ws.write(row_i + i, 11, value['field_11'] or '', style_content)
+            ws.write(row_i + i, 12, value['field_12'] or '', style_content)
+            ws.write(row_i + i, 13, value['field_13'] or '', style_content)
+            ws.write(row_i + i, 14, value['field_14'], style_number)
+            ws.write(row_i + i, 15, value['field_15'], style_number)
+            ws.write(row_i + i, 16, value['field_16'], style_number)
+            ws.write(row_i + i, 17, value['field_17'], style_number)
+            ws.write(row_i + i, 18, value['field_18'], style_number)
+            ws.write(row_i + i, 19, value['field_19'], style_number)
+            ws.write(row_i + i, 20, value['field_20'], style_number)
+            ws.write(row_i + i, 21, value['field_21'], style_number)
+            ws.write(row_i + i, 22, value['field_22'], style_number)
+            ws.write(row_i + i, 23, value['field_23'], style_number)
+            ws.write(row_i + i, 24, value['field_24'], style_number)
+            ws.write(row_i + i, 25, value['field_25'], style_content)
+            ws.write(row_i + i, 26, value['field_26'] or '', style_content)
+            ws.write(row_i + i, 27, value['field_27'] or '', style_date)
+            ws.write(row_i + i, 28, value['field_28'] or '', style_content)
+            ws.write(row_i + i, 29, value['field_29'] or '', style_content)
+            ws.write(row_i + i, 30, value['field_30'] or '', style_content)
+            ws.write(row_i + i, 31, value['field_31'] or '', style_content)
+            ws.write(row_i + i, 32, value['field_32'] or '', style_date)
+            ws.write(row_i + i, 33, value['field_33'], style_number)
 
-                total_amount_untaxed += value['amount_untaxed']
-                total_another_taxes += value['another_taxes']
-                total_amount_total += value['amount_total']
-                total_inv_retention_igv += value['inv_retention_igv']
-                i += 1
+            # total_amount_untaxed += value['amount_untaxed']
+            # total_another_taxes += value['another_taxes']
+            # total_amount_total += value['amount_total']
+            # total_inv_retention_igv += value['inv_retention_igv']
+            i += 1
 
-        ws.write(total, 8, total_amount_untaxed, style_number_bold)
-        ws.write(total, 9, total_another_taxes, style_number_bold)
-        ws.write(total, 10, total_amount_total, style_number_bold)
-        ws.write(total, 15, total_inv_retention_igv, style_number_bold)
+        # ws.write(total, 8, total_amount_untaxed, style_number_bold)
+        # ws.write(total, 9, total_another_taxes, style_number_bold)
+        # ws.write(total, 10, total_amount_total, style_number_bold)
+        # ws.write(total, 15, total_inv_retention_igv, style_number_bold)
         return True
 
     def get_content(self, type_report='1'):

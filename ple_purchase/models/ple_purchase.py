@@ -2,6 +2,7 @@
 from odoo import fields, models, api
 from ..reports.purchase_report_xlsx import PurchaseReportXlsx
 from ..reports.purchase_report_txt import PurchaseReportTxt
+from ..reports.purchase_report import PurchaseReport
 import base64
 from odoo.exceptions import UserError
 
@@ -218,7 +219,8 @@ class PlePurchase(models.Model):
                 'application_article': line.application_article,
                 'partner_nodomicilied': line.partner_nodomicilied,
                 'journal_name': line.journal_name,
-                'document_code': line.document_code
+                'document_code': line.document_code,
+                'amount_taxed': line.amount_taxed
             }
             data.append(value)
         return data
@@ -264,6 +266,7 @@ class PlePurchase(models.Model):
 
     def action_generate_report(self):
         data = self.get_data()
+        data = PurchaseReport(data)._get_data()
         if data:
             self.get_reports_txt(data)
             self.get_reports_xlsx(data)
