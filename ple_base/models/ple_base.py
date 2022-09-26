@@ -41,11 +41,13 @@ class PleBase(models.Model):
     ]
 
     def _get_name(self, vals):
-        date_start = vals.get('date_start', self.date_start)
-        date_end = vals.get('date_end', self.date_end)
-        company_id = vals.get('company_id', self.company_id.id)
-        company = self.env['res.company'].browse(company_id).name
-        return str(date_start) + '-' + str(date_end) + ' ' + company
+        # date_start = vals.get('date_start', self.date_start)
+        # date_end = vals.get('date_end', self.date_end)
+        year = vals.get('period_year', self.period_year)
+        month = vals.get('period_month', self.period_month).zfill(2) if vals.get('period_month', self.period_month) else False
+        # company_id = vals.get('company_id', self.company_id.id)
+        # company = self.env['res.company'].browse(company_id).name
+        return str(year) + str(month)  # + ' ' + company
 
     def default_get(self, fields_list):
         res = super(PleBase, self).default_get(fields_list)
