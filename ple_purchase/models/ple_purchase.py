@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class PlePurchase(models.Model):
     _name = 'ple.purchase'
+    _description = 'ple.purchase'
     # _inherits = {'ple.report.base': 'ple_id'}
     _inherit = 'ple.base'
 

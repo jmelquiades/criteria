@@ -3,6 +3,7 @@ from odoo import _, api, fields, models
 
 class PleSaleLine(models.Model):
     _name = 'ple.sale.line'
+    _description = 'ple.sale.line'
 
     row = fields.Integer('Fila')
     name = fields.Char(

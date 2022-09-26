@@ -7,6 +7,7 @@ import base64
 
 class PleSale(models.Model):
     _name = 'ple.sale'
+    _description = 'ple.sale'
     _inherit = 'ple.base'
 
     line_ids = fields.One2many(

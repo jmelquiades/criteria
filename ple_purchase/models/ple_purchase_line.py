@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 class PlePurchaseLine(models.Model):
 
     _name = 'ple.purchase.line'
+    _description = 'ple.purchase.line'
 
     row = fields.Integer('Fila')
     name = fields.Char(string='Periodo', required=True)
