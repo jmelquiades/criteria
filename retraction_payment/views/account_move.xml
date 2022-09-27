@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_pe_edi_extended_detraction" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_pe_edi_extended_detraction.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='pe_dte_detraction']" position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'not in', ['1001', '1002', '1003', '1004'])]}</attribute>
+                <!-- <group id="pe_dte_detraction" string="Operación Sujeta a Detracción" attrs="{'invisible': [('l10n_pe_dte_operation_type', 'not in', ['1001', '1002', '1003', '1004'])]}">
+                    <field name="l10n_pe_dte_is_detraction"/>
+                    <field name="l10n_pe_dte_detraction_code" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
+                    <field name="l10n_pe_dte_detraction_percent" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
+                    <field name="l10n_pe_dte_detraction_base" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
+                    <field name="l10n_pe_dte_detraction_amount" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
+                    <field name="l10n_pe_dte_detraction_payment_method" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
+                </group> -->
+            </xpath>
+        </field>
+    </record>
+</odoo>
