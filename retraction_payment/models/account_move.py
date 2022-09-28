@@ -34,3 +34,8 @@ class AccountMove(models.Model):
         else:
             self.l10n_pe_dte_detraction_amount = 0  # Todo: hacer readonly en la vista estos campos!
             self.l10n_pe_dte_detraction_base = 0
+
+    def action_register_payment(self):
+        action = super().action_register_payment()
+        action['context'].update(is_detraccion=True)
+        return action
