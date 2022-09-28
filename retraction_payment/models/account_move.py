@@ -15,13 +15,22 @@ class AccountMove(models.Model):
 
     l10n_pe_dte_is_detraction = fields.Boolean(compute=_get_is_detraction, store=True)
 
-    @api.constrains('l10n_pe_dte_detraction_percent', 'l10n_pe_dte_is_detraction')
+    @api.constrains('l10n_pe_dte_detraction_code', 'l10n_pe_dte_is_detraction')
     def _constrains_l10n_pe_dte_detraction_percent(self):
         if self.l10n_pe_dte_is_detraction and not self.l10n_pe_dte_detraction_code:
             raise UserError('Definir el tipo de detracción')
 
-    @api.onchange('invoice_line_ids', 'l10n_pe_dte_detraction_percent')
+    @api.constrains('l10n_pe_dte_operation_type', 'l10n_pe_dte_detraction_base')
+    def _constrains_l10n_pe_dte_operation_type_l10n_pe_dte_detraction_base(self):
+        if self.l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004'] and self.l10n_pe_dte_detraction_base <= 700:  # ! Esos 700 debe ser parte de cnfiguración.
+            raise UserError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo.')
+
+    @api.onchange('invoice_line_ids', 'l10n_pe_dte_detraction_percent')  # ! esto debería de ser computado
     def _onchange_detraction_percent(self):
         self._recompute_tax_lines()
         super(AccountMove, self)._onchange_detraction_percent()
-        self.l10n_pe_dte_detraction_amount = math.ceil(self.l10n_pe_dte_detraction_amount)
+        if self.l10n_pe_dte_is_detraction:
+            self.l10n_pe_dte_detraction_amount = math.ceil(self.l10n_pe_dte_detraction_amount)
+        else:
+            self.l10n_pe_dte_detraction_amount = 0  # Todo: hacer readonly en la vista estos campos!
+            self.l10n_pe_dte_detraction_base = 0
