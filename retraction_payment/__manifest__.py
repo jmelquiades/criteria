@@ -11,7 +11,8 @@
         'l10n_pe_edi_extended_detraction', 'l10n_pe_edi_extended'
     ],
     'data': [
-        'views/account_move.xml'
+        'views/account_move.xml',
+        'views/res_config_settings.xml'
     ],
     'demo': [
 
