@@ -14,9 +14,9 @@ class AccountPaymentRegister(models.TransientModel):
         detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
         no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
         journal = self.env.user.company_id.detraction_journal_id.id
-        if self.journal_id.id == journal and self.amount >= detraction_amount_residual:
+        if self.journal_id.id == journal and self.amount > detraction_amount_residual:
             raise UserError('No puede pagar este monto en detracción.')
-        elif self.journal_id.id != journal and self.amount >= no_detraction_amount_residual:
+        elif self.journal_id.id != journal and self.amount > no_detraction_amount_residual:
             raise UserError('No puede pagar este monto en este diario (detracción)')
 
     def _get_wizard_values_from_batch(self, batch_result):
