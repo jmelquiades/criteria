@@ -3,12 +3,12 @@ import math
 from odoo.exceptions import UserError
 
 DETRACTION_PAYMENT_STATE = [
-    ('not_paid', 'Not Paid'),
-    ('in_payment', 'In Payment'),
-    ('paid', 'Paid'),
-    ('partial', 'Partially Paid'),
-    ('unknown', 'Unknow'),
-    ('no_detraction', 'No detraction'),
+    ('not_paid', 'No pagadas'),
+    ('in_payment', 'En proceso de pago'),
+    ('paid', 'Pagado'),
+    ('partial', 'Pagado parcialmente'),
+    ('unknown', 'Desconocido'),
+    ('no_detraction', 'No es detracción'),
 ]
 
 
