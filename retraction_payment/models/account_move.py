@@ -23,8 +23,8 @@ class AccountMove(models.Model):
                 record.l10n_pe_dte_is_detraction = True
 
     l10n_pe_dte_is_detraction = fields.Boolean(compute=_get_is_detraction, store=True)
-    detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='Detraction Payment State', compute='_get_detraction_payment_state')
-    no_detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='No Detraction Payment State', compute='_get_no_detraction_payment_state')
+    detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='Estado de pago de detracción', compute='_get_detraction_payment_state')
+    no_detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='Estado de pago de no detracción', compute='_get_no_detraction_payment_state')
 
     # @api.depends('line_ids.matched_debit_ids.debit_move_id', 'line_ids.matched_credit_ids.credit_move_id')
     def _get_detraction_payment_state(self):
