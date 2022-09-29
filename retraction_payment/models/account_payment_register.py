@@ -38,9 +38,9 @@ class AccountPaymentRegister(models.TransientModel):
         # reconciled_amls = self.env['account.move.line'].search([('partner_id', '=', move.partner_id.id), ('payment_id', 'in', payments.ids), ('reconciled', '=', True)])
 
         # * Calculo de límites
-
-        detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id and j.journal_id.id == journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-        no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id and j.journal_id.id != journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+        # ! j.payment_id and  se excluyé para tener en cuenta los otros mov. diferente de pagos (en prueba)
+        detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id.id == journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+        no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id.id != journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
 
         # * Update data
 
