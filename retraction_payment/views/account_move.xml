@@ -27,4 +27,15 @@
             </xpath>
         </field>
     </record>
+    <record id="view_invoice_tree_inherit_account" model="ir.ui.view">
+        <field name="name">account.move.view.list.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_state']" position="before">
+                <field name="detraction_payment_state" widget="badge" decoration-danger="detraction_payment_state in ('not_paid', 'unknown')" decoration-warning="detraction_payment_state in ('partial', 'in_payment')" decoration-info="detraction_payment_state == 'not_detraction'" decoration-success="detraction_payment_state == 'paid'" optional="show"/>
+                <field name="no_detraction_payment_state" widget="badge" decoration-danger="no_detraction_payment_state in ('not_paid', 'unknown')" decoration-warning="no_detraction_payment_state in ('partial', 'in_payment')" decoration-info="no_detraction_payment_state == 'not_detraction'" decoration-success="no_detraction_payment_state == 'paid'" optional="show"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
