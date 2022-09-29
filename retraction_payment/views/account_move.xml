@@ -7,14 +7,21 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@id='pe_dte_detraction']" position="attributes">
                 <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'not in', ['1001', '1002', '1003', '1004'])]}</attribute>
-                <!-- <group id="pe_dte_detraction" string="Operación Sujeta a Detracción" attrs="{'invisible': [('l10n_pe_dte_operation_type', 'not in', ['1001', '1002', '1003', '1004'])]}">
-                    <field name="l10n_pe_dte_is_detraction"/>
-                    <field name="l10n_pe_dte_detraction_code" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
-                    <field name="l10n_pe_dte_detraction_percent" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
-                    <field name="l10n_pe_dte_detraction_base" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
-                    <field name="l10n_pe_dte_detraction_amount" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
-                    <field name="l10n_pe_dte_detraction_payment_method" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '!=', True)]}"/>
-                </group> -->
+            </xpath>
+            <xpath expr="//field[@name='l10n_pe_dte_detraction_code']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_pe_dte_detraction_percent']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_pe_dte_detraction_payment_method']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_pe_dte_detraction_base']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_pe_dte_detraction_amount']" position="attributes">
+                <attribute name="readonly">1</attribute>
             </xpath>
         </field>
     </record>
