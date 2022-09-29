@@ -19,9 +19,11 @@
             </xpath>
             <xpath expr="//field[@name='l10n_pe_dte_detraction_base']" position="attributes">
                 <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
             </xpath>
             <xpath expr="//field[@name='l10n_pe_dte_detraction_amount']" position="attributes">
                 <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
             </xpath>
         </field>
     </record>
