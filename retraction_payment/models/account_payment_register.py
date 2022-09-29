@@ -23,7 +23,10 @@ class AccountPaymentRegister(models.TransientModel):
         data = super()._get_wizard_values_from_batch(batch_result)
         lines = batch_result['lines']
         move = lines.move_id
+        is_detraction = self.env.context.get('is_detraction', False)
         journal = self.env.user.company_id.detraction_journal_id.id
+        if is_detraction and not journal:
+            raise UserError('Configurar el diario de detracciones.')
         detraction_amount = sum(lines.mapped('move_id.l10n_pe_dte_detraction_amount'))  # * Viene con moneda de la factura (fuente)
         no_detraction_amount = sum(lines.mapped('move_id.amount_total')) - detraction_amount  # * Viene con moneda de la factura (fuente)
 

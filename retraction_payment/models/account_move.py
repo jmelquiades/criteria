@@ -37,5 +37,5 @@ class AccountMove(models.Model):
 
     def action_register_payment(self):
         action = super().action_register_payment()
-        action['context'].update(is_detraccion=True)
+        action['context'].update(is_detraction=True)
         return action
