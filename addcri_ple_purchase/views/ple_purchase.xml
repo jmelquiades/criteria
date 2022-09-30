@@ -117,6 +117,6 @@
             <p>Cree un nuevo registro</p>
         </field>
     </record>
-    <menuitem id="ple_purchase_rmt_menu" name="Registro de Compras" action="ple_purchase_action" parent="ple_base.ple_base_rmt_menu" sequence="1"/>
-    <menuitem id="ple_purchase_rg_menu" name="Registro de Compras" action="ple_purchase_action" parent="ple_base.ple_base_rg_menu" sequence="1"/>
+    <menuitem id="ple_purchase_rmt_menu" name="Registro de Compras" action="ple_purchase_action" parent="addcri_ple_base.ple_base_rmt_menu" sequence="1"/>
+    <menuitem id="ple_purchase_rg_menu" name="Registro de Compras" action="ple_purchase_action" parent="addcri_ple_base.ple_base_rg_menu" sequence="1"/>
 </odoo>

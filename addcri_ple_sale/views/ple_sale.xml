@@ -105,6 +105,6 @@
             <p>Cree un nuevo registro</p>
         </field>
     </record>
-    <menuitem id="ple_sale_rmt_menu" name="Registro de Ventas" action="ple_sale_action" parent="ple_base.ple_base_rmt_menu" sequence="2"/>
-    <menuitem id="ple_sale_rg_menu" name="Registro de Ventas" action="ple_sale_action" parent="ple_base.ple_base_rg_menu" sequence="2"/>
+    <menuitem id="ple_sale_rmt_menu" name="Registro de Ventas" action="ple_sale_action" parent="addcri_ple_base.ple_base_rmt_menu" sequence="2"/>
+    <menuitem id="ple_sale_rg_menu" name="Registro de Ventas" action="ple_sale_action" parent="addcri_ple_base.ple_base_rg_menu" sequence="2"/>
 </odoo>
