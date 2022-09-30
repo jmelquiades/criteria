@@ -9,7 +9,7 @@ class AccountPaymentRegister(models.TransientModel):
     detraction_amount_residual = fields.Float('Detraction amount')
     no_detraction_amount_residual = fields.Float('Detraction amount')
 
-    @api.constrains('journal_id', 'amount', 'detraction_amount_residual', 'no_detraction_amount_residual')
+    @api.constrains('journal_id', 'amount')
     def _constrains_journal_id(self):
         detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
         no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)

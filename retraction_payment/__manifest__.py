@@ -1,6 +1,6 @@
 {
     'name': 'Retraction payment',
-    'version': '1.0.202209297',
+    'version': '1.0.202209299',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
