@@ -1,6 +1,6 @@
 {
-    'name': 'Retraction payment',
-    'version': '1.0.202209299',
+    'name': 'Registro de compras y ventas PLE',
+    'version': '1.0.20220923',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
@@ -8,16 +8,16 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'l10n_pe_edi_extended_detraction', 'l10n_pe_edi_extended'
+        'ple_base', 'ple_purchase', 'ple_sale'
     ],
     'data': [
-        'views/account_move.xml',
-        'views/res_config_settings.xml'
+        'security/ir.model.access.csv',
+        'views/ple_sale_purchase.xml'
     ],
     'demo': [
 
     ],
-    'auto_install': False,
+    'auto_install': True,
     'application': False,
     'assets': {
 

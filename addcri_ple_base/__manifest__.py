@@ -1,5 +1,5 @@
 {
-    'name': 'PLE base',
+    'name': 'Base registro de compras y ventas PLE',
     'version': '1.0.202209261',
     'description': '',
     'summary': '',

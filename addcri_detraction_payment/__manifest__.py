@@ -1,6 +1,6 @@
 {
-    'name': 'Ple ventas y compras',
-    'version': '1.0.20220923',
+    'name': 'Detraction payment',
+    'version': '1.0.202209299',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
@@ -8,16 +8,16 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'ple_base', 'ple_purchase', 'ple_sale'
+        'l10n_pe_edi_extended_detraction', 'l10n_pe_edi_extended'
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'views/ple_sale_purchase.xml'
+        'views/account_move.xml',
+        'views/res_config_settings.xml'
     ],
     'demo': [
 
     ],
-    'auto_install': True,
+    'auto_install': False,
     'application': False,
     'assets': {
 
