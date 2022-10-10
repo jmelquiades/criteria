@@ -96,9 +96,9 @@ class AccountMove(models.Model):
         self._recompute_tax_lines()
         super(AccountMove, self)._onchange_detraction_percent()
         if self.l10n_pe_dte_is_detraction:
-            self.l10n_pe_dte_detraction_amount = math.ceil(self.l10n_pe_dte_detraction_amount)
+            self.l10n_pe_dte_detraction_amount = round(self.l10n_pe_dte_detraction_amount, 0)
         else:
-            self.l10n_pe_dte_detraction_amount = 0  # Todo: hacer readonly en la vista estos campos!
+            self.l10n_pe_dte_detraction_amount = 0
             self.l10n_pe_dte_detraction_base = 0
 
     def action_register_payment(self):

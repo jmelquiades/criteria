@@ -1,6 +1,6 @@
 {
-    'name': 'Detraction payment',
-    'version': '1.0.202209299',
+    'name': 'Detracción',
+    'version': '1.0.202210101',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
