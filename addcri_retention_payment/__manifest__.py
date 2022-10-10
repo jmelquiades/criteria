@@ -1,6 +1,6 @@
 {
-    'name': 'Detracción',
-    'version': '1.0.202210101',
+    'name': 'Retención',
+    'version': '1.0',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
@@ -8,14 +8,13 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'l10n_pe_edi_extended_detraction', 'l10n_pe_edi_extended'
+        'account'
     ],
     'data': [
-        'views/account_move.xml',
+        'views/res_partner.xml',
         'views/res_config_settings.xml'
     ],
     'demo': [
-
     ],
     'auto_install': False,
     'application': False,
