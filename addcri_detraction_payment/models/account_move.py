@@ -150,17 +150,17 @@ class AccountMove(models.Model):
         return reconciled_amls
 
     def _get_info_aml_detraction(self, reconciled_amls, journal=False):
-        self.warning_journal_detraction(journal)
+        self.warning_detraction_journal(journal)
         detraction_reconciciled_lines = reconciled_amls.filtered(lambda line: line.journal_id.id == journal)
         no_detraction_reconciciled_lines = reconciled_amls - detraction_reconciciled_lines
         return detraction_reconciciled_lines, no_detraction_reconciciled_lines
 
     def _get_detraction_reconciled_move_lines(self, journal=False):
-        self.warning_journal_detraction(journal)
+        self.warning_detraction_journal(journal)
         reconciled_amls = self._get_reconciled_move_lines()
         return self._get_info_aml_detraction(reconciled_amls, journal)
 
-    def warning_journal_detraction(self, journal):
+    def warning_detraction_journal(self, journal):
         if not journal:
             raise UserError('Configurar el diario de detracciones.')
 
