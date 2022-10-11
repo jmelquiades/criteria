@@ -6,7 +6,7 @@
     </record>
     <record id="002" model="l10n_latam.table.10">
         <field name="name">Giro</field>
-        <field name="code">001</field>
+        <field name="code">002</field>
     </record>
     <record id="003" model="l10n_latam.table.10">
         <field name="name">Transferencia de fondos</field>
