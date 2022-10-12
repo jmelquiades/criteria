@@ -8,7 +8,7 @@ DETRACTION_PAYMENT_STATE = [
     ('paid', 'Pagado'),
     ('partial', 'Pagado parcialmente'),
     ('unknown', 'Desconocido'),
-    ('no_detraction', 'No es detracción'),
+    ('no_detraction', 'No hay detracción'),
 ]
 
 
@@ -33,7 +33,7 @@ class AccountMove(models.Model):
             # detraction_reconciciled_lines, no_detraction_reconciciled_lines = j._get_detraction_reconciled_move_lines(self._get_detraction_journal())
             # detraction_amount_pay = abs(sum(detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
             # no_detraction_amount_pay = abs(sum(no_detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # detraction_amount, no_detraction_amount = j._get_detracction_amount()
+            # detraction_amount, no_detraction_amount = j._get_detraction_amount()
             detraction_amount, detraction_amount_pay = j._get_detraction_amounts()
             if not j.l10n_pe_dte_is_detraction:
                 j.detraction_payment_state = 'no_detraction'
@@ -43,7 +43,7 @@ class AccountMove(models.Model):
                 j.detraction_payment_state = 'partial'
             elif j.currency_id.is_zero(detraction_amount_pay - detraction_amount):
                 j.detraction_payment_state = 'in_payment'
-                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id.id == journal)
+                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
                 if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
                     j.no_detraction_payment_state = 'paid'
             else:
@@ -55,7 +55,7 @@ class AccountMove(models.Model):
             # detraction_reconciciled_lines, no_detraction_reconciciled_lines = j._get_detraction_reconciled_move_lines(self._get_detraction_journal())
             # detraction_amount_pay = abs(sum(detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
             # no_detraction_amount_pay = abs(sum(no_detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # detraction_amount, no_detraction_amount = j._get_detracction_amount()
+            # detraction_amount, no_detraction_amount = j._get_detraction_amount()
             journal = self._get_detraction_journal()
             no_detraction_amount, no_detraction_amount_pay = j._get_detraction_amounts(False)
             if not j.l10n_pe_dte_is_detraction:
@@ -66,14 +66,14 @@ class AccountMove(models.Model):
                 j.no_detraction_payment_state = 'partial'
             elif j.currency_id.is_zero(no_detraction_amount_pay - no_detraction_amount):
                 j.no_detraction_payment_state = 'in_payment'
-                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id.id == journal)
+                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
                 if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
                     j.no_detraction_payment_state = 'paid'
             else:
                 j.no_detraction_payment_state = 'unknown'
 
     def _get_detraction_amounts(self, detraction=True):
-        detraction_amount, no_detraction_amount = self._get_detracction_amount()
+        detraction_amount, no_detraction_amount = self._get_detraction_amount()
         detraction_reconciciled_lines, no_detraction_reconciciled_lines = self._get_detraction_reconciled_move_lines(self._get_detraction_journal())
         if detraction:
             detraction_amount_pay = abs(sum(detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
@@ -120,8 +120,8 @@ class AccountMove(models.Model):
             return super().js_assign_outstanding_line(line_id)
         else:
             journal = self._get_detraction_journal()
-            lines = lines.filtered(lambda line: line.move_id.id != move.id)
-            detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id.id == journal)
+            lines = lines.filtered(lambda line: line.move_id != move)
+            detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id == journal)
             no_detraction_no_reconciciled_lines = lines - detraction_no_reconciciled_lines
 
             # * Búsqueda de pagos
@@ -136,7 +136,7 @@ class AccountMove(models.Model):
             no_detraction_amount_pay = abs(sum(no_detraction_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
             # detraction_amount = self.l10n_pe_dte_detraction_amount  # * Viene con moneda de la factura (fuente)
             # no_detraction_amount = self.amount_total - detraction_amount  # * Viene con moneda de la factura (fuente)
-            detraction_amount, no_detraction_amount = self._get_detracction_amount()
+            detraction_amount, no_detraction_amount = self._get_detraction_amount()
 
             if detraction_amount < detraction_amount_pay or no_detraction_amount < no_detraction_amount_pay:
                 raise UserError('No tiene permitido conciliar estos montos, verifique el monto de pago destinado a detracción.')
@@ -151,7 +151,7 @@ class AccountMove(models.Model):
 
     def _get_info_aml_detraction(self, reconciled_amls, journal=False):
         self.warning_detraction_journal(journal)
-        detraction_reconciciled_lines = reconciled_amls.filtered(lambda line: line.journal_id.id == journal)
+        detraction_reconciciled_lines = reconciled_amls.filtered(lambda line: line.journal_id == journal)
         no_detraction_reconciciled_lines = reconciled_amls - detraction_reconciciled_lines
         return detraction_reconciciled_lines, no_detraction_reconciciled_lines
 
@@ -164,10 +164,10 @@ class AccountMove(models.Model):
         if not journal:
             raise UserError('Configurar el diario de detracciones.')
 
-    def _get_detracction_amount(self):
+    def _get_detraction_amount(self):
         detraction_amount = self.l10n_pe_dte_detraction_amount  # * Viene con moneda de la factura (fuente)
         no_detraction_amount = self.amount_total - detraction_amount
         return detraction_amount, no_detraction_amount
 
     def _get_detraction_journal(self):
-        return self.env.user.company_id.detraction_journal_id.id
+        return self.env.user.company_id.detraction_journal_id
