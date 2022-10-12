@@ -15,9 +15,9 @@ class L10NLatamTable10(models.Model):
         ("code_unique", "unique(code)", "The code field pair must be unique."),
     ]
 
-    def name_get(self):
-        result = []
-        for record in self:
-            name = f'({record.code}) {record.name}'
-            result.append((record.id, name))
-        return result
+    # def name_get(self):
+    #     result = []
+    #     for record in self:
+    #         name = f'({record.code}) {record.name}'
+    #         result.append((record.id, name))
+    #     return result

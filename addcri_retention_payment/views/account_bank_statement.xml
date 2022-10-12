@@ -9,7 +9,7 @@
                 <field name="retention" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='line_ids']/tree/field[@name='partner_id']" position="after">
-                <field name="l10n_latam_document_type_id" string="T.D." attrs="{'column_invisible' : [('parent.retention', '=', False)]}"/>
+                <field name="l10n_latam_document_type_id" string="T.D." options="{'no_create': True, 'no_edit': True}" attrs="{'column_invisible' : [('parent.retention', '=', False)]}" domain="[('code', '=', '20')]"/>
                 <field name="l10n_latam_table_10_id" string="Medio de pago" options="{'no_create': True, 'no_edit': True, 'no_open': True}" attrs="{'column_invisible' : [('parent.retention', '=', False)]}"/>
             </xpath>
         </field>
