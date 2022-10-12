@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_state']" position="before">
                 <field name="detraction_payment_state" widget="badge" decoration-danger="detraction_payment_state in ('not_paid', 'unknown')" decoration-warning="detraction_payment_state in ('partial', 'in_payment')" decoration-info="detraction_payment_state == 'not_detraction'" decoration-success="detraction_payment_state == 'paid'" optional="show" string="P. Detracción"/>
-                <field name="no_detraction_payment_state" widget="badge" decoration-danger="no_detraction_payment_state in ('not_paid', 'unknown')" decoration-warning="no_detraction_payment_state in ('partial', 'in_payment')" decoration-info="no_detraction_payment_state == 'not_detraction'" decoration-success="no_detraction_payment_state == 'paid'" optional="show" string="P. Gravado"/>
+                <field name="no_detraction_payment_state" widget="badge" decoration-danger="no_detraction_payment_state in ('not_paid', 'unknown')" decoration-warning="no_detraction_payment_state in ('partial', 'in_payment')" decoration-info="no_detraction_payment_state == 'not_detraction'" decoration-success="no_detraction_payment_state == 'paid'" optional="show" string="P. Base"/>
             </xpath>
         </field>
     </record>
