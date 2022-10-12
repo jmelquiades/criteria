@@ -9,7 +9,8 @@
     'category': '',
     'depends': [
         'account',
-        'l10n_latam_invoice_document'
+        'l10n_latam_invoice_document',
+        'l10n_pe_edi_extended'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -17,7 +18,8 @@
         'views/res_partner.xml',
         'views/res_config_settings.xml',
         'views/account_bank_statement.xml',
-        'views/l10n_latam_table_10.xml'
+        'views/l10n_latam_table_10.xml',
+        'views/account_move.xml'
     ],
     'demo': [
     ],
