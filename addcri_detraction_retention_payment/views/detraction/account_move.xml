@@ -12,7 +12,9 @@
                 <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='l10n_pe_dte_detraction_percent']" position="attributes">
-                <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>
+                <!-- <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute> -->
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
             </xpath>
             <xpath expr="//field[@name='l10n_pe_dte_detraction_payment_method']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>

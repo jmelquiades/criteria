@@ -6,13 +6,16 @@
         <field name="inherit_id" ref="l10n_pe_edi_extended.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='pe_dte_retention']/field[@name='l10n_pe_dte_retention_type']" position="before">
-                <field name="l10n_pe_dte_is_retention"/>
+                <field name="l10n_pe_dte_is_retention" attrs="{'invisible': [('l10n_pe_dte_is_detraction', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//group[@id='pe_dte_retention']/field[@name='l10n_pe_dte_retention_type']" position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_pe_dte_is_retention', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//group[@id='pe_dte_retention']" position="attributes">
                 <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'in', ['1001', '1002', '1003', '1004'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_payment_fee_ids']" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'in', ['1001', '1002', '1003', '1004'])]}</attribute>
+                <attribute name="attrs">{'invisible': [('l10n_pe_dte_is_retention', '=', False)]}</attribute>
             </xpath>
         </field>
     </record>
