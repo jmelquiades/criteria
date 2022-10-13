@@ -74,7 +74,8 @@ class AccountMove(models.Model):
 
     def action_register_payment(self):
         action = super().action_register_payment()
-        action['context'].update(is_detraction=True)
+        if self.l10n_pe_dte_is_detraction:
+            action['context'].update(is_detraction=True)
         return action
 
     def js_assign_outstanding_line(self, line_id):
