@@ -25,12 +25,12 @@
                 <attribute name="readonly">1</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <xpath expr="//group[@id='pe_dte_retention']" position="attributes">
+            <!-- <xpath expr="//group[@id='pe_dte_retention']" position="attributes">
                 <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'in', ['1001', '1002', '1003', '1004'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_payment_fee_ids']" position="attributes">
                 <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'in', ['1001', '1002', '1003', '1004'])]}</attribute>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
     <record id="view_invoice_tree_inherit_detraction" model="ir.ui.view">
