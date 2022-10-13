@@ -18,6 +18,11 @@ class AccountMove(models.Model):
     l10n_pe_dte_is_retention = fields.Boolean('Is retention?')
     retention_payment_state = fields.Selection(RETENTION_PAYMENT_STATE, string='Estado de pago de retención', compute='_get_retention_payment_state')
 
+    @api.constrains('l10n_pe_dte_is_retention', 'l10n_pe_dte_retention_type')
+    def _constrains_l10n_pe_dte_is_retention_l10n_pe_dte_retention_type(self):
+        if self.l10n_pe_dte_is_retention and not self.l10n_pe_dte_retention_type:
+            raise UserError('Debe elegir el tipo de retención.')
+
     @api.onchange('l10n_pe_dte_is_retention')
     def _onchange_l10n_pe_dte_is_retention(self):
         if self.l10n_pe_dte_is_retention == False:
