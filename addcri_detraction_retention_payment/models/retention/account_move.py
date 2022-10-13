@@ -66,10 +66,3 @@ class AccountMove(models.Model):
     def warning_retention_journal(self, journal):
         if not journal:
             raise UserError('Configurar el diario de retenciones.')
-
-    def _get_reconciled_move_lines(self):
-        """Helper used to retrieve the reconciled move line on this journal entry"""
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
-        reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
-            reconciled_lines.mapped('matched_credit_ids.credit_move_id')
-        return reconciled_amls
