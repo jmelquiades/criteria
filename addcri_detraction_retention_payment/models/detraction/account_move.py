@@ -7,8 +7,8 @@ DETRACTION_PAYMENT_STATE = [
     ('in_payment', 'En proceso de pago'),
     ('paid', 'Pagado'),
     ('partial', 'Pagado parcialmente'),
-    ('unknown', 'Desconocido'),
-    ('no_detraction', 'No hay detracción'),
+    ('unknown', 'No es detracción'),
+    # ('no_detraction', 'No hay detracción'),
 ]
 
 
@@ -29,22 +29,17 @@ class AccountMove(models.Model):
     def _get_detraction_payment_state(self):
         for j in self:
             journal = self._get_detraction_journal()
-            # detraction_reconciciled_lines, no_detraction_reconciciled_lines = j._get_detraction_reconciled_move_lines(self._get_detraction_journal())
-            # detraction_amount_pay = abs(sum(detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # no_detraction_amount_pay = abs(sum(no_detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # detraction_amount, no_detraction_amount = j._get_detraction_amount()
-            detraction_amount, detraction_amount_pay = j._get_detraction_amounts()
-            if not j.l10n_pe_dte_is_detraction:
-                j.detraction_payment_state = 'no_detraction'
-            elif j.currency_id.is_zero(detraction_amount_pay):
-                j.detraction_payment_state = 'not_paid'
-            elif detraction_amount_pay < detraction_amount:
-                j.detraction_payment_state = 'partial'
-            elif j.currency_id.is_zero(detraction_amount_pay - detraction_amount):
-                j.detraction_payment_state = 'in_payment'
-                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
-                if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
-                    j.detraction_payment_state = 'paid'
+            if j.l10n_pe_dte_is_detraction:
+                detraction_amount, detraction_amount_pay = j._get_detraction_amounts()
+                if j.currency_id.is_zero(detraction_amount_pay):
+                    j.detraction_payment_state = 'not_paid'
+                elif detraction_amount_pay < detraction_amount:
+                    j.detraction_payment_state = 'partial'
+                elif j.currency_id.is_zero(detraction_amount_pay - detraction_amount):
+                    j.detraction_payment_state = 'in_payment'
+                    reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
+                    if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
+                        j.detraction_payment_state = 'paid'
             else:
                 j.detraction_payment_state = 'unknown'
 

@@ -6,8 +6,8 @@ RETENTION_PAYMENT_STATE = [
     ('in_payment', 'En proceso de pago'),
     ('paid', 'Pagado'),
     ('partial', 'Pagado parcialmente'),
-    ('unknown', 'Desconocido'),
-    ('no_retention', 'No hay retención'),
+    ('unknown', 'No es retención'),
+    # ('no_retention', 'No hay retención'),
 ]
 
 
@@ -18,55 +18,22 @@ class AccountMove(models.Model):
     l10n_pe_dte_is_retention = fields.Boolean('Is retention?')
     retention_payment_state = fields.Selection(RETENTION_PAYMENT_STATE, string='Estado de pago de retención', compute='_get_retention_payment_state')
 
-    # @api.depends('l10n_pe_dte_operation_type')
-    # def _get_is_retention(self):
-    #     for record in self:
-    #         if record.l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004']:
-    #             record.l10n_pe_dte_is_retention = True
-
     def _get_retention_payment_state(self):
         for j in self:
             journal = self._get_retention_journal()
-            # retention_reconciciled_lines, no_retention_reconciciled_lines = j._get_retention_reconciled_move_lines(self._get_retention_journal())
-            # retention_amount_pay = abs(sum(retention_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # no_retention_amount_pay = abs(sum(no_retention_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # retention_amount, no_retention_amount = j._get_retention_amount()
-            retention_amount, retention_amount_pay = j._get_retention_amounts()
-            if not j.l10n_pe_dte_is_retention:
-                j.retention_payment_state = 'no_retention'
-            elif j.currency_id.is_zero(retention_amount_pay):
-                j.retention_payment_state = 'not_paid'
-            elif retention_amount_pay < retention_amount:
-                j.retention_payment_state = 'partial'
-            elif j.currency_id.is_zero(retention_amount_pay - retention_amount):
-                j.retention_payment_state = 'in_payment'
-                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
-                if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
-                    j.no_retention_payment_state = 'paid'
+            if j.l10n_pe_dte_is_retention:
+                retention_amount, retention_amount_pay = j._get_retention_amounts()
+                if j.currency_id.is_zero(retention_amount_pay):
+                    j.retention_payment_state = 'not_paid'
+                elif retention_amount_pay < retention_amount:
+                    j.retention_payment_state = 'partial'
+                elif j.currency_id.is_zero(retention_amount_pay - retention_amount):
+                    j.retention_payment_state = 'in_payment'
+                    reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
+                    if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
+                        j.no_retention_payment_state = 'paid'
             else:
                 j.retention_payment_state = 'unknown'
-
-    # def _get_no_retention_payment_state(self):
-    #     for j in self:
-    #         # retention_reconciciled_lines, no_retention_reconciciled_lines = j._get_retention_reconciled_move_lines(self._get_retention_journal())
-    #         # retention_amount_pay = abs(sum(retention_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-    #         # no_retention_amount_pay = abs(sum(no_retention_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-    #         # retention_amount, no_retention_amount = j._get_retention_amount()
-    #         journal = self._get_retention_journal()
-    #         no_retention_amount, no_retention_amount_pay = j._get_retention_amounts(False)
-    #         if not j.l10n_pe_dte_is_retention:
-    #             j.no_retention_payment_state = 'no_retention'
-    #         elif j.currency_id.is_zero(no_retention_amount_pay):
-    #             j.no_retention_payment_state = 'not_paid'
-    #         elif no_retention_amount_pay < no_retention_amount:
-    #             j.no_retention_payment_state = 'partial'
-    #         elif j.currency_id.is_zero(no_retention_amount_pay - no_retention_amount):
-    #             j.no_retention_payment_state = 'in_payment'
-    #             reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
-    #             if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
-    #                 j.no_retention_payment_state = 'paid'
-    #         else:
-    #             j.no_retention_payment_state = 'unknown'
 
     def _get_retention_amounts(self, retention=True):
         retention_amount, no_retention_amount = self._get_retention_amount()
