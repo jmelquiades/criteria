@@ -18,6 +18,12 @@ class AccountMove(models.Model):
     l10n_pe_dte_is_retention = fields.Boolean('Is retention?')
     retention_payment_state = fields.Selection(RETENTION_PAYMENT_STATE, string='Estado de pago de retención', compute='_get_retention_payment_state')
 
+    @api.onchange('l10n_pe_dte_operation_type')
+    def _onchange_l10n_pe_dte_operation_type_retention(self):
+        if self.l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004']:
+            self.l10n_pe_dte_is_retention = False
+            self.l10n_pe_dte_retention_type = False
+
     def _get_retention_payment_state(self):
         for j in self:
             journal = self._get_retention_journal()

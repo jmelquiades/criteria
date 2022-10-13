@@ -21,9 +21,17 @@ class AccountMove(models.Model):
         for record in self:
             if record.l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004']:
                 record.l10n_pe_dte_is_detraction = True
+            else:
+                record.l10n_pe_dte_is_detraction = False
 
     l10n_pe_dte_is_detraction = fields.Boolean(compute=_get_is_detraction, store=True)
     detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='Estado de pago de detracción', compute='_get_detraction_payment_state')
+
+    @api.onchange('l10n_pe_dte_operation_type')
+    def _onchange_l10n_pe_dte_operation_type_detraction(self):
+        if self.l10n_pe_dte_operation_type not in ['1001', '1002', '1003', '1004']:
+            self.l10n_pe_dte_detraction_code = False
+            self.l10n_pe_dte_detraction_percent = False
 
     # @api.depends('line_ids.matched_debit_ids.debit_move_id', 'line_ids.matched_credit_ids.credit_move_id')
     def _get_detraction_payment_state(self):

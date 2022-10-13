@@ -21,7 +21,7 @@ class AccountMove(models.Model):
     @api.constrains('l10n_pe_dte_is_retention', 'l10n_pe_dte_is_detraction')
     def _constrains_l10n_pe_dte_is_retention(self):
         if self.l10n_pe_dte_is_detraction and self.l10n_pe_dte_is_retention:
-            raise UserError('La factura no puede ser detracciín y retención a la vez.')
+            raise UserError('La factura no puede ser detracción y retención a la vez.')
 
     # @api.depends('line_ids.matched_debit_ids.debit_move_id', 'line_ids.matched_credit_ids.credit_move_id')
     def _get_base_payment_state(self):
