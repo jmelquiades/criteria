@@ -24,7 +24,6 @@ class AccountMove(models.Model):
 
     l10n_pe_dte_is_detraction = fields.Boolean(compute=_get_is_detraction, store=True)
     detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='Estado de pago de detracción', compute='_get_detraction_payment_state')
-    no_detraction_payment_state = fields.Selection(DETRACTION_PAYMENT_STATE, string='Estado de pago de no detracción', compute='_get_no_detraction_payment_state')
 
     # @api.depends('line_ids.matched_debit_ids.debit_move_id', 'line_ids.matched_credit_ids.credit_move_id')
     def _get_detraction_payment_state(self):
@@ -45,32 +44,9 @@ class AccountMove(models.Model):
                 j.detraction_payment_state = 'in_payment'
                 reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
                 if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
-                    j.no_detraction_payment_state = 'paid'
+                    j.detraction_payment_state = 'paid'
             else:
                 j.detraction_payment_state = 'unknown'
-
-    # @api.depends('line_ids.matched_debit_ids.debit_move_id', 'line_ids.matched_credit_ids.credit_move_id')
-    def _get_no_detraction_payment_state(self):
-        for j in self:
-            # detraction_reconciciled_lines, no_detraction_reconciciled_lines = j._get_detraction_reconciled_move_lines(self._get_detraction_journal())
-            # detraction_amount_pay = abs(sum(detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # no_detraction_amount_pay = abs(sum(no_detraction_reconciciled_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            # detraction_amount, no_detraction_amount = j._get_detraction_amount()
-            journal = self._get_detraction_journal()
-            no_detraction_amount, no_detraction_amount_pay = j._get_detraction_amounts(False)
-            if not j.l10n_pe_dte_is_detraction:
-                j.no_detraction_payment_state = 'no_detraction'
-            elif j.currency_id.is_zero(no_detraction_amount_pay):
-                j.no_detraction_payment_state = 'not_paid'
-            elif no_detraction_amount_pay < no_detraction_amount:
-                j.no_detraction_payment_state = 'partial'
-            elif j.currency_id.is_zero(no_detraction_amount_pay - no_detraction_amount):
-                j.no_detraction_payment_state = 'in_payment'
-                reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
-                if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
-                    j.no_detraction_payment_state = 'paid'
-            else:
-                j.no_detraction_payment_state = 'unknown'
 
     def _get_detraction_amounts(self, detraction=True):
         detraction_amount, no_detraction_amount = self._get_detraction_amount()
