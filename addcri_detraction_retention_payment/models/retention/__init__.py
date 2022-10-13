@@ -5,3 +5,4 @@ from . import l10n_latam_table_10
 from . import account_bank_statement
 from . import account_bank_statement_line
 from . import account_move
+from . import account_payment_register
