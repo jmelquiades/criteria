@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_retention" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_pe_edi_extended.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='pe_dte_retention']/field[@name='l10n_pe_dte_retention_type']" position="before">
+                <field name="l10n_pe_dte_is_retention"/>
+            </xpath>
+            <xpath expr="//group[@id='pe_dte_retention']" position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'in', ['1001', '1002', '1003', '1004'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_fee_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'in', ['1001', '1002', '1003', '1004'])]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_invoice_tree_inherit_retention" model="ir.ui.view">
+        <field name="name">account.move.view.list.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_state']" position="before">
+                <field name="retention_payment_state" widget="badge" decoration-danger="retention_payment_state in ('not_paid', 'unknown')" decoration-warning="retention_payment_state in ('partial', 'in_payment')" decoration-info="retention_payment_state == 'not_retention'" decoration-success="retention_payment_state == 'paid'" optional="show" string="P. Retención"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
