@@ -87,6 +87,7 @@ class ResCompany(models.Model):
                 continue
             data.update({'currency_code': currency_pe_code})
             url = url_format % data
+            _logger.info(f'_parse_bcrp_purchase_data {url}')
             try:
                 res = requests.get(url, timeout=10)
                 res.raise_for_status()
