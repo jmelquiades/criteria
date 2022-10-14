@@ -8,7 +8,7 @@ class ResCurrency(models.Model):
     def _get_purchase_rates(self, company, date):
         if not self.ids:
             return {}
-        self.env['res.currency.rate'].flush(['rate', 'currency_id', 'company_id', 'name'])
+        self.env['res.currency.rate'].flush(['purchase_rate', 'currency_id', 'company_id', 'name'])
         query = """SELECT c.id,
                           COALESCE((SELECT r.purchase_rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
