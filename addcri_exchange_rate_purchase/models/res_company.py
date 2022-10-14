@@ -95,6 +95,7 @@ class ResCompany(models.Model):
             except Exception as e:
                 _logger.error(e)
                 continue
+            _logger.info(f'_parse_bcrp_purchase_data series {series}')
             date_rate_str = series['periods'][-1]['name']
             fetched_rate = float(series['periods'][-1]['values'][0])
             rate = 1.0 / fetched_rate if fetched_rate else 0
