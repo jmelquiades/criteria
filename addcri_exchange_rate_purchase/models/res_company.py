@@ -105,6 +105,7 @@ class ResCompany(models.Model):
             normalized_date = date_rate_str.replace('Set', 'Sep')
             date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
             result[currency_odoo_code] = (rate, date_rate)
+        _logger.info(f'_parse_bcrp_purchase_data {result}')
         return result
 
     def _generate_purchase_currency_rates(self, parsed_data):
