@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_currency_form_inherit_addcri_exchange_rate_purchase" model="ir.ui.view">
+        <field name="name">res.currency.view.form.inherit</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rate_ids']/tree/field[@name='rate']" position="after">
+                <field name="purchase_rate" digits="[12,12]" optional="show" string="Tipo de cambio compra"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
