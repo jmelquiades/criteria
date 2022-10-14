@@ -1,6 +1,6 @@
 {
     'name': 'Tipo de cambio compra',
-    'version': '1.0',
+    'version': '1.202210141',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
