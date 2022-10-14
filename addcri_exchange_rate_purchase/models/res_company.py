@@ -133,6 +133,7 @@ class ResCompany(models.Model):
 
                 currency_object = Currency.search([('name', '=', currency)])
                 already_existing_rate = CurrencyRate.search([('currency_id', '=', currency_object.id), ('name', '=', date_rate), ('company_id', '=', company.id)])
+                _logger.info(f'_generate_purchase_currency_rates {currency_object} {date_rate} {company} {rate_value}')
                 if already_existing_rate:
                     already_existing_rate.purchase_rate = rate_value
                 else:
