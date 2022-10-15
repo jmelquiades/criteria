@@ -13,6 +13,7 @@ class ResCompany(models.Model):
     _description = 'Res Company'
 
     def update_rate_currency_after_install(self):
+        rslt = True
         active_currencies = self.env['res.currency'].search([])
         if 'PEN' in active_currencies.mapped('name'):
             for (currency_provider, companies) in self._group_by_provider().items():
