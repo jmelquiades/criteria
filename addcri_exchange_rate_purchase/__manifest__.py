@@ -11,6 +11,7 @@
         'currency_rate_live'
     ],
     'data': [
+        'data/update_rate_currency_after_install.xml',
         'views/res_currency.xml'
     ],
     'demo': [
