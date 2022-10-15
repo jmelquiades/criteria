@@ -12,7 +12,7 @@
     ],
     'data': [
         'views/res_currency.xml',
-        'data/update_rate_currency_after_install.xml',
+        # 'data/update_rate_currency_after_install.xml'
     ],
     'demo': [
 
