@@ -31,7 +31,7 @@ class ResCompany(models.Model):
                         for result in parse_results:
                             companies._generate_purchase_currency_rates(result)
 
-        return rslt
+        return parse_results
 
     def _parse_bcrp_update_purchase_data(self, available_currencies):
         """Bank of Peru (bcrp)
