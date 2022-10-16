@@ -31,7 +31,7 @@ class ResCompany(models.Model):
                         for result in parse_results:
                             companies._generate_purchase_currency_rates(result)
 
-        return parse_results
+        return rslt
 
     def update_rate_currency_after_install_rate_null(self):
         currencies = self.env['res.currency'].search([]).ids
