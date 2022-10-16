@@ -34,7 +34,7 @@ class ResCompany(models.Model):
         return parse_results
 
     def update_rate_currency_after_install_rate_null(self):
-        currencies = self.env['res.currency'].search([])
+        currencies = self.env['res.currency'].search([]).ids
         null_purchase_rates = self.env['res.currency.rate'].search([('currency_id', 'in', currencies), ('purchase_rate', '=', False)])
         null_purchase_rates.update({
             'purchase_rate': 1
