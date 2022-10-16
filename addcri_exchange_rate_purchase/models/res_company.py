@@ -12,6 +12,86 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
     _description = 'Res Company'
 
+    @api.model
+    def update_rate_currency_after_install(self):
+        rslt = True
+        active_currencies = self.env['res.currency'].search([])
+        if 'PEN' in active_currencies.mapped('name'):
+            for (currency_provider, companies) in self.env['res.company'].search([])._group_by_provider().items():
+                parse_results = None
+                if currency_provider == 'bcrp':
+                    parse_function = getattr(companies, '_parse_' + currency_provider + '_update_purchase_data')
+                    parse_results = parse_function(active_currencies)
+
+                    if parse_results == False:
+                        # We check == False, and don't use bool conversion, as an empty
+                        # dict can be returned, if none of the available currencies is supported by the provider
+                        _logger.warning('Unable to connect to the online exchange rate purchase platform %s. The web service may be temporary down.', currency_provider + '_purchase')
+                        rslt = False
+                    else:
+                        for result in parse_results:
+                            companies._generate_purchase_currency_rates(result)
+
+        return rslt
+
+    def _parse_bcrp_update_purchase_data(self, available_currencies):
+        """Bank of Peru (bcrp)
+        API Doc: https://estadisticas.bcrp.gob.pe/estadisticas/series/ayuda/api
+            - https://estadisticas.bcrp.gob.pe/estadisticas/series/api/[códigos de series]/[formato de salida]/[periodo inicial]/[periodo final]/[idioma]
+        Source: https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/tipo-de-cambio
+            PD04640PD	TC Sistema bancario SBS (S/ por US$) - Venta
+            PD04648PD	TC Euro (S/ por Euro) - Venta
+        """
+
+        bcrp_date_format_url = '%Y-%m-%d'
+        bcrp_date_format_res = '%d.%b.%y'
+        result = {}
+        available_currency_names = available_currencies.mapped('name')
+        if 'PEN' not in available_currency_names:
+            return result
+        result['PEN'] = (1.0, fields.Date.context_today(self.with_context(tz='America/Lima')))
+        url_format = "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/%(currency_code)s/json/%(date_start)s/%(date_end)s/ing"
+        foreigns = {
+            # currency code from webservices
+            'USD': 'PD04639PD',
+            'EUR': 'PD04647PD',
+        }
+        results = []
+        for currency_odoo_code, currency_pe_code in foreigns.items():
+            if currency_odoo_code not in available_currency_names:
+                continue
+            ########
+            dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
+            for date_pe in dates:
+                second_pe_str = date_pe.strftime(bcrp_date_format_url)
+                data = {
+                    'date_start': second_pe_str,
+                    'date_end': second_pe_str,
+                }
+                #########
+                data.update({'currency_code': currency_pe_code})
+                url = url_format % data
+                try:
+                    res = requests.get(url, timeout=10)
+                    res.raise_for_status()
+                    series = res.json()
+                except Exception as e:
+                    _logger.error(e)
+                    continue
+                date_rate_str = series['periods'][-1]['name']
+                fetched_rate = float(series['periods'][-1]['values'][0])
+                rate = 1.0 / fetched_rate if fetched_rate else 0
+                if not rate:
+                    continue
+                # This replace is done because the service is returning Set for September instead of Sep the value
+                # commonly accepted for September,
+                normalized_date = date_rate_str.replace('Set', 'Sep')
+                date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
+                result[currency_odoo_code] = (rate, date_rate)
+                cop = result.copy()
+                results.append(cop)
+        return results
+
     def update_currency_rates(self):
         ''' This method is used to update all currencies given by the provider.
         It calls the parse_function of the selected exchange rates provider automatically.

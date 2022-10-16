@@ -6,8 +6,12 @@
         <field name="inherit_id" ref="base.view_currency_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='rate_ids']/tree/field[@name='rate']" position="after">
-                <field name="purchase_rate" digits="[12,12]" optional="show" string="Tipo de cambio compra"/>
+                <field name="inverse_company_purchase_rate" digits="[12,12]" optional="show" string="PEN por unidad (compra)"/>
+                <field name="purchase_rate" digits="[12,12]" optional="hide" string="Tasa técnica (compra)"/>
             </xpath>
+            <!-- <xpath expr="field[@name='rate_ids']/tree/field[@name='inverse_company_rate']" position="attributes">
+                <attribute name="string">PEN por unidad (Venta)</attribute>
+            </xpath> -->
         </field>
     </record>
 </odoo>
