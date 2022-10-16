@@ -69,6 +69,7 @@ class ResCompany(models.Model):
                 continue
             ########
             dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate in (False, 1)).mapped('name')
+            _logger.info(f'_parse_bcrp_update_purchase_data dates {dates}')
             for date_pe in dates:
                 second_pe_str = date_pe.strftime(bcrp_date_format_url)
                 data = {
