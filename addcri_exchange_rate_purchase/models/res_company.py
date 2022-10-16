@@ -12,6 +12,7 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
     _description = 'Res Company'
 
+    @api.model
     def update_rate_currency_after_install(self):
         rslt = True
         active_currencies = self.env['res.currency'].search([])
@@ -32,14 +33,6 @@ class ResCompany(models.Model):
                             companies._generate_purchase_currency_rates(result)
 
         return rslt
-
-    # def update_rate_currency_after_install_rate_null(self):
-    #     currencies = self.env['res.currency'].search([]).ids
-    #     null_purchase_rates = self.env['res.currency.rate'].search([('currency_id', 'in', currencies), ('purchase_rate', '=', False)])
-    #     null_purchase_rates.update({
-    #         'purchase_rate': 1
-    #     })
-    #     return True
 
     def _parse_bcrp_update_purchase_data(self, available_currencies):
         """Bank of Peru (bcrp)
