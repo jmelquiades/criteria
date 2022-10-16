@@ -16,7 +16,7 @@ class ResCompany(models.Model):
         rslt = True
         active_currencies = self.env['res.currency'].search([])
         if 'PEN' in active_currencies.mapped('name'):
-            for (currency_provider, companies) in self._group_by_provider().items():
+            for (currency_provider, companies) in self.env['res.company'].search([])._group_by_provider().items():
                 parse_results = None
                 if currency_provider == 'bcrp':
                     parse_function = getattr(companies, '_parse_' + currency_provider + '_update_purchase_data')
@@ -66,11 +66,9 @@ class ResCompany(models.Model):
         results = []
         for currency_odoo_code, currency_pe_code in foreigns.items():
             if currency_odoo_code not in available_currency_names:
-                _logger.info('_parse_bcrp_update_purchase_data not in')
                 continue
             ########
             dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
-            _logger.info(f'_parse_bcrp_update_purchase_data dates {dates}')
             for date_pe in dates:
                 second_pe_str = date_pe.strftime(bcrp_date_format_url)
                 data = {
@@ -176,7 +174,6 @@ class ResCompany(models.Model):
                 continue
             data.update({'currency_code': currency_pe_code})
             url = url_format % data
-            _logger.info(f'_parse_bcrp_purchase_data {url}')
             try:
                 res = requests.get(url, timeout=10)
                 res.raise_for_status()
@@ -184,7 +181,6 @@ class ResCompany(models.Model):
             except Exception as e:
                 _logger.error(e)
                 continue
-            _logger.info(f'_parse_bcrp_purchase_data series {series}')
             date_rate_str = series['periods'][-1]['name']
             fetched_rate = float(series['periods'][-1]['values'][0])
             rate = 1.0 / fetched_rate if fetched_rate else 0
@@ -195,7 +191,6 @@ class ResCompany(models.Model):
             normalized_date = date_rate_str.replace('Set', 'Sep')
             date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
             result[currency_odoo_code] = (rate, date_rate)
-        _logger.info(f'_parse_bcrp_purchase_data {result}')
         return result
 
     def _generate_purchase_currency_rates(self, parsed_data):
@@ -224,7 +219,6 @@ class ResCompany(models.Model):
 
                 currency_object = Currency.search([('name', '=', currency)])
                 already_existing_rate = CurrencyRate.search([('currency_id', '=', currency_object.id), ('name', '=', date_rate), ('company_id', '=', company.id)])
-                _logger.info(f'_generate_purchase_currency_rates {currency_object} {date_rate} {company} {rate_value}')
                 if already_existing_rate:
                     already_existing_rate.purchase_rate = rate_value
                 else:
