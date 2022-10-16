@@ -6,7 +6,7 @@ class ResCurrencyRate(models.Model):
     _inherit = 'res.currency.rate'
     _description = 'Res Currency Rate'
 
-    purchase_rate = fields.Float('Purchase Rate')
+    purchase_rate = fields.Float('Purchase Rate', default=1)
     inverse_company_purchase_rate = fields.Float(
         digits=0,
         compute="_compute_inverse_company_purchase_rate",

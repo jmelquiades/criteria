@@ -33,13 +33,13 @@ class ResCompany(models.Model):
 
         return rslt
 
-    def update_rate_currency_after_install_rate_null(self):
-        currencies = self.env['res.currency'].search([]).ids
-        null_purchase_rates = self.env['res.currency.rate'].search([('currency_id', 'in', currencies), ('purchase_rate', '=', False)])
-        null_purchase_rates.update({
-            'purchase_rate': 1
-        })
-        return True
+    # def update_rate_currency_after_install_rate_null(self):
+    #     currencies = self.env['res.currency'].search([]).ids
+    #     null_purchase_rates = self.env['res.currency.rate'].search([('currency_id', 'in', currencies), ('purchase_rate', '=', False)])
+    #     null_purchase_rates.update({
+    #         'purchase_rate': 1
+    #     })
+    #     return True
 
     def _parse_bcrp_update_purchase_data(self, available_currencies):
         """Bank of Peru (bcrp)
@@ -69,7 +69,7 @@ class ResCompany(models.Model):
                 _logger.info('_parse_bcrp_update_purchase_data not in')
                 continue
             ########
-            dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate in (0, 1)).mapped('name')
+            dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
             _logger.info(f'_parse_bcrp_update_purchase_data dates {dates}')
             for date_pe in dates:
                 second_pe_str = date_pe.strftime(bcrp_date_format_url)
