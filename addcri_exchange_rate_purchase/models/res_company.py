@@ -66,6 +66,7 @@ class ResCompany(models.Model):
         results = []
         for currency_odoo_code, currency_pe_code in foreigns.items():
             if currency_odoo_code not in available_currency_names:
+                _logger.info('_parse_bcrp_update_purchase_data not in')
                 continue
             ########
             dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate in (0, 1)).mapped('name')
