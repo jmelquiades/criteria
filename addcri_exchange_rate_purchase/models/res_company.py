@@ -78,18 +78,19 @@ class ResCompany(models.Model):
                 except Exception as e:
                     _logger.error(e)
                     continue
-                date_rate_str = series['periods'][-1]['name']
-                fetched_rate = float(series['periods'][-1]['values'][0])
-                rate = 1.0 / fetched_rate if fetched_rate else 0
-                if not rate:
-                    continue
-                # This replace is done because the service is returning Set for September instead of Sep the value
-                # commonly accepted for September,
-                normalized_date = date_rate_str.replace('Set', 'Sep')
-                date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
-                result[currency_odoo_code] = (rate, date_rate)
-                cop = result.copy()
-                results.append(cop)
+                if series.get('periods', False):
+                    date_rate_str = series['periods'][-1]['name']
+                    fetched_rate = float(series['periods'][-1]['values'][0])
+                    rate = 1.0 / fetched_rate if fetched_rate else 0
+                    if not rate:
+                        continue
+                    # This replace is done because the service is returning Set for September instead of Sep the value
+                    # commonly accepted for September,
+                    normalized_date = date_rate_str.replace('Set', 'Sep')
+                    date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
+                    result[currency_odoo_code] = (rate, date_rate)
+                    cop = result.copy()
+                    results.append(cop)
         return results
 
     def update_currency_rates(self):
