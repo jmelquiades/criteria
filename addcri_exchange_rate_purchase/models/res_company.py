@@ -33,6 +33,14 @@ class ResCompany(models.Model):
 
         return parse_results
 
+    def update_rate_currency_after_install_rate_null(self):
+        currencies = self.env['res.currency'].search([])
+        null_purchase_rates = self.env['res.currency.rate'].search([('currency_id', 'in', currencies), ('purchase_rate', '=', False)])
+        null_purchase_rates.update({
+            'purchase_rate': 1
+        })
+        return True
+
     def _parse_bcrp_update_purchase_data(self, available_currencies):
         """Bank of Peru (bcrp)
         API Doc: https://estadisticas.bcrp.gob.pe/estadisticas/series/ayuda/api
@@ -87,7 +95,8 @@ class ResCompany(models.Model):
                 normalized_date = date_rate_str.replace('Set', 'Sep')
                 date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
                 result[currency_odoo_code] = (rate, date_rate)
-                results.append(result)
+                cop = result.copy()
+                results.append(cop)
         return results
 
     def update_currency_rates(self):

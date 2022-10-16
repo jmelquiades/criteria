@@ -2,5 +2,6 @@
 <odoo>
     <data noupdate="1">
         <function model="res.company" name="update_rate_currency_after_install"/>
+        <function model="res.company" name="update_rate_currency_after_install_rate_null"/>
     </data>
 </odoo>
