@@ -49,48 +49,114 @@ class ResCompany(models.Model):
         available_currency_names = available_currencies.mapped('name')
         if 'PEN' not in available_currency_names:
             return result
-        result['PEN'] = (1.0, fields.Date.context_today(self.with_context(tz='America/Lima')))
+
         url_format = "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/%(currency_code)s/json/%(date_start)s/%(date_end)s/ing"
         foreigns = {
             # currency code from webservices
             'USD': 'PD04639PD',
             'EUR': 'PD04647PD',
         }
+
+        # results = []
+        # for currency_odoo_code, currency_pe_code in foreigns.items():
+        #     if currency_odoo_code not in available_currency_names:
+        #         continue
+        #     ########
+        #     dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
+        #     for date_pe in dates:
+        #         second_pe_str = date_pe.strftime(bcrp_date_format_url)
+        #         data = {
+        #             'date_start': second_pe_str,
+        #             'date_end': second_pe_str,
+        #         }
+        #         #########
+        #         data.update({'currency_code': currency_pe_code})
+        #         url = url_format % data
+        #         try:
+        #             res = requests.get(url, timeout=10)
+        #             res.raise_for_status()
+        #             series = res.json()
+        #         except Exception as e:
+        #             _logger.error(e)
+        #             continue
+        #         if series.get('periods', False):
+        #             date_rate_str = series['periods'][-1]['name']
+        #             fetched_rate = float(series['periods'][-1]['values'][0])
+        #             rate = 1.0 / fetched_rate if fetched_rate else 0
+        #             if not rate:
+        #                 continue
+        #             # This replace is done because the service is returning Set for September instead of Sep the value
+        #             # commonly accepted for September,
+        #             normalized_date = date_rate_str.replace('Set', 'Sep')
+        #             date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        #             result[currency_odoo_code] = (rate, date_rate)
+        #             cop = result.copy()
+        #             results.append(cop)
+        # return results
         results = []
-        for currency_odoo_code, currency_pe_code in foreigns.items():
-            if currency_odoo_code not in available_currency_names:
-                continue
-            ########
-            dates = self.env['res.currency'].search([('name', '=', currency_odoo_code)]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
-            for date_pe in dates:
+        dates = self.env['res.currency'].search([('name', 'in', list(foreigns.keys()))]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
+        for date_pe in dates:
+            date_backup_pe = date_pe
+            result = {}
+            dates_null_rate = []
+            for currency_odoo_code, currency_pe_code in foreigns.items():
+                if currency_odoo_code not in available_currency_names:
+                    continue
                 second_pe_str = date_pe.strftime(bcrp_date_format_url)
                 data = {
                     'date_start': second_pe_str,
                     'date_end': second_pe_str,
                 }
-                #########
                 data.update({'currency_code': currency_pe_code})
-                url = url_format % data
-                try:
-                    res = requests.get(url, timeout=10)
-                    res.raise_for_status()
-                    series = res.json()
-                except Exception as e:
-                    _logger.error(e)
-                    continue
-                if series.get('periods', False):
-                    date_rate_str = series['periods'][-1]['name']
-                    fetched_rate = float(series['periods'][-1]['values'][0])
-                    rate = 1.0 / fetched_rate if fetched_rate else 0
-                    if not rate:
+                rate = 1
+                while rate == 1:
+                    try:
+                        url = url_format % data
+                        res = requests.get(url, timeout=10)
+                        res.raise_for_status()
+                        series = res.json()
+                    except Exception as e:
+                        _logger.error(e)
+                        rate = 1
                         continue
-                    # This replace is done because the service is returning Set for September instead of Sep the value
-                    # commonly accepted for September,
-                    normalized_date = date_rate_str.replace('Set', 'Sep')
-                    date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
-                    result[currency_odoo_code] = (rate, date_rate)
-                    cop = result.copy()
+                    else:
+                        if series.get('periods', False):
+                            print(url)
+                            date_rate_str = series['periods'][-1]['name']
+                            fetched_rate = float(series['periods'][-1]['values'][0])
+                            rate = 1.0 / fetched_rate if fetched_rate else 0
+                            if not rate:
+                                continue
+                            # This replace is done because the service is returning Set for September instead of Sep the value
+                            # commonly accepted for September,
+                            normalized_date = date_rate_str.replace('Set', 'Sep')
+                            date_rate = datetime.datetime.strptime(normalized_date, bcrp_date_format_res).strftime(DEFAULT_SERVER_DATE_FORMAT)
+                            result[currency_odoo_code] = (rate, date_rate)
+                        else:
+                            dates_null_rate.append(date_pe)
+                            date_pe = date_pe - datetime.timedelta(days=1)
+                            second_pe_str = date_pe.strftime(bcrp_date_format_url)
+                            data = {
+                                'date_start': second_pe_str,
+                                'date_end': second_pe_str,
+                            }
+                            data.update({'currency_code': currency_pe_code})
+                date_pe = date_backup_pe
+
+            cop = result.copy()
+            if cop:
+                if dates_null_rate:
+                    date = date_backup_pe
+                    left_result = {}
+                    for currency, rate in cop.items():
+                        left_result[currency] = (rate[0], date.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                    left_result['PEN'] = (1.0, fields.Date.context_today(self.with_context(tz='America/Lima')))
+                    left_cop = left_result.copy()
+                    results.append(left_cop)
+                else:
+                    cop['PEN'] = (1.0, fields.Date.context_today(self.with_context(tz='America/Lima')))
                     results.append(cop)
+
         return results
 
     def update_currency_rates(self):
@@ -215,5 +281,6 @@ class ResCompany(models.Model):
                 already_existing_rate = CurrencyRate.search([('currency_id', '=', currency_object.id), ('name', '=', date_rate), ('company_id', '=', company.id)])
                 if already_existing_rate:
                     already_existing_rate.purchase_rate = rate_value
-                else:
-                    CurrencyRate.create({'currency_id': currency_object.id, 'purchase_rate': rate_value, 'name': date_rate, 'company_id': company.id})
+                # ! comentado para evitar el error de que no exista ya que no tendría el tipo de cambio venta y eso generaría errores por las funciones pre existentes en el tipo de cambio venta.
+                # else:
+                #     CurrencyRate.create({'currency_id': currency_object.id, 'purchase_rate': rate_value, 'name': date_rate, 'company_id': company.id})
