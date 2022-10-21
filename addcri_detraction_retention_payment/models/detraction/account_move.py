@@ -70,7 +70,7 @@ class AccountMove(models.Model):
         if self.l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004'] and self.l10n_pe_dte_detraction_base <= 700:  # ! Esos 700 debe ser parte de cnfiguración.
             raise UserError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo.')
 
-    @api.onchange('invoice_line_ids', 'l10n_pe_dte_detraction_percent')  # ! esto debería de ser computado
+    @api.onchange('invoice_line_ids', 'l10n_pe_dte_detraction_percent', 'date', 'exchange_rate')  # ! esto debería de ser computado
     def _onchange_detraction_percent(self):
         self._recompute_tax_lines()
         super(AccountMove, self)._onchange_detraction_percent()
