@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="res_config_settings_view_form" model="ir.ui.view">
+    <record id="res_config_settings_view_form_detraction" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.einvoice</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
@@ -14,7 +14,7 @@
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="detraction_journal_id"/>
-                            <span class="fa fa-lg fa-building-o" title="Diario de detracción." groups="account.group_account_user"/>
+                            <span class="fa fa-lg fa-building-o" title="Diario de pago de detracción." groups="account.group_account_user"/>
                             <div class="text-muted">Diario en el cual se reconocerá como de detracción</div>
                             <field name="detraction_journal_id"/>
                         </div>

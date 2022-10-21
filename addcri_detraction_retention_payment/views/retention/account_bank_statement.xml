@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bank_statement_form_inherit_addcri_retention_payment" model="ir.ui.view">
+        <field name="name">account.bank.statement.view.form.inherit</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="retention" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="l10n_latam_document_type_id" string="T.D." options="{'no_create': True, 'no_edit': True}" attrs="{'column_invisible' : [('parent.retention', '=', False)]}" domain="[('code', '=', '20')]"/>
+                <field name="l10n_latam_table_10_id" string="Medio de pago" options="{'no_create': True, 'no_edit': True, 'no_open': True}" attrs="{'column_invisible' : [('parent.retention', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,6 +1,6 @@
 {
-    'name': 'Detraction payment',
-    'version': '1.0.202209299',
+    'name': 'Tipo de cambio compra',
+    'version': '1.202210171',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
@@ -8,11 +8,12 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'l10n_pe_edi_extended_detraction', 'l10n_pe_edi_extended'
+        'currency_rate_live'
     ],
     'data': [
-        'views/account_move.xml',
-        'views/res_config_settings.xml'
+        'data/update_rate_currency_after_install.xml',
+        'data/ir_cron.xml',
+        'views/res_currency.xml',
     ],
     'demo': [
 
