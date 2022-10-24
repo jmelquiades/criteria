@@ -21,18 +21,6 @@ class AccountMove(models.Model):
     _description = 'Account Move'
 
     base_payment_state = fields.Selection(BASE_PAYMENT_STATE, string='Estado de pago de no detracción', compute='_get_base_payment_state')
-    exchange_rate = fields.Float('Tipo de cambio', compute='_get_exchange_rate', digits=(12, 3))
-    if_foreign_currency = fields.Boolean('Foreign Currency', compute='_get_if_foreign_currency')
-
-    @api.depends('currency_id', 'company_id.currency_id')
-    def _get_if_foreign_currency(self):
-        for record in self:
-            record.if_foreign_currency = record.currency_id != record.company_id.currency_id
-
-    @api.depends('date', 'currency_id', 'company_id', 'company_id.currency_id')
-    def _get_exchange_rate(self):
-        for record in self:
-            record.exchange_rate = record.company_id.currency_id._get_conversion_rate(record.currency_id, record.company_id.currency_id, record.company_id, record.date)
 
     @api.constrains('l10n_pe_dte_is_retention', 'l10n_pe_dte_is_detraction')
     def _constrains_l10n_pe_dte_is_retention(self):
