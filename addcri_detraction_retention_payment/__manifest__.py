@@ -1,6 +1,6 @@
 {
     'name': 'Detracción y retención',
-    'version': '1.0.202210121',
+    'version': '1.0.202210241',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
