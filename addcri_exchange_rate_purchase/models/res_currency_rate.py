@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class ResCurrencyRate(models.Model):
@@ -147,3 +148,22 @@ class ResCurrencyRate(models.Model):
     def _compute_rate(self):
         for currency_rate in self:
             currency_rate.sale_rate = currency_rate.sale_rate or self._get_latest_rate().sale_rate or 1.0
+
+    # * Move
+
+    def _execute_compute_exchange_rate_moves(self, vals):
+        AccountMove = self.env['account.move']
+        company = vals.get('company_id', self.company_id)
+        currency = vals.get('currency_id', self.currency_id)
+        date = vals.get('name', self.name)
+
+        domain = [('date', '>=', date), ('company_id', '=', company.id), ('currency_id', '=', currency.id)]
+
+        next_dates = currency.rate_ids.filtered(lambda cr: cr.name > date).sorted(lambda d: d.name)
+        next_date = next_dates[0].name if next_dates else False
+
+        if next_date:
+            domain_extra = [('date', '<', next_date)]
+            domain = expression.AND([domain, domain_extra])
+        moves = AccountMove.search(domain)
+        moves._get_exchange_rate()

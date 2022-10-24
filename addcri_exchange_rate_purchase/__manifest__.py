@@ -1,6 +1,6 @@
 {
     'name': 'Tipo de cambio compra y venta',
-    'version': '1.202210241',
+    'version': '1.202210242',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
@@ -14,6 +14,7 @@
         'data/update_rate_currency_after_install.xml',
         'data/ir_cron.xml',
         'views/res_currency.xml',
+        'views/account_move.xml',
     ],
     'demo': [
 
