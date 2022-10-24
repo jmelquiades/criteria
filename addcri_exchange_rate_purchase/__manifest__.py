@@ -1,6 +1,6 @@
 {
-    'name': 'Tipo de cambio compra',
-    'version': '1.202210171',
+    'name': 'Tipo de cambio compra y venta',
+    'version': '1.202210241',
     'description': '',
     'summary': '',
     'author': 'Jhon Jairo Rojas Ortiz',
