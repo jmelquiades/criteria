@@ -25,7 +25,7 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_state']" position="before">
-                <field name="retention_payment_state" widget="badge" decoration-danger="retention_payment_state in ('not_paid', 'unknown')" decoration-warning="retention_payment_state in ('partial', 'in_payment')" decoration-info="retention_payment_state == 'not_retention'" decoration-success="retention_payment_state == 'paid'" optional="show" string="P. Retención"/>
+                <field name="retention_payment_state" widget="badge" decoration-danger="retention_payment_state =='not_paid'" decoration-warning="retention_payment_state in ('partial', 'in_payment')" decoration-info="retention_payment_state == 'unknown'" decoration-success="retention_payment_state == 'paid'" optional="show" string="P. Retención"/>
             </xpath>
         </field>
     </record>

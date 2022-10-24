@@ -6,7 +6,7 @@ RETENTION_PAYMENT_STATE = [
     ('in_payment', 'En proceso de pago'),
     ('paid', 'Pagado'),
     ('partial', 'Pagado parcialmente'),
-    ('unknown', 'No es retención'),
+    ('unknown', 'N.A.'),
     # ('no_retention', 'No hay retención'),
 ]
 

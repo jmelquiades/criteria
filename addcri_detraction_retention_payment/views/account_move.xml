@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_state']" position="before">
-                <field name="base_payment_state" widget="badge" decoration-danger="base_payment_state in ('not_paid', 'unknown')" decoration-warning="base_payment_state in ('partial', 'in_payment')" decoration-info="base_payment_state == 'not_detraction'" decoration-success="base_payment_state == 'paid'" optional="show" string="P. Base"/>
+                <field name="base_payment_state" widget="badge" decoration-danger="base_payment_state == 'not_paid'" decoration-warning="base_payment_state in ('partial', 'in_payment')" decoration-info="base_payment_state == 'unknown'" decoration-success="base_payment_state == 'paid'" optional="show" string="P. Base"/>
             </xpath>
         </field>
     </record>
