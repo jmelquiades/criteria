@@ -11,7 +11,7 @@ BASE_PAYMENT_STATE = [
     ('in_payment', 'En proceso de pago'),
     ('paid', 'Pagado'),
     ('partial', 'Pagado parcialmente'),
-    ('unknown', 'N.A'),
+    ('unknown', 'No aplica'),
     # ('no_detraction', 'No hay detracción'),
 ]
 
