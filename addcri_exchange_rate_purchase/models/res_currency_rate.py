@@ -210,7 +210,7 @@ class ResCurrencyRate(models.Model):
     def _sanitize_vals(self, vals):
         vals = super(ResCurrencyRate, self)._sanitize_vals(vals)
         if 'inverse_company_purchase_rate' in vals and ('company_purchase_rate' in vals or 'purchase_rate' in vals):
-            del vals['inverse_company_rate']
+            del vals['inverse_company_purchase_rate']
         if 'company_purchase_rate' in vals and 'purchase_rate' in vals:
             del vals['company_purchase_rate']
         if 'inverse_company_sale_rate' in vals and ('company_sale_rate' in vals or 'sale_rate' in vals):
