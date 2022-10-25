@@ -1,4 +1,8 @@
 from odoo import _, api, fields, models
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -16,11 +20,16 @@ class AccountMove(models.Model):
     @api.depends('date', 'currency_id', 'company_id', 'company_id.currency_id')
     def _get_exchange_rate(self):
         for record in self:
-            record.exchange_rate = 0
-            if record.move_type in record.get_outbound_types():
+            record.exchange_rate = 1
+            if record.move_type in record.get_inbound_types():
                 record.exchange_rate = record.company_id.currency_id._get_conversion_purchase_rate(record.currency_id, record.company_id.currency_id, record.company_id, record.date)
-            elif record.move_type in record.get_inbound_types():
+            elif record.move_type in record.get_outbound_types():
                 record.exchange_rate = record.company_id.currency_id._get_conversion_sale_rate(record.currency_id, record.company_id.currency_id, record.company_id, record.date)
+
+    @api.onchange('exchange_rate')
+    def _onchange_price_subtotal_from_exchange_rate(self):
+        lines = (self.line_ids | self.invoice_line_ids).with_context(manual_rate=True)
+        lines._onchange_price_subtotal()
 
     # def _recompute_tax_lines(self, recompute_tax_base_amount=False, tax_rep_lines_to_recompute=None):
     #     """ Compute the dynamic tax lines of the journal entry.

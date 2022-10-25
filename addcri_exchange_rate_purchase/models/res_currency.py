@@ -29,7 +29,7 @@ class ResCurrency(models.Model):
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
         return res
 
-    def _convert_purchase(self, from_amount, to_currency, company, date, round=True):
+    def _convert_purchase(self, from_amount, to_currency, company, date, round=True, exchange_rate=0):
         """Returns the converted amount of ``from_amount``` from the currency
            ``self`` to the currency ``to_currency`` for the given ``date`` and
            company.
@@ -47,7 +47,13 @@ class ResCurrency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            to_amount = from_amount * self._get_conversion_purchase_rate(self, to_currency, company, date)
+            manual_rate = dict(self._context).get('manual_rate', False)
+            if manual_rate:
+                if exchange_rate == 0:
+                    raise
+                to_amount = from_amount * exchange_rate
+            else:
+                to_amount = from_amount * self._get_conversion_purchase_rate(self, to_currency, company, date)
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
@@ -75,7 +81,7 @@ class ResCurrency(models.Model):
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
         return res
 
-    def _convert_sale(self, from_amount, to_currency, company, date, round=True):
+    def _convert_sale(self, from_amount, to_currency, company, date, round=True, exchange_rate=0):
         """Returns the converted amount of ``from_amount``` from the currency
            ``self`` to the currency ``to_currency`` for the given ``date`` and
            company.
@@ -93,6 +99,13 @@ class ResCurrency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            to_amount = from_amount * self._get_conversion_sale_rate(self, to_currency, company, date)
+            manual_rate = dict(self._context).get('manual_rate', False)
+            if manual_rate:
+                if exchange_rate == 0:
+                    raise
+                to_amount = from_amount * exchange_rate
+            else:
+                to_amount = from_amount * self._get_conversion_sale_rate(self, to_currency, company, date)
+
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
