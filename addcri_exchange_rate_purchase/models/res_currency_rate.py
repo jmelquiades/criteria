@@ -96,78 +96,6 @@ class ResCurrencyRate(models.Model):
                     }
                 }
 
-    # # * Sale
-
-    sale_rate = fields.Float('Sale Rate', default=1, digits=0,
-                             group_operator="avg")
-
-    company_sale_rate = fields.Float(
-        digits=0,
-        compute="_compute_company_sale_rate",
-        inverse="_inverse_company_sale_rate",
-        group_operator="avg",
-        help="The currency of sale_rate 1 to the sale_rate of the currency.",
-    )
-    inverse_company_sale_rate = fields.Float(
-        digits=0,
-        compute="_compute_inverse_company_sale_rate",
-        inverse="_inverse_inverse_company_sale_rate",
-        group_operator="avg",
-        help="The sale_rate of the currency to the currency of sale_rate 1 ",
-    )
-    _sql_constraints = [
-        ('currency_sale_rate_check', 'CHECK (sale_rate>0)', 'The currency sale rate must be strictly positive.'),
-    ]
-
-    @api.depends('company_sale_rate')
-    def _compute_inverse_company_sale_rate(self):
-        for currency_rate in self:
-            currency_rate.inverse_company_sale_rate = 1.0 / currency_rate.company_sale_rate
-
-    @api.onchange('inverse_company_sale_rate')
-    def _inverse_inverse_company_sale_rate(self):
-        for currency_rate in self:
-            currency_rate.company_sale_rate = 1.0 / currency_rate.inverse_company_sale_rate
-
-    @api.depends('sale_rate', 'name', 'currency_id', 'company_id', 'currency_id.rate_ids.sale_rate')
-    @api.depends_context('company')
-    def _compute_company_sale_rate(self):
-        last_rate = self.env['res.currency.rate']._get_last_sale_rates_for_companies(self.company_id | self.env.company)
-        for currency_rate in self:
-            company = currency_rate.company_id or self.env.company
-            currency_rate.company_sale_rate = (currency_rate.sale_rate or self._get_latest_sale_rate().sale_rate or 1.0) / last_rate[company]
-
-    @api.onchange('company_sale_rate')
-    def _inverse_company_sale_rate(self):
-        last_rate = self.env['res.currency.rate']._get_last_sale_rates_for_companies(self.company_id | self.env.company)
-        for currency_rate in self:
-            company = currency_rate.company_id or self.env.company
-            currency_rate.sale_rate = currency_rate.company_sale_rate * last_rate[company]
-
-    def _get_last_sale_rates_for_companies(self, companies):
-        return {
-            company: company.currency_id.rate_ids.sudo().filtered(lambda x: (
-                x.sale_rate
-                and x.company_id == company or not x.company_id
-            )).sorted('name')[-1:].sale_rate or 1
-            for company in companies
-        }
-
-    def _get_latest_sale_rate(self):
-        # Make sure 'name' is defined when creating a new sale_rate.
-        if not self.name:
-            raise UserError(_("The date for the current sale_rate is empty.\nPlease set it."))
-        return self.currency_id.rate_ids.sudo().filtered(lambda x: (
-            x.sale_rate
-            and x.company_id == (self.company_id or self.env.company)
-            and x.name < (self.name or fields.Date.today())
-        )).sorted('name')[-1:]
-
-    @api.depends('currency_id', 'company_id', 'name')
-    def _compute_sale_rate(self):
-        for currency_rate in self:
-            currency_rate.sale_rate = currency_rate.sale_rate or self._get_latest_sale_rate().sale_rate or 1.0
-
     # * Move
 
     @api.model
@@ -213,8 +141,4 @@ class ResCurrencyRate(models.Model):
             del vals['inverse_company_purchase_rate']
         if 'company_purchase_rate' in vals and 'purchase_rate' in vals:
             del vals['company_purchase_rate']
-        if 'inverse_company_sale_rate' in vals and ('company_sale_rate' in vals or 'sale_rate' in vals):
-            del vals['inverse_company_sale_rate']
-        if 'company_sale_rate' in vals and 'sale_rate' in vals:
-            del vals['company_sale_rate']
         return vals

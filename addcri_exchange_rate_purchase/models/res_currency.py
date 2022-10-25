@@ -60,26 +60,11 @@ class ResCurrency(models.Model):
     # * Sale
 
     def _get_sale_rates(self, company, date):
-        if not self.ids:
-            return {}
-        self.env['res.currency.rate'].flush(['sale_rate', 'currency_id', 'company_id', 'name'])
-        query = """SELECT c.id,
-                          COALESCE((SELECT r.sale_rate FROM res_currency_rate r
-                                  WHERE r.currency_id = c.id AND r.name <= %s
-                                    AND (r.company_id IS NULL OR r.company_id = %s)
-                               ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1), 1.0) AS rate
-                   FROM res_currency c
-                   WHERE c.id IN %s"""
-        self._cr.execute(query, (date, company.id, tuple(self.ids)))
-        currency_rates = dict(self._cr.fetchall())
-        return currency_rates
+        return self._get_rates(company, date)
 
     @api.model
     def _get_conversion_sale_rate(self, from_currency, to_currency, company, date):
-        currency_rates = (from_currency + to_currency)._get_sale_rates(company, date)
-        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
-        return res
+        return self._get_conversion_rate(from_currency, to_currency, company, date)
 
     def _convert_sale(self, from_amount, to_currency, company, date, round=True, exchange_rate=0):
         """Returns the converted amount of ``from_amount``` from the currency
@@ -105,7 +90,7 @@ class ResCurrency(models.Model):
                     raise
                 to_amount = from_amount * exchange_rate
             else:
-                to_amount = from_amount * self._get_conversion_sale_rate(self, to_currency, company, date)
+                to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
 
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
