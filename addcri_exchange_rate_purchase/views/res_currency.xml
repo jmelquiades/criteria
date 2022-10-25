@@ -9,9 +9,11 @@
                 <!-- * Purchase -->
                 <field name="inverse_company_purchase_rate" digits="[12,12]" optional="show" string="PEN por unidad (compra)"/>
                 <field name="purchase_rate" digits="[12,12]" optional="hide" string="Tasa técnica (compra)"/>
+                <field name="company_purchase_rate" digits="[12,12]" optional="hide" string="Unidad por PEN (compra)"/>
                 <!-- * Sale -->
                 <field name="inverse_company_sale_rate" digits="[12,12]" optional="show" string="PEN por unidad (venta)"/>
                 <field name="sale_rate" digits="[12,12]" optional="hide" string="Tasa técnica (venta)"/>
+                <field name="company_sale_rate" digits="[12,12]" optional="hide" string="Unidad por PEN (venta)"/>
             </xpath>
         </field>
     </record>

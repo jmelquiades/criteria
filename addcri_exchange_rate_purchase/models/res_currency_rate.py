@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
+import datetime
 
 
 class ResCurrencyRate(models.Model):
@@ -9,20 +10,21 @@ class ResCurrencyRate(models.Model):
 
     # * Purchase
 
-    purchase_rate = fields.Float('Purchase Rate', default=1)
-    inverse_company_purchase_rate = fields.Float(
-        digits=0,
-        compute="_compute_inverse_company_purchase_rate",
-        inverse="_inverse_inverse_company_purchase_rate",
-        group_operator="avg",
-        help="The purchase_rate of the currency to the currency of purchase_rate 1 ",
-    )
+    purchase_rate = fields.Float('Purchase Rate', default=1, digits=0,
+                                 group_operator="avg")
     company_purchase_rate = fields.Float(
         digits=0,
         compute="_compute_company_purchase_rate",
         inverse="_inverse_company_purchase_rate",
         group_operator="avg",
         help="The currency of purchase_rate 1 to the purchase_rate of the currency.",
+    )
+    inverse_company_purchase_rate = fields.Float(
+        digits=0,
+        compute="_compute_inverse_company_purchase_rate",
+        inverse="_inverse_inverse_company_purchase_rate",
+        group_operator="avg",
+        help="The purchase_rate of the currency to the currency of purchase_rate 1 ",
     )
 
     _sql_constraints = [
@@ -74,20 +76,31 @@ class ResCurrencyRate(models.Model):
         )).sorted('name')[-1:]
 
     @api.depends('currency_id', 'company_id', 'name')
-    def _compute_rate(self):
+    def _compute_purchase_rate(self):
         for currency_rate in self:
-            currency_rate.purchase_rate = currency_rate.purchase_rate or self._get_latest_rate().purchase_rate or 1.0
+            currency_rate.purchase_rate = currency_rate.purchase_rate or self._get_latest_purchase_rate().purchase_rate or 1.0
 
-    # * Sale
+    @api.onchange('company_purchase_rate')
+    def _onchange_purchase_rate_warning(self):
+        latest_rate = self._get_latest_purchase_rate()
+        if latest_rate:
+            diff = (latest_rate.purchase_rate - self.purchase_rate) / latest_rate.purchase_rate
+            if abs(diff) > 0.2:
+                return {
+                    'warning': {
+                        'title': _("Warning for %s", self.currency_id.name),
+                        'message': _(
+                            "The new rate is quite far from the previous rate.\n"
+                            "Incorrect currency rates may cause critical problems, make sure the rate is correct !"
+                        )
+                    }
+                }
 
-    sale_rate = fields.Float('Sale Rate', default=1)
-    inverse_company_sale_rate = fields.Float(
-        digits=0,
-        compute="_compute_inverse_company_sale_rate",
-        inverse="_inverse_inverse_company_sale_rate",
-        group_operator="avg",
-        help="The sale_rate of the currency to the currency of sale_rate 1 ",
-    )
+    # # * Sale
+
+    sale_rate = fields.Float('Sale Rate', default=1, digits=0,
+                             group_operator="avg")
+
     company_sale_rate = fields.Float(
         digits=0,
         compute="_compute_company_sale_rate",
@@ -95,7 +108,13 @@ class ResCurrencyRate(models.Model):
         group_operator="avg",
         help="The currency of sale_rate 1 to the sale_rate of the currency.",
     )
-
+    inverse_company_sale_rate = fields.Float(
+        digits=0,
+        compute="_compute_inverse_company_sale_rate",
+        inverse="_inverse_inverse_company_sale_rate",
+        group_operator="avg",
+        help="The sale_rate of the currency to the currency of sale_rate 1 ",
+    )
     _sql_constraints = [
         ('currency_sale_rate_check', 'CHECK (sale_rate>0)', 'The currency sale rate must be strictly positive.'),
     ]
@@ -145,11 +164,24 @@ class ResCurrencyRate(models.Model):
         )).sorted('name')[-1:]
 
     @api.depends('currency_id', 'company_id', 'name')
-    def _compute_rate(self):
+    def _compute_sale_rate(self):
         for currency_rate in self:
-            currency_rate.sale_rate = currency_rate.sale_rate or self._get_latest_rate().sale_rate or 1.0
+            currency_rate.sale_rate = currency_rate.sale_rate or self._get_latest_sale_rate().sale_rate or 1.0
 
     # * Move
+
+    @api.model
+    def create(self, vals):
+        res = super(ResCurrencyRate, self).create(vals)
+        if 'rate' in vals:
+            self._execute_compute_exchange_rate_moves(vals)
+        return res
+
+    def write(self, vals):
+        res = super(ResCurrencyRate, self).write(vals)
+        if 'rate' in vals:
+            self._execute_compute_exchange_rate_moves(vals)
+        return res
 
     def _execute_compute_exchange_rate_moves(self, vals):
         AccountMove = self.env['account.move']
@@ -157,7 +189,14 @@ class ResCurrencyRate(models.Model):
         currency = vals.get('currency_id', self.currency_id)
         date = vals.get('name', self.name)
 
-        domain = [('date', '>=', date), ('company_id', '=', company.id), ('currency_id', '=', currency.id)]
+        if type(date) == str:
+            date_str = date
+            date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        else:
+            date_str = date.strftime('%Y-%m-%d')
+            date = date
+
+        domain = [('date', '>=', date_str), ('company_id', '=', company.id), ('currency_id', '=', currency.id)]
 
         next_dates = currency.rate_ids.filtered(lambda cr: cr.name > date).sorted(lambda d: d.name)
         next_date = next_dates[0].name if next_dates else False
@@ -167,3 +206,15 @@ class ResCurrencyRate(models.Model):
             domain = expression.AND([domain, domain_extra])
         moves = AccountMove.search(domain)
         moves._get_exchange_rate()
+
+    def _sanitize_vals(self, vals):
+        vals = super(ResCurrencyRate, self)._sanitize_vals(vals)
+        if 'inverse_company_purchase_rate' in vals and ('company_purchase_rate' in vals or 'purchase_rate' in vals):
+            del vals['inverse_company_rate']
+        if 'company_purchase_rate' in vals and 'purchase_rate' in vals:
+            del vals['company_purchase_rate']
+        if 'inverse_company_sale_rate' in vals and ('company_sale_rate' in vals or 'sale_rate' in vals):
+            del vals['inverse_company_sale_rate']
+        if 'company_sale_rate' in vals and 'sale_rate' in vals:
+            del vals['company_sale_rate']
+        return vals

@@ -75,7 +75,7 @@ class ResCurrency(models.Model):
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
         return res
 
-    def _convert_purchase(self, from_amount, to_currency, company, date, round=True):
+    def _convert_sale(self, from_amount, to_currency, company, date, round=True):
         """Returns the converted amount of ``from_amount``` from the currency
            ``self`` to the currency ``to_currency`` for the given ``date`` and
            company.
