@@ -10,8 +10,9 @@ class ResCurrencyRate(models.Model):
 
     # * Purchase
 
-    purchase_rate = fields.Float('Purchase Rate', default=1, digits=0,
+    purchase_rate = fields.Float('Purchase Rate', digits=0,
                                  group_operator="avg")
+    #   default=1,
     company_purchase_rate = fields.Float(
         digits=0,
         compute="_compute_company_purchase_rate",
