@@ -139,7 +139,10 @@ class PleSale(models.Model):
                 # 'ple_sale_id': self.id,
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
-                'ref': invoice.ref
+                'ref': invoice.ref,
+                # * me
+                'move_period': invoice.move_period,
+                'exchange_inconsistent': invoice.exchange_inconsistent,
             }
             records.append((0, 0, values))
             row += 1
@@ -148,45 +151,49 @@ class PleSale(models.Model):
 
     def get_data(self):
         data = []
-        for obj_line in self.line_ids:
+        for line in self.line_ids:
             value = {
-                'period': obj_line.name,
-                'number_origin': obj_line.number_origin,
-                'journal_correlative': obj_line.journal_correlative,
-                'date_invoice': obj_line.date_invoice and obj_line.date_invoice.strftime('%d/%m/%Y') or '',
-                'date_due': obj_line.date_due and obj_line.date_due.strftime('%d/%m/%Y') or '',
-                'voucher_sunat_code': obj_line.voucher_sunat_code,
-                'voucher_series': obj_line.series,
-                'correlative': obj_line.correlative,
-                'correlative_end': obj_line.correlative_end,
-                'customer_document_type': obj_line.customer_document_type,
-                'customer_document_number': obj_line.customer_document_number,
-                'customer_name': obj_line.customer_name,
-                'amount_export': obj_line.amount_export,
-                'amount_untaxed': obj_line.amount_untaxed,
-                'discount_tax_base': obj_line.discount_tax_base,
-                'sale_no_gravadas_igv': obj_line.sale_no_gravadas_igv,
-                'discount_igv': obj_line.discount_igv,
-                'amount_exonerated': obj_line.amount_exonerated,
-                'amount_no_effect': obj_line.amount_no_effect,
-                'isc': obj_line.isc,
-                'rice_tax_base': obj_line.rice_tax_base or '',
-                'rice_igv': obj_line.rice_igv or '',
-                'another_taxes': obj_line.another_taxes,
-                'amount_total': obj_line.amount_total,
-                'code_currency': obj_line.code_currency,
-                'currency_rate': obj_line.currency_rate,
-                'origin_date_invoice': obj_line.origin_date_invoice and obj_line.origin_date_invoice.strftime('%d/%m/%Y') or '',
-                'origin_document_code': obj_line.origin_document_code,
-                'origin_serie': obj_line.origin_serie,
-                'origin_correlative': obj_line.origin_correlative,
-                'contract_name': obj_line.contract_name,
-                'inconsistency_type_change': obj_line.inconsistency_type_change,
-                'payment_voucher': obj_line.payment_voucher,
-                'ple_state': obj_line.ple_state,
+                'period': line.name,
+                'number_origin': line.number_origin,
+                'journal_correlative': line.journal_correlative,
+                'date_invoice': line.date_invoice and line.date_invoice.strftime('%d/%m/%Y') or '',
+                'date_due': line.date_due and line.date_due.strftime('%d/%m/%Y') or '',
+                'voucher_sunat_code': line.voucher_sunat_code,
+                'voucher_series': line.series,
+                'correlative': line.correlative,
+                'correlative_end': line.correlative_end,
+                'customer_document_type': line.customer_document_type,
+                'customer_document_number': line.customer_document_number,
+                'customer_name': line.customer_name,
+                'amount_export': line.amount_export,
+                'amount_untaxed': line.amount_untaxed,
+                'discount_tax_base': line.discount_tax_base,
+                'sale_no_gravadas_igv': line.sale_no_gravadas_igv,
+                'discount_igv': line.discount_igv,
+                'amount_exonerated': line.amount_exonerated,
+                'amount_no_effect': line.amount_no_effect,
+                'isc': line.isc,
+                'rice_tax_base': line.rice_tax_base or '',
+                'rice_igv': line.rice_igv or '',
+                'another_taxes': line.another_taxes,
+                'amount_total': line.amount_total,
+                'code_currency': line.code_currency,
+                'currency_rate': line.currency_rate,
+                'origin_date_invoice': line.origin_date_invoice and line.origin_date_invoice.strftime('%d/%m/%Y') or '',
+                'origin_document_code': line.origin_document_code,
+                'origin_serie': line.origin_serie,
+                'origin_correlative': line.origin_correlative,
+                'contract_name': line.contract_name,
+                'inconsistency_type_change': line.inconsistency_type_change,
+                'payment_voucher': line.payment_voucher,
+                'ple_state': line.ple_state,
                 ####
-                'journal_name': obj_line.journal_name,
-                'document_code': obj_line.document_code}
+                'journal_name': line.journal_name,
+                'document_code': line.document_code,
+                # * me
+                'move_period': line.move_period,
+                'exchange_inconsistent': line.exchange_inconsistent,
+            }
             data.append(value)
         return data
 
