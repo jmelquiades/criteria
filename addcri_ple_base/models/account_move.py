@@ -46,6 +46,18 @@ class AccountMove(models.Model):
     voucher_number = fields.Char(string='Número de Pago')
     voucher_payment_date = fields.Date(string='Fecha pago')
 
+    # * me
+
+    move_period = fields.Selection([
+        ('0', 'Anotación sin efecto en el IGV'),
+        ('1', 'Documento anulado'),
+        ('2', 'Fecha del comprobante corresponde al periodo'),
+        ('8', 'Corresponde al periodo anterior'),
+        ('9', 'Se está corrigiendo una anotación de periodo anterior')
+    ], string='Estado de factura')
+
+    exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+
     @api.model
     def _convert_date_timezone(self, date_order, format_time='%Y-%m-%d %H:%M:%S'):
         tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc

@@ -130,3 +130,18 @@ class PleSaleLine(models.Model):
     document_code = fields.Char('Código de Documento')
     # tax_totals_json = fields.Char('Tax TOtals Json')
     ref = fields.Char('Referencia')
+    # * me
+
+    move_period = fields.Selection([
+        ('0', 'Anotación sin efecto en el IGV'),
+        ('1', 'Documento anulado'),
+        ('2', 'Fecha del comprobante corresponde al periodo'),
+        ('8', 'Corresponde al periodo anterior'),
+        ('9', 'Se está corrigiendo una anotación de periodo anterior')
+    ], string='Estado de factura')
+
+    exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+    tax_exp = fields.Float('Tax Exp')
+    tax_ina = fields.Float('Tax Ina')
+    tax_exo = fields.Float('Tax Exo')
+    tax_icbp = fields.Float('Tax Icbp')
