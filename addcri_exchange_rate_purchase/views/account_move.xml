@@ -9,6 +9,9 @@
                 <field name="if_foreign_currency" invisible="1"/>
                 <field name="exchange_rate" attrs="{'invisible': [('if_foreign_currency', '=', False)]}"/>
             </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='debit']" position="before">
+                <field name="exchange_rate" invisible="1"/>
+            </xpath>
         </field>
     </record>
 </odoo>
