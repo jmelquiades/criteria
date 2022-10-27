@@ -141,3 +141,7 @@ class PleSaleLine(models.Model):
     ], string='Estado de factura')
 
     exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+    tax_exp = fields.Float('Tax Exp')
+    tax_ina = fields.Float('Tax Ina')
+    tax_exo = fields.Float('Tax Exo')
+    tax_icbp = fields.Float('Tax Icbp')

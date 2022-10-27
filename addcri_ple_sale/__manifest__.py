@@ -8,7 +8,7 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'base', 'sale', 'addcri_ple_base'
+        'base', 'sale', 'addcri_ple_base', 'addcri_exchange_rate_purchase'
     ],
     'data': [
         'security/ir.model.access.csv',

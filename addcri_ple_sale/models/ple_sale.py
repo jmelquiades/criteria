@@ -3,6 +3,7 @@ from ..reports.sale_report_xlsx import SaleReportXlsx
 from ..reports.sale_report_txt import SaleReportTxt
 from ..reports.sale_report import SaleReport
 import base64
+import json
 
 
 class PleSale(models.Model):
@@ -101,6 +102,10 @@ class PleSale(models.Model):
             sum_another_taxes = v['S_TAX_OTHER']
             amount_total = v['AMOUNT_TOTAL']
 
+            taxes_values = list(json.loads(invoice.tax_totals_json).get('groups_by_subtotal', {}).values())
+            taxes = taxes_values and taxes_values[0] or []
+            exchange_rate = invoice.exchange_rate
+
             values = {
                 'row': row,
                 'name': invoice.date.strftime('%Y%m00'),
@@ -143,11 +148,20 @@ class PleSale(models.Model):
                 # * me
                 'move_period': invoice.move_period,
                 'exchange_inconsistent': invoice.exchange_inconsistent,
+                # * taxes
+                'tax_exp': self._get_amount_tax(taxes, 'EXP')*exchange_rate,
+                'tax_ina': self._get_amount_tax(taxes, 'INA')*exchange_rate,
+                'tax_exo': self._get_amount_tax(taxes, 'EXO')*exchange_rate,
+                'tax_icbp': self._get_amount_tax(taxes, 'ICBP')*exchange_rate,
             }
             records.append((0, 0, values))
             row += 1
         self.line_ids = records
         return self.action_generate_report()
+
+    def _get_amount_tax(self, values, tax):
+        arr_tax = list(filter(lambda t: t.get('tax_group_name', '') == tax, values))
+        return dict(arr_tax and arr_tax[-1] or {}).get('tax_group_amount', 0)
 
     def get_data(self):
         data = []
@@ -193,6 +207,11 @@ class PleSale(models.Model):
                 # * me
                 'move_period': line.move_period,
                 'exchange_inconsistent': line.exchange_inconsistent,
+                # * TAX
+                'tax_exp': line.tax_exp,
+                'tax_ina': line.tax_ina,
+                'tax_exo': line.tax_exo,
+                'tax_icbp': line.tax_icbp,
             }
             data.append(value)
         return data
