@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="base.USD" model="res.currency">
+        <!-- <record id="base.USD" model="res.currency">
             <field name="active">1</field>
         </record>
         <record id="base.main_company" model="res.company">
             <field name="currency_provider">bcrp</field>
-        </record>
+        </record> -->
         <function model="res.company" name="update_rate_currency_after_install"/>
     </data>
 </odoo>
