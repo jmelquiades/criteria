@@ -14,8 +14,6 @@ class ResCompany(models.Model):
 
     @api.model
     def update_rate_currency_after_install(self):
-        self.env.ref('base.USD').active = True
-        self.env.ref('base.main_company').currency_provider = 'bcrp'
         rslt = True
         active_currencies = self.env['res.currency'].search([])
         if 'PEN' in active_currencies.mapped('name'):
