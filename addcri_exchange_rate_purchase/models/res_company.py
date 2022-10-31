@@ -57,7 +57,7 @@ class ResCompany(models.Model):
             'EUR': 'PD04647PD',
         }
         results = []
-        dates = self.env['res.currency'].search([('name', 'in', list(foreigns.keys()))]).rate_ids.filtered(lambda r: r.purchase_rate == 1).mapped('name')
+        dates = self.env['res.currency'].search([('name', 'in', list(foreigns.keys()))]).rate_ids.filtered(lambda r: not r.purchase_rate).mapped('name')
         for date_pe in dates:
             date_backup_pe = date_pe
             result = {}
