@@ -50,8 +50,8 @@ class AccountMove(models.Model):
 
     move_period = fields.Selection([
         ('0', 'Anotación sin efecto en el IGV'),
-        ('1', 'Documento anulado'),
-        ('2', 'Fecha del comprobante corresponde al periodo'),
+        ('1', 'Fecha del comprobante corresponde al periodo'),
+        ('2', 'Documento anulado'),
         ('8', 'Corresponde al periodo anterior'),
         ('9', 'Se está corrigiendo una anotación de periodo anterior')
     ], string='Estado de factura')
