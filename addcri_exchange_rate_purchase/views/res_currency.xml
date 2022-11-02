@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_currency_form_inherit_addcri_exchange_rate_purchase" model="ir.ui.view">
+        <field name="name">res.currency.view.form.inherit</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rate_ids']/tree/field[@name='rate']" position="after">
+                <!-- * Purchase -->
+                <field name="company_purchase_rate" digits="[12,12]" optional="hide" string="Unidad por PEN (compra)"/>
+                <field name="inverse_company_purchase_rate" digits="[12,12]" optional="show" string="PEN por unidad (compra)"/>
+                <field name="purchase_rate" digits="[12,12]" optional="hide" string="Tasa técnica (compra)"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

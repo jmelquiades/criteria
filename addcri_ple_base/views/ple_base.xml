@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="ple_base_menu" name="SUNAT PLE" web_icon="addcri_ple_base,static/img/app.png"/>
+    <menuitem id="ple_base_rmt_menu" name="RMT" parent="ple_base_menu" sequence="2"/>
+    <menuitem id="ple_base_rg_menu" name="RG" parent="ple_base_menu" sequence="3"/>
+</odoo>

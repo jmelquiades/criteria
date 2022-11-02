@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ple_sale_view_form" model="ir.ui.view">
+        <field name="name">ple.sale.view.form</field>
+        <field name="model">ple.sale</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="update_data_lines" string="Generar PLE" type="object" states="draft"/>
+                    <button name="action_close" string="Declarar a SUNAT" states="draft" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <label for="period_year" string="Period"/>
+                            <div>
+                                <field name="period_month" placeholder="Month" class="oe_inline" attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="period_year" placeholder="Year" class="oe_inline" attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                            </div>
+                            <field name="company_id" attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                        </group>
+                        <group>
+                            <field name="datetime_ple" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="detalle" string="Detalle">
+                            <field name="line_ids" readonly="1">
+                                <tree>
+                                    <field name="row" string="Fila"/>
+                                    <field name="invoice_id" optional="show"/>
+                                    <field name="document_code" string="TP Doc."/>
+                                    <field name="series" string="Serie"/>
+                                    <field name="correlative" string="# Comp"/>
+                                    <field name="date_invoice" string="F. Emi"/>
+                                    <field name="date" string="F. Cont"/>
+                                    <field name="date_due" string="F. Venc"/>
+                                    <field name="origin_date_invoice" string="F. Emi (M)" optional="hide"/>
+                                    <field name="origin_document_code" string="TP Doc.(M)" optional="hide"/>
+                                    <field name="origin_serie" string="Serie (M)" optional="hide"/>
+                                    <field name="origin_correlative" string="# Comp (M)" optional="hide"/>
+                                    <field name="customer_document_number" string="Doc. ID" size="5"/>
+                                    <field name="customer_name" string="R. Social"/>
+                                    <field name="amount_untaxed" string="Base"/>
+                                    <field name="amount_taxed" string="Impuesto"/>
+                                    <field name="amount_total" string="Total"/>
+                                    <field name="code_currency" string="Divisa"/>
+                                    <field name="currency_rate" string="T.C."/>
+                                    <field name="ref" string="Ref."/>
+                                    <!--  -->
+                                    <field name="amount_export" optional="hide"/>
+                                    <field name="discount_tax_base" optional="hide"/>
+                                    <field name="sale_no_gravadas_igv" optional="hide"/>
+                                    <field name="discount_igv" optional="hide"/>
+                                    <field name="amount_exonerated" optional="hide"/>
+                                    <field name="amount_no_effect" optional="hide"/>
+                                    <field name="isc" optional="hide"/>
+                                    <field name="rice_tax_base" optional="hide"/>
+                                    <field name="rice_igv" optional="hide"/>
+                                    <field name="ple_state" optional="hide"/>
+                                    <field name="journal_name" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="report" string="Report">
+                            <group>
+                                <group name="txt" string="TXT">
+                                    <field name="txt_filename" invisible="1"/>
+                                    <field name="txt_binary" filename="txt_filename" readonly="1"/>
+                                </group>
+                                <group name="xlsx" string="XLSX">
+                                    <field name="xlsx_filename" invisible="1"/>
+                                    <field name="xlsx_binary" filename="xlsx_filename" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="ple_sale_view_tree" model="ir.ui.view">
+        <field name="name">ple.sale.view.tree</field>
+        <field name="model">ple.sale</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="period_year"/>
+                <field name="period_month"/>
+                <field name="company_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="ple_sale_action" model="ir.actions.act_window">
+        <field name="name">Registro de Ventas</field>
+        <field name="res_model">ple.sale</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>Cree un nuevo registro</p>
+        </field>
+    </record>
+    <menuitem id="ple_sale_rmt_menu" name="Registro de Ventas" action="ple_sale_action" parent="addcri_ple_base.ple_base_rmt_menu" sequence="2"/>
+    <menuitem id="ple_sale_rg_menu" name="Registro de Ventas" action="ple_sale_action" parent="addcri_ple_base.ple_base_rg_menu" sequence="2"/>
+</odoo>

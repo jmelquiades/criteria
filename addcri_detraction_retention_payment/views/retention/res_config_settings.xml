@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_retention" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.invoice</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="after">
+                <h2>Diario de retención</h2>
+                <div class="row mt16 o_settings_container" name="rucsearch_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box" id="retention_journal">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="retention_journal_id"/>
+                            <span class="fa fa-lg fa-building-o" title="Diario de pago de retención." groups="account.group_account_user"/>
+                            <div class="text-muted">Diario en el cual se reconocerá como de retención</div>
+                            <field name="retention_journal_id"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="update_purchase_rate" model="ir.cron">
+            <field name="name">Update purchase rate</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field name="state">code</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="code">model.update_rate_currency_after_install()</field>
+            <field name='interval_number'>1</field>
+            <field name='active'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+            <field name="priority">5</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1))"/>
+        </record>
+    </data>
+</odoo>
