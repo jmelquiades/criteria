@@ -218,7 +218,7 @@ class AccountMove(models.Model):
     l10n_pe_dte_amount_prepaid = fields.Monetary(string='Prepaid Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_untaxed = fields.Monetary(string='Total before taxes', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True, help='Total before taxes, all discounts included')
     l10n_pe_dte_global_discount = fields.Monetary(string='Global discount', store=True, readonly=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
-    l10n_pe_dte_amount_in_words = fields.Char(string="Amount in Words", compute='_l10n_pe_dte_amount_in_words')
+    l10n_pe_dte_amount_in_words = fields.Char(string="DTE Amount in Words", compute='_l10n_pe_dte_amount_in_words')
     l10n_pe_dte_amount_perception_base = fields.Float(string='Perception Base', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_perception_percentage = fields.Float(string='Perception Percentage', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_perception = fields.Float(string='Perception Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
