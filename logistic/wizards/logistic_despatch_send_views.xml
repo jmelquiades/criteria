@@ -79,8 +79,8 @@
         <record id="despatch_send" model="ir.actions.act_window">
             <field name="name">Send &amp; print</field>
             <field name="res_model">logistic.despatch.send</field>
-            <field name="binding_model">logistic.despatch</field>
-            <field name="binding_views">list</field>
+            <!-- <field name="binding_model">logistic.despatch</field> -->
+            <!-- <field name="binding_views">list</field> -->
             <field name="view_mode">tree,form</field>
             <field name="target">new</field>
             <field name="context">{ 'default_template_id': ref('logistic.email_template_edi_despatch'), 'mark_despatch_as_sent': True, }</field>
