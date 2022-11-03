@@ -104,7 +104,7 @@ class PleSaleLine(models.Model):
         string='Serie'
     )
     origin_correlative = fields.Char(
-        string='Correlativo',
+        string='Correlativo de origen',
     )
     contract_name = fields.Char(
         string='Identificador de Contrato y/o Proyecto'

@@ -27,13 +27,13 @@ class PlePurchase(models.Model):
         string='Líneas'
     )
     xlsx_filename_8_1 = fields.Char()
-    xlsx_binary_8_1 = fields.Binary('Reporte XLSX')
+    xlsx_binary_8_1 = fields.Binary('Reporte XLSX 8.1')
     txt_filename_8_1 = fields.Char()
-    txt_binary_8_1 = fields.Binary('Reporte TXT')
+    txt_binary_8_1 = fields.Binary('Reporte TXT 8.1')
     xlsx_filename_8_2 = fields.Char()
-    xlsx_binary_8_2 = fields.Binary('Reporte XLSX')
+    xlsx_binary_8_2 = fields.Binary('Reporte XLSX 8.2')
     txt_filename_8_2 = fields.Char()
-    txt_binary_8_2 = fields.Binary('Reporte TXT')
+    txt_binary_8_2 = fields.Binary('Reporte TXT 8.2')
     error_dialog_8_1 = fields.Text(readonly=True)
     error_dialog_8_2 = fields.Text(readonly=True)
 

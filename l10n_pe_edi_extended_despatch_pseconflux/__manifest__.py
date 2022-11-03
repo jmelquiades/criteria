@@ -10,6 +10,7 @@
 
     'author': "Conflux",
     'website': "https://conflux.pe",
+    'license': 'LGPL-3',
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/data/ir_module_category_data.xml
@@ -19,9 +20,9 @@
 
     # any module necessary for this one to work correctly
     "depends": ["l10n_pe_edi_extended_despatch"],
-    
+
     # always loaded
     "data": [
         'views/logistic_despatch_view.xml',
-        ],
+    ],
 }

@@ -37,7 +37,7 @@ class PlePurchaseLine(models.Model):
     origin_date_invoice = fields.Date(string='Fecha Pago')
     origin_document_code = fields.Char(string='Tipo de comprobante')
     origin_serie = fields.Char(string='Serie')
-    origin_correlative = fields.Char(string='Correlativo',)
+    origin_correlative = fields.Char(string='Correlativo de origen',)
     origin_code_aduana = fields.Char(string='Código aduana')
     journal_correlative = fields.Char(string='Correlativo Asiento')
     voucher_number = fields.Char(string='Número de Pago')
@@ -67,7 +67,7 @@ class PlePurchaseLine(models.Model):
     inv_retention_igv = fields.Float(string='Monto retención de IGV')
     hard_rent = fields.Float(string='Renta Bruta')
     exoneration_nodomicilied_code = fields.Char(string='Exoneración aplicada', help="Consigna la exoneración aplicada a No domiciliado según los parámetros de la tabla 33 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias.")
-    type_rent_code = fields.Char(string='Tipo de Renta')
+    type_rent_code = fields.Char(string='Código de tipo de Renta')
     taken_code = fields.Char(string='Modalidad de servicio prestado', help="Consigna la Modalidad del servicio prestado por el No domiciliado, según los parámetros de la tabla 32 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias.")
     application_article = fields.Char(string='Aplicación Art. 76°')
     retention = fields.Char(
