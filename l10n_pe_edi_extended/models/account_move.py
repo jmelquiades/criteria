@@ -196,9 +196,9 @@ class AccountMove(models.Model):
     l10n_pe_cdr_void_file = fields.Many2one('ir.attachment', string='CDR Void file', copy=False)
     l10n_pe_dte_pdf_file = fields.Many2one('ir.attachment', string='DTE PDF file', copy=False)
     l10n_pe_dte_pdf_file_link = fields.Char(string='DTE PDF file link', compute='_compute_l10n_pe_dte_links')
-    l10n_pe_dte_cdr_file = fields.Many2one('ir.attachment', string='CDR file', copy=False)
+    l10n_pe_dte_cdr_file = fields.Many2one('ir.attachment', string='DTE CDR file', copy=False)
     l10n_pe_dte_cdr_file_link = fields.Char(string='CDR file link', compute='_compute_l10n_pe_dte_links')
-    l10n_pe_dte_cdr_void_file = fields.Many2one('ir.attachment', string='CDR Void file', copy=False)
+    l10n_pe_dte_cdr_void_file = fields.Many2one('ir.attachment', string='DTE CDR Void file', copy=False)
     l10n_pe_dte_cdr_void_file_link = fields.Char(string='CDR Void file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_service_order = fields.Char(string='Purchase/Service order', help='This Purchase/service order will be shown on the electronic invoice')
     l10n_pe_dte_retention_type = fields.Selection([
