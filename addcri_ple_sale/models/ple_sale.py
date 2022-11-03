@@ -161,11 +161,11 @@ class PleSale(models.Model):
                 'tax_exp': amount_total_taxes.get('EXP', 0)*exchange_rate,
                 'tax_ina': amount_total_taxes.get('INA', 0)*exchange_rate,
                 'tax_exo': amount_total_taxes.get('EXO', 0)*exchange_rate,
-                'tax_icbp': amount_total_taxes.get('ICBP', 0)*exchange_rate,
+                # 'tax_icbp': amount_total_taxes.get('ICBP', 0)*exchange_rate,
                 # 'tax_exp': self._get_amount_tax(taxes, 'EXP')*exchange_rate,
                 # 'tax_ina': self._get_amount_tax(taxes, 'INA')*exchange_rate,
                 # 'tax_exo': self._get_amount_tax(taxes, 'EXO')*exchange_rate,
-                # 'tax_icbp': self._get_amount_tax(taxes, 'ICBP')*exchange_rate,
+                'tax_icbp': self._get_amount_tax(taxes, 'ICBP')*exchange_rate,
             }
             records.append((0, 0, values))
             row += 1
