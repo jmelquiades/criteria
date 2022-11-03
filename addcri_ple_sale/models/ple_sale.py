@@ -165,7 +165,7 @@ class PleSale(models.Model):
                 # 'tax_exp': self._get_amount_tax(taxes, 'EXP')*exchange_rate,
                 # 'tax_ina': self._get_amount_tax(taxes, 'INA')*exchange_rate,
                 # 'tax_exo': self._get_amount_tax(taxes, 'EXO')*exchange_rate,
-                'tax_icbp': self._get_amount_tax(taxes, 'ICBP')*exchange_rate,
+                'tax_icbp': self._get_amount_tax(taxes, 'ICBP')  # ! sin tipo de cambio ya que en la factura esto es un nùmero que representa ya el valor en soles *exchange_rate,
             }
             records.append((0, 0, values))
             row += 1
