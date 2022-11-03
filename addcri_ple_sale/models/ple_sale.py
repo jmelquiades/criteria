@@ -156,6 +156,7 @@ class PleSale(models.Model):
                 # * me
                 'move_period': invoice.move_period,
                 'exchange_inconsistent': invoice.exchange_inconsistent,
+                'cancel_with_payment_method': invoice.cancel_with_payment_method,
                 # * taxes
                 'tax_exp': amount_total_taxes.get('EXP', 0)*exchange_rate,
                 'tax_ina': amount_total_taxes.get('INA', 0)*exchange_rate,
@@ -223,6 +224,7 @@ class PleSale(models.Model):
                 # * me
                 'move_period': line.move_period,
                 'exchange_inconsistent': line.exchange_inconsistent,
+                'cancel_with_payment_method': line.cancel_with_payment_method,
                 # * TAX
                 'tax_exp': line.tax_exp,
                 'tax_ina': line.tax_ina,

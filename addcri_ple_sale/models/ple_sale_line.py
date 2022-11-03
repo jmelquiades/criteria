@@ -145,3 +145,4 @@ class PleSaleLine(models.Model):
     tax_ina = fields.Float('Tax Ina')
     tax_exo = fields.Float('Tax Exo')
     tax_icbp = fields.Float('Tax Icbp')
+    cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')
