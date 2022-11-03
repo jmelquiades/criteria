@@ -11,11 +11,13 @@ from collections import defaultdict
 import logging
 log = logging.getLogger(__name__)
 
+
 def format_float(amount, precision=2):
     ''' Helper to format monetary amount as a string with 2 decimal places. '''
     if amount is None or amount is False:
         return None
     return '%.*f' % (precision, amount)
+
 
 def unit_amount(amount, quantity, currency):
     ''' Helper to divide amount by quantity by taking care about float division by zero. '''
@@ -24,10 +26,11 @@ def unit_amount(amount, quantity, currency):
     else:
         return 0.0
 
+
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    @api.depends('l10n_pe_dte_amount_total','currency_id')
+    @api.depends('l10n_pe_dte_amount_total', 'currency_id')
     def _l10n_pe_dte_amount_in_words(self):
         """Transform the amount to text
         """
@@ -52,12 +55,12 @@ class AccountMove(models.Model):
         dte_number = ''
         if self.l10n_latam_use_documents and self.l10n_latam_document_number:
             seq_split = self.l10n_latam_document_number.split('-')
-            if len(seq_split)==2:
+            if len(seq_split) == 2:
                 dte_serial = seq_split[0]
                 dte_number = seq_split[1]
         else:
             seq_split = self.name.split('-')
-            if len(seq_split)==2:
+            if len(seq_split) == 2:
                 dte_serial = seq_split[0]
                 dte_number = seq_split[1]
         res = []
@@ -77,7 +80,7 @@ class AccountMove(models.Model):
         return {
             "invoice_report_name": self.l10n_latam_document_type_id.report_name,
         }
-    
+
     def l10n_pe_edi_get_extra_report_values(self):
         res = self._l10n_pe_edi_get_extra_report_values()
         return res
@@ -187,16 +190,16 @@ class AccountMove(models.Model):
     - Not sent: the DTE has not been sent to the partner but it has sent to SUNAT.
     - Sent: The DTE has been sent to the partner.""")
     l10n_pe_dte_file = fields.Many2one('ir.attachment', string='DTE file', copy=False)
-    l10n_pe_dte_file_link = fields.Char(string='DTE file', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_file_link = fields.Char(string='DTE file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_hash = fields.Char(string='DTE Hash', copy=False)
     l10n_pe_cdr_file = fields.Many2one('ir.attachment', string='CDR file', copy=False)
     l10n_pe_cdr_void_file = fields.Many2one('ir.attachment', string='CDR Void file', copy=False)
     l10n_pe_dte_pdf_file = fields.Many2one('ir.attachment', string='DTE PDF file', copy=False)
-    l10n_pe_dte_pdf_file_link = fields.Char(string='DTE PDF file', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_pdf_file_link = fields.Char(string='DTE PDF file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_cdr_file = fields.Many2one('ir.attachment', string='CDR file', copy=False)
-    l10n_pe_dte_cdr_file_link = fields.Char(string='CDR file', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_cdr_file_link = fields.Char(string='CDR file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_cdr_void_file = fields.Many2one('ir.attachment', string='CDR Void file', copy=False)
-    l10n_pe_dte_cdr_void_file_link = fields.Char(string='CDR Void file', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_cdr_void_file_link = fields.Char(string='CDR Void file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_service_order = fields.Char(string='Purchase/Service order', help='This Purchase/service order will be shown on the electronic invoice')
     l10n_pe_dte_retention_type = fields.Selection([
         ('01', 'Tasa 3%'),
@@ -205,7 +208,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},)
 
     # === Amount fields ===
-    l10n_pe_dte_amount_subtotal = fields.Monetary(string='Subtotal',store=True, readonly=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True, help='Total without discounts and taxes')
+    l10n_pe_dte_amount_subtotal = fields.Monetary(string='Subtotal', store=True, readonly=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True, help='Total without discounts and taxes')
     l10n_pe_dte_amount_discount = fields.Monetary(string='Discount', store=True, readonly=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_base = fields.Monetary(string='Base Amount', store=True, readonly=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True, help='Total with discounts and before taxes')
     l10n_pe_dte_amount_exonerated = fields.Monetary(string='Exonerated  Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
@@ -220,23 +223,23 @@ class AccountMove(models.Model):
     l10n_pe_dte_amount_perception_percentage = fields.Float(string='Perception Percentage', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_perception = fields.Float(string='Perception Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_retention_base = fields.Monetary(string='IGV Retention Base', copy=True, readonly=True,
-        states={'draft': [('readonly', False)]},)
+                                                        states={'draft': [('readonly', False)]},)
     l10n_pe_dte_amount_retention = fields.Monetary(string='IGV Retention Amount', copy=True, readonly=True,
-        states={'draft': [('readonly', False)]},)
+                                                   states={'draft': [('readonly', False)]},)
     # ==== Tax fields ====
     l10n_pe_dte_igv_percent = fields.Integer(string="Percentage IGV", compute='_get_percentage_igv')
     l10n_pe_dte_amount_icbper = fields.Monetary(string='ICBPER Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
-    l10n_pe_dte_amount_igv = fields.Monetary(string='IGV Amount', store=True,compute='_compute_dte_amount',  compute_sudo=True, tracking=True)
+    l10n_pe_dte_amount_igv = fields.Monetary(string='IGV Amount', store=True, compute='_compute_dte_amount',  compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_isc = fields.Monetary(string='ISC Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_others = fields.Monetary(string='Other charges', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_is_einvoice = fields.Boolean('Is E-invoice')
     l10n_pe_dte_amount_total = fields.Monetary(string='Total Amount', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
     l10n_pe_dte_amount_total_with_perception = fields.Float(string='Total Amount With Perception', store=True, compute='_compute_dte_amount', compute_sudo=True, tracking=True)
-    invoice_payment_fee_ids = fields.One2many('account.move.payment_fee','move_id', string='Credit Payment Fees')
+    invoice_payment_fee_ids = fields.One2many('account.move.payment_fee', 'move_id', string='Credit Payment Fees')
     invoice_payment_fee_total = fields.Monetary(string='[Credit] Amount Pending to Pay', compute='_compute_invoice_payment_fee_total', store=True)
     amount_by_group2 = fields.Binary(string="Tax amount by group",
-        compute='_compute_invoice_taxes_by_group2',
-        help='Edit Tax amounts if you encounter rounding issues.')
+                                     compute='_compute_invoice_taxes_by_group2',
+                                     help='Edit Tax amounts if you encounter rounding issues.')
 
     @api.depends('line_ids.price_subtotal', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
     def _compute_invoice_taxes_by_group2(self):
@@ -302,12 +305,12 @@ class AccountMove(models.Model):
             self.l10n_pe_dte_operation_type = '0101'
         return super(AccountMove, self)._onchange_partner_id()
 
-    @api.depends('invoice_payment_fee_ids','invoice_payment_fee_ids.amount_total')
+    @api.depends('invoice_payment_fee_ids', 'invoice_payment_fee_ids.amount_total')
     def _compute_invoice_payment_fee_total(self):
         for rec in self:
             invoice_payment_fee_total = 0
             for fee in rec.invoice_payment_fee_ids:
-                invoice_payment_fee_total+=fee.amount_total
+                invoice_payment_fee_total += fee.amount_total
             rec.invoice_payment_fee_total = invoice_payment_fee_total
 
     def _compute_l10n_pe_dte_links(self):
@@ -334,7 +337,7 @@ class AccountMove(models.Model):
             l10n_pe_dte_amount_discount = 0.0
             l10n_pe_dte_amount_subtotal = 0.0
             l10n_pe_dte_amount_prepaid = 0.0
-            #~ E-invoice amounts
+            # ~ E-invoice amounts
             l10n_pe_dte_amount_free = 0.0
             l10n_pe_dte_amount_total_with_perception = 0.0
             l10n_pe_dte_amount_perception_percentage = 0.0
@@ -354,7 +357,7 @@ class AccountMove(models.Model):
                         l10n_pe_dte_global_discount += line.l10n_pe_dte_price_base < 0 and line.l10n_pe_dte_price_base * sign * -1 or 0.0
                     else:
                         l10n_pe_dte_amount_prepaid += abs(line.price_total)
-                    # If the product is not free, it calculates the amount discount 
+                    # If the product is not free, it calculates the amount discount
                     l10n_pe_dte_amount_discount += line.l10n_pe_dte_free_product == False and (line.l10n_pe_dte_price_base * line.discount)/100 or 0.0
                     # If the price_base is > 0, sum to the total without taxes and discounts
                     l10n_pe_dte_amount_subtotal += line.l10n_pe_dte_price_base > 0 and line.l10n_pe_dte_price_base or 0.0
@@ -391,29 +394,29 @@ class AccountMove(models.Model):
             move.l10n_pe_dte_amount_free = l10n_pe_dte_amount_free
             move.l10n_pe_dte_amount_total = move.l10n_pe_dte_amount_base + move.l10n_pe_dte_amount_exonerated + move.l10n_pe_dte_amount_unaffected + move.l10n_pe_dte_amount_exportation + move.l10n_pe_dte_amount_igv + move.l10n_pe_dte_amount_isc + move.l10n_pe_dte_amount_icbper + move.l10n_pe_dte_amount_others
             currency_rate_tmp = 1
-            if move.currency_id.name!='PEN':
-                currency_rate_tmp = abs(total_untaxed/total_untaxed_currency) if total_untaxed_currency!=0 else 1
-            if move.l10n_pe_dte_amount_perception_base>0 and move.l10n_pe_dte_amount_perception==0:
+            if move.currency_id.name != 'PEN':
+                currency_rate_tmp = abs(total_untaxed/total_untaxed_currency) if total_untaxed_currency != 0 else 1
+            if move.l10n_pe_dte_amount_perception_base > 0 and move.l10n_pe_dte_amount_perception == 0:
                 move.l10n_pe_dte_amount_perception = move.l10n_pe_dte_amount_perception_base
-                
-                move.l10n_pe_dte_amount_perception_base = round(move.l10n_pe_dte_amount_total*currency_rate_tmp,2)
-            if move.l10n_pe_dte_amount_perception>0:
-                l10n_pe_dte_amount_total_with_perception = round(move.l10n_pe_dte_amount_total*currency_rate_tmp + move.l10n_pe_dte_amount_perception,2)
-                l10n_pe_dte_amount_perception_percentage = round(move.l10n_pe_dte_amount_perception*100/move.l10n_pe_dte_amount_perception_base,2)
+
+                move.l10n_pe_dte_amount_perception_base = round(move.l10n_pe_dte_amount_total*currency_rate_tmp, 2)
+            if move.l10n_pe_dte_amount_perception > 0:
+                l10n_pe_dte_amount_total_with_perception = round(move.l10n_pe_dte_amount_total*currency_rate_tmp + move.l10n_pe_dte_amount_perception, 2)
+                l10n_pe_dte_amount_perception_percentage = round(move.l10n_pe_dte_amount_perception*100/move.l10n_pe_dte_amount_perception_base, 2)
             move.l10n_pe_dte_amount_perception_percentage = l10n_pe_dte_amount_perception_percentage
             move.l10n_pe_dte_amount_total_with_perception = l10n_pe_dte_amount_total_with_perception
 
-    @api.onchange('l10n_pe_dte_amount_retention_base','l10n_pe_dte_retention_type','amount_total')
+    @api.onchange('l10n_pe_dte_amount_retention_base', 'l10n_pe_dte_retention_type', 'amount_total')
     def _onchange_l10n_pe_retention_calc(self):
         for rec in self:
             if rec.l10n_pe_dte_retention_type:
-                if rec.l10n_pe_dte_amount_retention_base==0:
+                if rec.l10n_pe_dte_amount_retention_base == 0:
                     rec.l10n_pe_dte_amount_retention_base = rec.amount_total
                 if rec.l10n_pe_dte_amount_retention_base:
                     percentage = 0
-                    if rec.l10n_pe_dte_retention_type=='01':
+                    if rec.l10n_pe_dte_retention_type == '01':
                         percentage = 0.03
-                    elif rec.l10n_pe_dte_retention_type=='02':
+                    elif rec.l10n_pe_dte_retention_type == '02':
                         percentage = 0.06
                     rec.l10n_pe_dte_amount_retention = rec.l10n_pe_dte_amount_retention_base*percentage
                 else:
@@ -425,11 +428,12 @@ class AccountMove(models.Model):
     @api.depends('company_id')
     def _compute_l10n_pe_dte_operation_type(self):
         for move in self:
-            move.l10n_pe_dte_operation_type = '0101' if move.company_id.country_id == self.env.ref('base.pe') and move.journal_id.type=='sale' else False
+            move.l10n_pe_dte_operation_type = '0101' if move.company_id.country_id == self.env.ref('base.pe') and move.journal_id.type == 'sale' else False
 
     def _get_l10n_pe_dte_extra_fields(self):
         updt = {}
         return updt
+
     def _post(self, soft=True):
         res = super(AccountMove, self)._post()
         for move in self:
@@ -438,33 +442,33 @@ class AccountMove(models.Model):
                 move.write(move._get_l10n_pe_dte_extra_fields())
             if move.l10n_pe_dte_is_einvoice:
                 move.l10n_pe_dte_compute_fees()
-            if move.l10n_pe_dte_is_einvoice and move.company_id.l10n_pe_dte_send_interval_unit=="immediately":
+            if move.l10n_pe_dte_is_einvoice and move.company_id.l10n_pe_dte_send_interval_unit == "immediately":
                 move.l10n_pe_dte_action_send()
         return res
 
     def l10n_pe_dte_action_send(self):
-        #override this method for custom integration
+        # override this method for custom integration
         pass
 
     def l10n_pe_dte_action_check(self):
-        #override this method for custom integration
+        # override this method for custom integration
         pass
 
     def l10n_pe_dte_action_cancel(self):
-        #override this method for custom integration
+        # override this method for custom integration
         pass
-    
+
     def _l10n_pe_prepare_dte(self):
         dte_serial = ''
         dte_number = ''
         if self.l10n_latam_use_documents and self.l10n_latam_document_number:
             seq_split = self.l10n_latam_document_number.split('-')
-            if len(seq_split)==2:
+            if len(seq_split) == 2:
                 dte_serial = seq_split[0]
                 dte_number = seq_split[1]
         else:
             seq_split = self.name.split('-')
-            if len(seq_split)==2:
+            if len(seq_split) == 2:
                 dte_serial = seq_split[0]
                 dte_number = seq_split[1]
 
@@ -472,14 +476,14 @@ class AccountMove(models.Model):
             'operation_type': self.l10n_pe_dte_operation_type,
             'partner_vat': self.partner_id.vat,
             'partner_identification_type': self.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code,
-            'partner_street_address': (self.partner_id.street_name or '') \
-                                + (self.partner_id.street_number and (' ' + self.partner_id.street_number) or '') \
-                                + (self.partner_id.street_number2 and (' ' + self.partner_id.street_number2) or '') \
-                                + (self.partner_id.street2 and (' ' + self.partner_id.street2) or '') \
-                                + (self.partner_id.l10n_pe_district and ', ' + self.partner_id.l10n_pe_district.name or '') \
-                                + (self.partner_id.city_id and ', ' + self.partner_id.city_id.name or '') \
-                                + (self.partner_id.state_id and ', ' + self.partner_id.state_id.name or '') \
-                                + (self.partner_id.country_id and ', ' + self.partner_id.country_id.name or ''),
+            'partner_street_address': (self.partner_id.street_name or '')
+            + (self.partner_id.street_number and (' ' + self.partner_id.street_number) or '')
+            + (self.partner_id.street_number2 and (' ' + self.partner_id.street_number2) or '')
+            + (self.partner_id.street2 and (' ' + self.partner_id.street2) or '')
+            + (self.partner_id.l10n_pe_district and ', ' + self.partner_id.l10n_pe_district.name or '')
+            + (self.partner_id.city_id and ', ' + self.partner_id.city_id.name or '')
+            + (self.partner_id.state_id and ', ' + self.partner_id.state_id.name or '')
+            + (self.partner_id.country_id and ', ' + self.partner_id.country_id.name or ''),
             'partner_name': self.partner_id.commercial_partner_id.name or self.partner_id.commercial_partner_id.name,
             'partner_email': self.partner_id.email,
             'issue_date': self.invoice_date.strftime('%Y-%m-%d'),
@@ -489,8 +493,8 @@ class AccountMove(models.Model):
             'currency_code': self.currency_id.name,
             'currency_rate': 1,
             'invoice_type_code': self.l10n_latam_document_type_id.code if self.journal_id.l10n_latam_use_documents else '01',
-            'amount_total': self.l10n_pe_dte_amount_total, #self.amount_total
-            'amount_taxable':abs(self.l10n_pe_dte_amount_base),
+            'amount_total': self.l10n_pe_dte_amount_total,  # self.amount_total
+            'amount_taxable': abs(self.l10n_pe_dte_amount_base),
             'amount_exonerated': abs(self.l10n_pe_dte_amount_exonerated),
             'amount_unaffected': abs(self.l10n_pe_dte_amount_unaffected),
             'amount_export': abs(self.l10n_pe_dte_amount_exportation),
@@ -498,15 +502,15 @@ class AccountMove(models.Model):
             'amount_free': abs(self.l10n_pe_dte_amount_free),
             'amount_igv': abs(self.l10n_pe_dte_amount_igv),
             "amount_isc": abs(self.l10n_pe_dte_amount_isc),
-            "amount_icbper":abs(self.l10n_pe_dte_amount_icbper),
-            "amount_others":sum([x[1] for x in self.amount_by_group2 if x[0] == 'OTROS']),
-            "payment_term":self.invoice_payment_term_id.name if self.invoice_payment_term_id else '',
-            "payment_term_is_credit":False,
-            "payment_term_fees":[],
-            "discount_global_base":0,
-            "discount_global_amount":0,
-            'other_charges':abs(self.l10n_pe_dte_amount_others),
-            "discount_global":abs(self.l10n_pe_dte_global_discount),
+            "amount_icbper": abs(self.l10n_pe_dte_amount_icbper),
+            "amount_others": sum([x[1] for x in self.amount_by_group2 if x[0] == 'OTROS']),
+            "payment_term": self.invoice_payment_term_id.name if self.invoice_payment_term_id else '',
+            "payment_term_is_credit": False,
+            "payment_term_fees": [],
+            "discount_global_base": 0,
+            "discount_global_amount": 0,
+            'other_charges': abs(self.l10n_pe_dte_amount_others),
+            "discount_global": abs(self.l10n_pe_dte_global_discount),
             'perception_amount': abs(self.l10n_pe_dte_amount_perception),
             'perception_base': abs(self.l10n_pe_dte_amount_perception_base),
             'total_with_perception': abs(self.l10n_pe_dte_amount_total_with_perception),
@@ -514,22 +518,22 @@ class AccountMove(models.Model):
             'service_order': self.l10n_pe_dte_service_order,
             'seller': self.invoice_user_id.name,
         }
-        if self.currency_id.id!=self.company_currency_id.id:
+        if self.currency_id.id != self.company_currency_id.id:
             date = self.date or self.invoice_date or fields.Date.today()
             currency_rates = self.currency_id._get_rates(self.company_id, date)
             exchange_rate = currency_rates.get(self.currency_id.id) or 1.0
             document['currency_rate'] = 1 / (exchange_rate or 1)
 
-        if document['invoice_type_code']=='07':
+        if document['invoice_type_code'] == '07':
             document['credit_note_type'] = self.l10n_pe_dte_credit_note_type
             document['rectification_ref_type'] = self.l10n_pe_dte_rectification_ref_type.code
             document['rectification_ref_number'] = self.l10n_pe_dte_rectification_ref_number
-        elif document['invoice_type_code']=='08':
+        elif document['invoice_type_code'] == '08':
             document['debit_note_type'] = self.l10n_pe_dte_debit_note_type
             document['rectification_ref_type'] = self.l10n_pe_dte_rectification_ref_type.code
             document['rectification_ref_number'] = self.l10n_pe_dte_rectification_ref_number
 
-        if len(self.invoice_payment_fee_ids)>0:
+        if len(self.invoice_payment_fee_ids) > 0:
             for payment_fee in self.invoice_payment_fee_ids:
                 document['payment_term_is_credit'] = True
                 document['payment_term_fees'].append({
@@ -539,38 +543,38 @@ class AccountMove(models.Model):
                 })
 
         invoice_line_vals = []
-        discount_global_base=0
-        #other_charges=0
+        discount_global_base = 0
+        # other_charges=0
         counter_advanced_lines = 0
         for line in self.invoice_line_ids:
             if line.display_type == False:
                 if line.l10n_pe_dte_advance_line:
-                    counter_advanced_lines+=1
+                    counter_advanced_lines += 1
                 dic_line = line.with_context(counter_advanced_lines=counter_advanced_lines)._l10n_pe_prepare_dte_lines()
                 if dic_line.get('is_detraction_full_line', False):
                     continue
                 '''if line.l10n_pe_dte_allowance_charge_reason_code=='50':
                     other_charges+=dic_line.get('price_subtotal')
                     continue'''
-                if dic_line.get('price_total')<0 and not line.l10n_pe_dte_advance_line:
-                    document['discount_global_amount']+=abs(dic_line.get('price_subtotal'))
+                if dic_line.get('price_total') < 0 and not line.l10n_pe_dte_advance_line:
+                    document['discount_global_amount'] += abs(dic_line.get('price_subtotal'))
                 else:
-                    discount_global_base+=dic_line.get('price_subtotal')
+                    discount_global_base += dic_line.get('price_subtotal')
                     invoice_line_vals.append(dic_line)
 
         #document['other_charges'] = other_charges
 
-        if document['discount_global_amount']>0:
-            document["discount_global_type"]="02"
-            document["discount_global_base"]=discount_global_base
-            document["discount_global_factor"]=document['discount_global_amount']/document["discount_global_base"]
+        if document['discount_global_amount'] > 0:
+            document["discount_global_type"] = "02"
+            document["discount_global_base"] = discount_global_base
+            document["discount_global_factor"] = document['discount_global_amount']/document["discount_global_base"]
 
-        if document['perception_amount']>0:
-            document['perception_factor'] = round(document['perception_amount']/document['perception_base'],3)
-            #document['amount_total']=document['perception_amount']
-            if document['perception_factor']==0.01:
+        if document['perception_amount'] > 0:
+            document['perception_factor'] = round(document['perception_amount']/document['perception_base'], 3)
+            # document['amount_total']=document['perception_amount']
+            if document['perception_factor'] == 0.01:
                 document['perception_type'] = '02'
-            elif document['perception_factor']==0.02:
+            elif document['perception_factor'] == 0.02:
                 document['perception_type'] = '01'
             else:
                 document['perception_type'] = '03'
@@ -605,13 +609,13 @@ class AccountMove(models.Model):
                         move.l10n_pe_edi_reversal_number = move.reversed_entry_id.l10n_pe_edi_number
                         move.l10n_pe_edi_reversal_date = move.reversed_entry_id.invoice_date'''
 
-    # Default invoice report for Electronic invoice    
+    # Default invoice report for Electronic invoice
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.company_id.country_id.code == 'PE' and self.l10n_pe_dte_is_einvoice:
             return 'l10n_pe_edi_extended.report_einvoice_document'
         return super()._get_name_invoice_report()
-    
+
     def l10n_pe_dte_credit_amount_single_fee(self):
         return self.l10n_pe_dte_amount_total-self.l10n_pe_dte_amount_retention
 
@@ -619,30 +623,30 @@ class AccountMove(models.Model):
         fees = []
         invoice_date = self.invoice_date.strftime('%Y-%m-%d')
         invoice_date_due = self.invoice_date_due.strftime('%Y-%m-%d')
-        if self.move_type=='out_invoice':
+        if self.move_type == 'out_invoice':
             self.invoice_payment_fee_ids.unlink()
-        if invoice_date!=invoice_date_due:
+        if invoice_date != invoice_date_due:
             if self.invoice_payment_term_id:
                 payment_lines = self.invoice_payment_term_id.compute(self.l10n_pe_dte_credit_amount_single_fee(), date_ref=self.invoice_date, currency=self.currency_id)
                 sequence = 1
                 for payment_line in payment_lines:
-                    if invoice_date==payment_line[0]:
+                    if invoice_date == payment_line[0]:
                         continue
                     fees.append([0, 0, {
-                        'sequence':sequence,
+                        'sequence': sequence,
                         'amount_total': payment_line[1],
                         'date_due': payment_line[0],
                         'currency_id':self.currency_id.id,
                     }])
-                    sequence+=1
+                    sequence += 1
             else:
                 fees.append([0, 0, {
-                    'sequence':1,
+                    'sequence': 1,
                     'amount_total': self.l10n_pe_dte_credit_amount_single_fee(),
                     'date_due': invoice_date_due,
-                    'currency_id':self.currency_id.id,
+                    'currency_id': self.currency_id.id,
                 }])
-        
+
         self.write({
             'invoice_payment_fee_ids': fees
         })
@@ -669,6 +673,7 @@ class AccountMove(models.Model):
 
         return super()._get_starting_sequence()
 
+
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
@@ -694,24 +699,24 @@ class AccountMoveLine(models.Model):
         string="Allowance or Charge reason",
         default=False,
         help="Catalog 53 of possible reasons of discounts")
-    l10n_pe_dte_price_base = fields.Monetary(string='Subtotal without discounts', digits=(9,10), store=True, readonly=True, currency_field='currency_id', help="Total amount without discounts and taxes")
-    l10n_pe_dte_price_unit_excluded = fields.Float(string='Price unit excluded', digits=(9,10), store=True, readonly=True, currency_field='currency_id', help="Price unit without taxes")
-    l10n_pe_dte_price_unit_included = fields.Float(string='Price unit IGV included', digits=(9,10), store=True, readonly=True, currency_field='currency_id', help="Price unit with IGV included")
+    l10n_pe_dte_price_base = fields.Monetary(string='Subtotal without discounts', store=True, readonly=True, currency_field='currency_id', help="Total amount without discounts and taxes")  # , digits=(9, 10)
+    l10n_pe_dte_price_unit_excluded = fields.Float(string='Price unit excluded', digits=(9, 10), store=True, readonly=True,  help="Price unit without taxes")  # currency_field='currency_id',
+    l10n_pe_dte_price_unit_included = fields.Float(string='Price unit IGV included', digits=(9, 10), store=True, readonly=True,  help="Price unit with IGV included")  # currency_field='currency_id',
     l10n_pe_dte_amount_discount = fields.Monetary(string='Amount discount before taxes', store=True, readonly=True, currency_field='currency_id', help='Amount discount before taxes')
-    l10n_pe_dte_amount_free = fields.Monetary(string='Amount free', digits=(9,10), store=True, readonly=True, currency_field='currency_id', help='amount calculated if the line id for free product')
+    l10n_pe_dte_amount_free = fields.Monetary(string='Amount free',  store=True, readonly=True, currency_field='currency_id', help='amount calculated if the line id for free product')  # digits=(9, 10),
     l10n_pe_dte_free_product = fields.Boolean('Free', store=True, readonly=True, default=False, help='Is free product?')
-    l10n_pe_dte_igv_amount = fields.Monetary(string='IGV amount',store=True, readonly=True, currency_field='currency_id', help="Total IGV amount")
-    l10n_pe_dte_isc_amount = fields.Monetary(string='ISC amount',store=True, readonly=True, currency_field='currency_id', help="Total ISC amount")
-    l10n_pe_dte_icbper_amount = fields.Monetary(string='ICBPER amount',store=True, readonly=True, currency_field='currency_id', help="Total ICBPER amount")
+    l10n_pe_dte_igv_amount = fields.Monetary(string='IGV amount', store=True, readonly=True, currency_field='currency_id', help="Total IGV amount")
+    l10n_pe_dte_isc_amount = fields.Monetary(string='ISC amount', store=True, readonly=True, currency_field='currency_id', help="Total ISC amount")
+    l10n_pe_dte_icbper_amount = fields.Monetary(string='ICBPER amount', store=True, readonly=True, currency_field='currency_id', help="Total ICBPER amount")
     #l10n_pe_dte_per_base = fields.Monetary(string='PERCEPTION base',store=True, readonly=True, currency_field='currency_id', help="Total PERCEPTION base")
     #l10n_pe_dte_per_amount = fields.Monetary(string='PERCEPTION amount',store=True, readonly=True, currency_field='currency_id', help="Total PERCEPTION amount")
     l10n_pe_dte_advance_line = fields.Boolean('Advance', store=True, default=False, help='Is advance line?')
     l10n_pe_dte_advance_invoice_id = fields.Many2one('account.move', string='Advance Invoice', store=True, readonly=True, help='Invoices related to the advance regualization')
-    l10n_pe_dte_advance_type = fields.Selection([('02','Factura'),('03','Boleta de venta')], string='Advance Type')
+    l10n_pe_dte_advance_type = fields.Selection([('02', 'Factura'), ('03', 'Boleta de venta')], string='Advance Type')
     l10n_pe_dte_advance_serial = fields.Char('Advance serial')
     l10n_pe_dte_advance_number = fields.Char('Advance number')
     l10n_pe_dte_advance_date = fields.Date('Advance date')
-    l10n_pe_dte_advance_amount = fields.Monetary(string='Advance amount',store=True, readonly=True, currency_field='currency_id', help="Total Advance amount")
+    l10n_pe_dte_advance_amount = fields.Monetary(string='Advance amount', store=True, readonly=True, currency_field='currency_id', help="Total Advance amount")
 
     @api.model
     def _get_price_total_and_subtotal_model(self, price_unit, quantity, discount, currency, product, partner, taxes, move_type):
@@ -728,62 +733,62 @@ class AccountMoveLine(models.Model):
         tax_is_free = False
         if taxes:
             # Compute taxes for all line
-            taxes_res = taxes._origin.compute_all(price_unit , quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
+            taxes_res = taxes._origin.compute_all(price_unit, quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
             l10n_pe_dte_price_unit_excluded = l10n_pe_dte_price_unit_excluded_signed = quantity != 0 and taxes_res['total_excluded']/quantity or 0.0
-            res['l10n_pe_dte_price_unit_excluded'] = l10n_pe_dte_price_unit_excluded   
+            res['l10n_pe_dte_price_unit_excluded'] = l10n_pe_dte_price_unit_excluded
             # Price unit whit all taxes included
             l10n_pe_dte_price_unit_included = l10n_pe_dte_price_unit_included_signed = quantity != 0 and taxes_res['total_included']/quantity or 0.0
-            res['l10n_pe_dte_price_unit_included'] = l10n_pe_dte_price_unit_included     
+            res['l10n_pe_dte_price_unit_included'] = l10n_pe_dte_price_unit_included
 
             # Amount taxes after dicounts, return a dict with all taxes applied with discount incluided
-            taxes_discount = taxes.compute_all(price_unit * (1 - (discount or 0.0) / 100.0), currency, quantity, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))  
-            
-            #~ With IGV taxes
+            taxes_discount = taxes.compute_all(price_unit * (1 - (discount or 0.0) / 100.0), currency, quantity, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
+
+            # ~ With IGV taxes
             igv_taxes_ids = taxes.filtered(lambda r: r.tax_group_id.name == 'IGV')
             if igv_taxes_ids:
                 # Compute taxes per unit
                 l10n_pe_dte_price_unit_included = l10n_pe_dte_price_unit_included_signed = quantity != 0 and taxes_res['total_included']/quantity or 0.0 if igv_taxes_ids else price_unit
                 res['l10n_pe_dte_price_unit_included'] = l10n_pe_dte_price_unit_included
-                #~ IGV amount after discount for all line                
-                l10n_pe_dte_igv_amount = sum( r['amount'] for r in taxes_discount['taxes'] if r['id'] in igv_taxes_ids.ids) 
+                # ~ IGV amount after discount for all line
+                l10n_pe_dte_igv_amount = sum(r['amount'] for r in taxes_discount['taxes'] if r['id'] in igv_taxes_ids.ids)
             l10n_pe_dte_price_base = l10n_pe_dte_price_base_signed = taxes_res['total_excluded']
-            res['l10n_pe_dte_price_base'] = l10n_pe_dte_price_base 
+            res['l10n_pe_dte_price_base'] = l10n_pe_dte_price_base
 
-            #~ With ISC taxes
+            # ~ With ISC taxes
             isc_taxes_ids = taxes.filtered(lambda r: r.tax_group_id.name == 'ISC')
             if isc_taxes_ids:
-                #~ ISC amount after discount for all line
-                l10n_pe_dte_isc_amount = sum( r['amount'] for r in taxes_discount['taxes'] if r['id'] in isc_taxes_ids.ids) 
+                # ~ ISC amount after discount for all line
+                l10n_pe_dte_isc_amount = sum(r['amount'] for r in taxes_discount['taxes'] if r['id'] in isc_taxes_ids.ids)
 
-            #~ With ICBPER taxes
+            # ~ With ICBPER taxes
             icbper_taxes_ids = taxes.filtered(lambda r: r.tax_group_id.name == 'ICBPER')
             if icbper_taxes_ids:
-                #~ ICBPER amount after discount for all line
-                l10n_pe_dte_icbper_amount = sum( r['amount'] for r in taxes_discount['taxes'] if r['id'] in icbper_taxes_ids.ids) 
+                # ~ ICBPER amount after discount for all line
+                l10n_pe_dte_icbper_amount = sum(r['amount'] for r in taxes_discount['taxes'] if r['id'] in icbper_taxes_ids.ids)
 
-            #~ With PER taxes (Perception)
+            # ~ With PER taxes (Perception)
             per_taxes_ids = taxes.filtered(lambda r: r.tax_group_id.name == 'PER')
             if per_taxes_ids:
-                l10n_pe_dte_per_amount = sum( r['amount'] for r in taxes_discount['taxes'] if r['id'] in per_taxes_ids.ids)
-                res['l10n_pe_dte_price_unit_included']-=l10n_pe_dte_per_amount/quantity
+                l10n_pe_dte_per_amount = sum(r['amount'] for r in taxes_discount['taxes'] if r['id'] in per_taxes_ids.ids)
+                res['l10n_pe_dte_price_unit_included'] -= l10n_pe_dte_per_amount/quantity
 
-            #~ With OTHER taxes (Perception)
+            # ~ With OTHER taxes (Perception)
             other_taxes_ids = taxes.filtered(lambda r: r.tax_group_id.name == 'OTROS')
             if other_taxes_ids:
-                l10n_pe_dte_other_amount = sum( r['amount'] for r in taxes_discount['taxes'] if r['id'] in other_taxes_ids.ids)
-                res['l10n_pe_dte_price_unit_included']-=l10n_pe_dte_other_amount/quantity
+                l10n_pe_dte_other_amount = sum(r['amount'] for r in taxes_discount['taxes'] if r['id'] in other_taxes_ids.ids)
+                res['l10n_pe_dte_price_unit_included'] -= l10n_pe_dte_other_amount/quantity
 
-            #~ With GRA taxes (Free)
+            # ~ With GRA taxes (Free)
             gra_taxes_ids = taxes.filtered(lambda r: r.tax_group_id.name == 'GRA')
             if gra_taxes_ids:
                 tax_is_free = True
 
-        #~ Free amount
-        if discount >= 100.0 or tax_is_free:  
+        # ~ Free amount
+        if discount >= 100.0 or tax_is_free:
             l10n_pe_dte_igv_amount = 0.0   # When the product is free, igv = 0
-            #l10n_pe_dte_isc_amount = 0.0   # When the product is free, isc = 0
+            # l10n_pe_dte_isc_amount = 0.0   # When the product is free, isc = 0
             l10n_pe_dte_icbper_amount = 0.0   # When the product is free, icbper = 0
-            l10n_pe_dte_amount_discount = 0.0  # Although the product has 100% discount, the amount of discount in a free product is 0             
+            l10n_pe_dte_amount_discount = 0.0  # Although the product has 100% discount, the amount of discount in a free product is 0
             l10n_pe_dte_free_product = True
             l10n_pe_dte_amount_free = l10n_pe_dte_price_unit_excluded * quantity
         else:
@@ -794,8 +799,8 @@ class AccountMoveLine(models.Model):
         res['l10n_pe_dte_amount_discount'] = l10n_pe_dte_amount_discount
         res['l10n_pe_dte_amount_free'] = l10n_pe_dte_amount_free
         res['l10n_pe_dte_free_product'] = l10n_pe_dte_free_product
-        res['l10n_pe_dte_igv_amount'] = l10n_pe_dte_igv_amount            
-        res['l10n_pe_dte_isc_amount'] = l10n_pe_dte_isc_amount            
+        res['l10n_pe_dte_igv_amount'] = l10n_pe_dte_igv_amount
+        res['l10n_pe_dte_isc_amount'] = l10n_pe_dte_isc_amount
         res['l10n_pe_dte_icbper_amount'] = l10n_pe_dte_icbper_amount
         #res['l10n_pe_dte_per_amount'] = l10n_pe_dte_per_amount
         #res['l10n_pe_dte_per_base'] = l10n_pe_dte_per_base
@@ -806,7 +811,7 @@ class AccountMoveLine(models.Model):
         isc_type = ''
         is_detraction_full_line = False
         is_other_charge = False
-        if self.discount >= 100.0:  
+        if self.discount >= 100.0:
             # Discount >= 100% means the product is free and the IGV type should be 'No onerosa' and 'taxed'
             igv_type = self.tax_ids.filtered(lambda r: r.l10n_pe_edi_tax_code == '9996')[0].l10n_pe_edi_igv_type
         elif any(tax.l10n_pe_edi_tax_code in ['1000'] for tax in self.tax_ids):
@@ -826,26 +831,26 @@ class AccountMoveLine(models.Model):
             igv_type = self.tax_ids.filtered(lambda r: r.l10n_pe_edi_tax_code == '9996')[0].l10n_pe_edi_igv_type
         if any(tax.l10n_pe_edi_tax_code in ['2000'] for tax in self.tax_ids):
             isc_type = self.tax_ids.filtered(lambda r: r.l10n_pe_edi_tax_code == '2000')[0].l10n_pe_edi_isc_type
-        
-        if any(tax.tax_group_id.name=='PERG' and tax.amount==0 for tax in self.tax_ids) and len(self.tax_ids)==1:
+
+        if any(tax.tax_group_id.name == 'PERG' and tax.amount == 0 for tax in self.tax_ids) and len(self.tax_ids) == 1:
             is_detraction_full_line = True
 
-        if any(tax.tax_group_id.name=='OTROS' for tax in self.tax_ids):
+        if any(tax.tax_group_id.name == 'OTROS' for tax in self.tax_ids):
             is_other_charge = False
 
         default_uom = 'NIU'
-        if self.product_id.type=='service':
+        if self.product_id.type == 'service':
             default_uom = 'ZZ'
 
         line = {
             'product_code': self.product_id.default_code if self.product_id.default_code else '',
             'product_sunat_code': self.product_id.l10n_pe_edi_unspsc if self.product_id.l10n_pe_edi_unspsc else '',
-            'name': self.name.replace('[%s] ' % self.product_id.default_code,'') if self.product_id else self.name,
+            'name': self.name.replace('[%s] ' % self.product_id.default_code, '') if self.product_id else self.name,
             'quantity': abs(self.quantity),
             'uom_code': self.product_uom_id.l10n_pe_edi_unece if self.product_uom_id.l10n_pe_edi_unece else default_uom,
-            'price_base':self.l10n_pe_dte_price_base,
+            'price_base': self.l10n_pe_dte_price_base,
             'price_subtotal': self.price_subtotal,
-            'price_total': self.price_total if is_other_charge else self.price_subtotal+self.l10n_pe_dte_igv_amount+self.l10n_pe_dte_isc_amount+self.l10n_pe_dte_icbper_amount,#self.price_total
+            'price_total': self.price_total if is_other_charge else self.price_subtotal+self.l10n_pe_dte_igv_amount+self.l10n_pe_dte_isc_amount+self.l10n_pe_dte_icbper_amount,  # self.price_total
             'price_unit_included': self.l10n_pe_dte_price_unit_included,
             'price_unit_excluded': self.l10n_pe_dte_price_unit_excluded,
             'igv_type': igv_type,
@@ -854,17 +859,17 @@ class AccountMoveLine(models.Model):
             'isc_amount': self.l10n_pe_dte_isc_amount,
             'icbper_amount': self.l10n_pe_dte_icbper_amount,
             'free_amount': self.l10n_pe_dte_price_unit_included*self.quantity if self.l10n_pe_dte_free_product else 0,
-            'discount_base':0,
-            'discount_amount':0,
-            'discount':self.l10n_pe_dte_amount_discount,
-            'is_free':self.l10n_pe_dte_free_product,
+            'discount_base': 0,
+            'discount_amount': 0,
+            'discount': self.l10n_pe_dte_amount_discount,
+            'is_free': self.l10n_pe_dte_free_product,
             'is_detraction_full_line': is_detraction_full_line,
         }
-        if self.discount>0 and self.discount<100:
-            line['discount_type']='00'
-            line['discount_factor']=(self.discount or 0.0) / 100.0
-            line['discount_base']=self.price_subtotal/(1.0 - line['discount_factor'])
-            line['discount_amount']=line['discount_base'] * line['discount_factor']
+        if self.discount > 0 and self.discount < 100:
+            line['discount_type'] = '00'
+            line['discount_factor'] = (self.discount or 0.0) / 100.0
+            line['discount_base'] = self.price_subtotal/(1.0 - line['discount_factor'])
+            line['discount_amount'] = line['discount_base'] * line['discount_factor']
         if self.l10n_pe_dte_advance_line:
             line['advance_line'] = self.l10n_pe_dte_advance_line
             line['advance_type'] = self.l10n_pe_dte_advance_type
@@ -875,16 +880,15 @@ class AccountMoveLine(models.Model):
                 line['advance_date'] = self.l10n_pe_dte_advance_date.strftime('%Y-%m-%d')
         return line
 
-
     def show_detail_anticipo(self):
-        #self.ensure_one()
+        # self.ensure_one()
         #raise ValueError(self.name)
 
         view = self.env.ref('l10n_pe_edi_extended.detail_anticipo', False)
 
         # picking_type_id = self.picking_type_id or self.picking_id.picking_type_id
         return {
-            'name': self.name ,
+            'name': self.name,
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move.line',
