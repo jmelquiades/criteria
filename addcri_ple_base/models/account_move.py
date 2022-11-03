@@ -57,6 +57,9 @@ class AccountMove(models.Model):
     ], string='Estado de factura')
 
     exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+    cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')
+    contract_number = fields.Char('Número de contrato')
+    latest_consolidated_number = fields.Char('Último número consolidado')
 
     @api.model
     def _convert_date_timezone(self, date_order, format_time='%Y-%m-%d %H:%M:%S'):
