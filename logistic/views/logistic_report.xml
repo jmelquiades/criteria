@@ -3,7 +3,7 @@
     <!-- QWeb Reports -->
     <record id="logistic_despatchs" model="ir.actions.report">
         <field name="model">logistic.despatch</field>
-        <!-- <field name="string">Despatchs</field> -->
+        <field name="report_name">Despatchs</field>
         <field name="report_type">qweb-pdf</field>
         <field name="name">logistic.report_despatch</field>
         <field name="report_file">logistic.report_despatch</field>
