@@ -132,7 +132,7 @@ class PleSaleLine(models.Model):
     ref = fields.Char('Referencia')
     # * me
 
-    move_period = fields.Selection([
+    sale_move_period = fields.Selection([
         ('0', 'Anotación sin efecto en el IGV'),
         ('1', 'Documento anulado'),
         ('2', 'Fecha del comprobante corresponde al periodo'),

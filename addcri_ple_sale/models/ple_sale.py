@@ -154,7 +154,7 @@ class PleSale(models.Model):
                 'document_code': invoice.l10n_latam_document_type_id.code,
                 'ref': invoice.ref,
                 # * me
-                'move_period': invoice.move_period,
+                'sale_move_period': invoice.sale_move_period,
                 'exchange_inconsistent': invoice.exchange_inconsistent,
                 'cancel_with_payment_method': invoice.cancel_with_payment_method,
                 # * taxes
@@ -222,7 +222,7 @@ class PleSale(models.Model):
                 'journal_name': line.journal_name,
                 'document_code': line.document_code,
                 # * me
-                'move_period': line.move_period,
+                'sale_move_period': line.sale_move_period,
                 'exchange_inconsistent': line.exchange_inconsistent,
                 'cancel_with_payment_method': line.cancel_with_payment_method,
                 # * TAX
