@@ -54,7 +54,7 @@ class AccountMove(models.Model):
         ('2', 'Documento anulado'),
         ('8', 'Corresponde al periodo anterior'),
         ('9', 'Se está corrigiendo una anotación de periodo anterior')
-    ], string='Estado de factura')
+    ], string='Estado de factura de venta')
 
     exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
     cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')
@@ -82,7 +82,7 @@ class AccountMove(models.Model):
         ('2', 'Fecha de emisión es anterior al periodo de anotación dentro de los 12 meses'),
         ('3', 'Fecha de emisión es anterior al periodo de anotación luego de los 12 meses'),
         ('4', 'Es ajuste o anotación')
-    ], string='Estado de factura', default='1')
+    ], string='Estado de factura de compra', default='1')
     purchase_ple_modification_date = fields.Datetime('Fecha de modificación de PLE de compras')
 
     @api.model
