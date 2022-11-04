@@ -38,6 +38,6 @@
             <p class="o_view_nocontent_smiling_face">Add a new record</p>
         </field>
     </record>
-    <menuitem id="table_10_menu" name="Tabla 10 SUNAT" groups="account.group_account_invoice" parent="account.menu_finance_configuration" sequence="10"/>
-    <menuitem id="payment_methods_menu" name="Medios de pago" groups="account.group_account_invoice" parent="table_10_menu" sequence="1" action="l10n_latam_table_10_action"/>
+    <menuitem id="table_10_menu" name="Tabla 10 SUNAT" groups="account.group_account_manager" parent="account.menu_finance_configuration" sequence="10"/>
+    <menuitem id="payment_methods_menu" name="Medios de pago" groups="account.group_account_manager" parent="table_10_menu" sequence="1" action="l10n_latam_table_10_action"/>
 </odoo>

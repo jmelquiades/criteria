@@ -14,7 +14,7 @@
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="detraction_journal_id"/>
-                            <span class="fa fa-lg fa-building-o" title="Diario de pago de detracción." groups="account.group_account_user"/>
+                            <span class="fa fa-lg fa-building-o" title="Diario de pago de detracción." groups="account.group_account_manager"/>
                             <div class="text-muted">Diario en el cual se reconocerá como de detracción</div>
                             <field name="detraction_journal_id"/>
                         </div>
