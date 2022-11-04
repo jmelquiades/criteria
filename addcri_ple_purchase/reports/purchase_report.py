@@ -43,14 +43,14 @@ class PurchaseReport(object):
                     'field_32': '01/01/0001',  # * fecha de retencion
                     'field_33': '0',
                     'field_34': '',
-                    'field_35': '',  # or 0
-                    'field_36': '',
-                    'field_37': '',
-                    'field_38': '',
-                    'field_39': '',
-                    'field_40': '',
-                    'field_41': '',
-                    'field_42': '1',
+                    'field_35': value['adquisition_type'] if value['purchase_move_period'] else '',
+                    'field_36': value['contract_or_project'] or '',
+                    'field_37': '1' if value['exchange_inconsistent'] == True else '',
+                    'field_38': '1' if value['non_existing_supplier'] == True else '',
+                    'field_39': '1' if value['waived_exemption_from_igv'] == True else '',
+                    'field_40': '1' if value['vat_inconsistent'] == True else '',
+                    'field_41': '1' if value['cancel_with_payment_method'] == True else '',
+                    'field_42': value['purchase_move_period'] if value['purchase_move_period'] else '',
                     'field_43': ''
                 }
                 data_8_1.append(record)

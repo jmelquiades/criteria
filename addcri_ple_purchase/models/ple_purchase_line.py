@@ -77,3 +77,25 @@ class PlePurchaseLine(models.Model):
     journal_name = fields.Char('Nombre de diario')
     document_code = fields.Char('Código de Documento')
     ref = fields.Char('Referencia')
+
+    # * me
+    purchase_move_period = fields.Selection([
+        ('0', 'Anotación optativa sin efecto en el IGV'),
+        ('1', 'Fecha del documento corresponde al periodo en el que se anotó'),
+        ('6', 'Fecha de emisión es anterior al periodo de anotación dentro de los 12 meses'),
+        ('7', 'Fecha de emisión es anterior al periodo de anotación luego de los 12 meses'),
+        ('9', 'Es ajuste o anotación')
+    ], string='Estado de factura de compra')
+    vat_inconsistent = fields.Boolean('DNI inconsistente')
+    exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+    cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')
+    waived_exemption_from_igv = fields.Boolean('Renunció a exoneración de IGV')
+    non_existing_supplier = fields.Boolean('Proveedor no habido')
+    contract_or_project = fields.Char('Contrato o proyecto')
+    adquisition_type = fields.Selection([
+        ('0', 'Mercadería, materia prima, suministro, envases y embalajes'),
+        ('1', 'Activo fijo'),
+        ('2', 'Otros activos no considerados en los numerales 1 y 2'),
+        ('3', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
+        ('4', 'Otros gastos no incluidos en el numeral 4'),
+    ], string='Tipo de adquisión')

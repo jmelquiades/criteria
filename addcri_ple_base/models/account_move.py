@@ -65,13 +65,13 @@ class AccountMove(models.Model):
 
     initial_consolidated_number = fields.Char('Nùmero inicial consolidado')
     adquisition_type = fields.Selection([
-        ('0', 'Mercadería, materia prima, suministro, envases y embalajes'),
-        ('1', 'Activo fijo'),
-        ('2', 'Otros activos no considerados en los numerales 1 y 2'),
-        ('3', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
-        ('4', 'Otros gastos no incluidos en el numeral 4'),
+        ('1', 'Mercadería, materia prima, suministro, envases y embalajes'),
+        ('2', 'Activo fijo'),
+        ('3', 'Otros activos no considerados en los numerales 1 y 2'),
+        ('4', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
+        ('5', 'Otros gastos no incluidos en el numeral 4'),
     ], string='Tipo de adquisión', default='4')
-    contract_or_project = fields.Char('Contrato o proyeccto')
+    contract_or_project = fields.Char('Contrato o proyecto')
     non_existing_supplier = fields.Boolean('Proveedor no habido')
     waived_exemption_from_igv = fields.Boolean('Renunció a exoneración de IGV')
     vat_inconsistent = fields.Boolean('DNI inconsistente')
@@ -79,9 +79,9 @@ class AccountMove(models.Model):
     purchase_move_period = fields.Selection([
         ('0', 'Anotación optativa sin efecto en el IGV'),
         ('1', 'Fecha del documento corresponde al periodo en el que se anotó'),
-        ('2', 'Fecha de emisión es anterior al periodo de anotación dentro de los 12 meses'),
-        ('3', 'Fecha de emisión es anterior al periodo de anotación luego de los 12 meses'),
-        ('4', 'Es ajuste o anotación')
+        ('6', 'Fecha de emisión es anterior al periodo de anotación dentro de los 12 meses'),
+        ('7', 'Fecha de emisión es anterior al periodo de anotación luego de los 12 meses'),
+        ('9', 'Es ajuste o anotación')
     ], string='Estado de factura de compra', default='1')
     purchase_ple_modification_date = fields.Datetime('Fecha de modificación de PLE de compras')
 

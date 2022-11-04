@@ -152,7 +152,16 @@ class PlePurchase(models.Model):
                 ###
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
-                'ref': invoice.ref
+                'ref': invoice.ref,
+                # * me
+                'purchase_move_period': invoice.purchase_move_period,
+                'vat_inconsistent': invoice.vat_inconsistent,
+                'exchange_inconsistent': invoice.exchange_inconsistent,
+                'cancel_with_payment_method': invoice.cancel_with_payment_method,
+                'waived_exemption_from_igv': invoice.waived_exemption_from_igv,
+                'non_existing_supplier': invoice.non_existing_supplier,
+                'contract_or_project': invoice.contract_or_project,
+                'adquisition_type': invoice.adquisition_type,
             }
             records.append((0, 0, values))
             row += 1
@@ -225,7 +234,16 @@ class PlePurchase(models.Model):
                 'partner_nodomicilied': line.partner_nodomicilied,
                 'journal_name': line.journal_name,
                 'document_code': line.document_code,
-                'amount_taxed': line.amount_taxed
+                'amount_taxed': line.amount_taxed,
+                # * me
+                'purchase_move_period': line.purchase_move_period,
+                'vat_inconsistent': line.vat_inconsistent,
+                'exchange_inconsistent': line.exchange_inconsistent,
+                'cancel_with_payment_method': line.cancel_with_payment_method,
+                'waived_exemption_from_igv': line.waived_exemption_from_igv,
+                'non_existing_supplier': line.non_existing_supplier,
+                'contract_or_project': line.contract_or_project,
+                'adquisition_type': line.adquisition_type,
             }
             data.append(value)
         return data
