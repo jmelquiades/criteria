@@ -162,6 +162,7 @@ class PlePurchase(models.Model):
                 'non_existing_supplier': invoice.non_existing_supplier,
                 'contract_or_project': invoice.contract_or_project,
                 'adquisition_type': invoice.adquisition_type,
+                'l10n_pe_dte_is_retention': invoice.l10n_pe_dte_is_retention,
             }
             records.append((0, 0, values))
             row += 1
@@ -244,6 +245,7 @@ class PlePurchase(models.Model):
                 'non_existing_supplier': line.non_existing_supplier,
                 'contract_or_project': line.contract_or_project,
                 'adquisition_type': line.adquisition_type,
+                'l10n_pe_dte_is_retention': line.l10n_pe_dte_is_retention,
             }
             data.append(value)
         return data

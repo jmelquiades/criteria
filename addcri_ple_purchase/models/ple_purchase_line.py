@@ -99,3 +99,4 @@ class PlePurchaseLine(models.Model):
         ('3', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
         ('4', 'Otros gastos no incluidos en el numeral 4'),
     ], string='Tipo de adquisión')
+    l10n_pe_dte_is_retention = fields.Boolean('Sujeto a retención')

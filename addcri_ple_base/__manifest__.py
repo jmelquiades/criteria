@@ -8,7 +8,7 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'base', 'account', 'l10n_latam_base', 'addcri_exchange_rate_purchase'
+        'base', 'account', 'l10n_latam_base', 'addcri_exchange_rate_purchase', 'addcri_detraction_retention_payment'
     ],
     'data': [
         'security/ir.model.access.csv',

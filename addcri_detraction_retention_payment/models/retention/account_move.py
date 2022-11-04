@@ -15,7 +15,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
     _description = 'Account Move'
 
-    l10n_pe_dte_is_retention = fields.Boolean('Is retention?')
+    l10n_pe_dte_is_retention = fields.Boolean('Sujeto a retención')
     retention_payment_state = fields.Selection(RETENTION_PAYMENT_STATE, string='Estado de pago de retención', compute='_get_retention_payment_state')
 
     @api.constrains('l10n_pe_dte_is_retention', 'l10n_pe_dte_retention_type')

@@ -42,7 +42,7 @@ class PurchaseReport(object):
                     'field_31': '-',
                     'field_32': '01/01/0001',  # * fecha de retencion
                     'field_33': '0',
-                    'field_34': '',
+                    'field_34': '1' if value['l10n_pe_dte_is_retention'] == True else '',
                     'field_35': value['adquisition_type'] if value['purchase_move_period'] else '',
                     'field_36': value['contract_or_project'] or '',
                     'field_37': '1' if value['exchange_inconsistent'] == True else '',
