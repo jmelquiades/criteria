@@ -76,11 +76,12 @@ class AccountMove(models.Model):
         # self._compute_amount()
         # self._compute_tax_totals_json()
         super(AccountMove, self)._onchange_detraction_percent()
-        if self.l10n_pe_dte_is_detraction:
-            self.l10n_pe_dte_detraction_amount = round(self.l10n_pe_dte_detraction_amount, 0)
-        else:
-            self.l10n_pe_dte_detraction_amount = 0
-            self.l10n_pe_dte_detraction_base = 0
+        for record in self:
+            if record.l10n_pe_dte_is_detraction:
+                record.l10n_pe_dte_detraction_amount = round(record.l10n_pe_dte_detraction_amount, 0)
+            else:
+                record.l10n_pe_dte_detraction_amount = 0
+                record.l10n_pe_dte_detraction_base = 0
 
     def action_register_payment(self):
         action = super().action_register_payment()

@@ -113,18 +113,19 @@ class AccountInvoice(models.Model):
     # @api.onchange('l10n_pe_dte_detraction_percent')
     @api.depends('l10n_pe_dte_detraction_percent', 'line_ids', 'currency_id', 'amount_total')
     def _onchange_detraction_percent(self):
-        currency_rate_tmp = 1
-        total_untaxed = 0.0
-        total_untaxed_currency = 0.0
-        for line in self.line_ids:
-            if not line.exclude_from_invoice_tab and any(tax.l10n_pe_edi_tax_code in ['1000'] for tax in line.tax_ids):
-                # Untaxed amount.
-                total_untaxed += line.balance
-                total_untaxed_currency += line.amount_currency
-        if self.currency_id.name != 'PEN':
-            currency_rate_tmp = abs(total_untaxed/total_untaxed_currency) if total_untaxed_currency != 0 else 1
-        self.l10n_pe_dte_detraction_base = self.amount_total if self.currency_id.name == 'PEN' else self.amount_total*currency_rate_tmp
-        self.l10n_pe_dte_detraction_amount = round(self.l10n_pe_dte_detraction_percent*self.l10n_pe_dte_detraction_base/100, 2)
+        for record in self:
+            currency_rate_tmp = 1
+            total_untaxed = 0.0
+            total_untaxed_currency = 0.0
+            for line in record.line_ids:
+                if not line.exclude_from_invoice_tab and any(tax.l10n_pe_edi_tax_code in ['1000'] for tax in line.tax_ids):
+                    # Untaxed amount.
+                    total_untaxed += line.balance
+                    total_untaxed_currency += line.amount_currency
+            if record.currency_id.name != 'PEN':
+                currency_rate_tmp = abs(total_untaxed/total_untaxed_currency) if total_untaxed_currency != 0 else 1
+            record.l10n_pe_dte_detraction_base = record.amount_total if record.currency_id.name == 'PEN' else record.amount_total*currency_rate_tmp
+            record.l10n_pe_dte_detraction_amount = round(record.l10n_pe_dte_detraction_percent*record.l10n_pe_dte_detraction_base/100, 2)
 
     def l10n_pe_dte_credit_amount_single_fee(self):
         res = super(AccountInvoice, self).l10n_pe_dte_credit_amount_single_fee()
