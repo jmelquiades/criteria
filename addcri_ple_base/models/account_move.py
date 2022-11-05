@@ -54,7 +54,7 @@ class AccountMove(models.Model):
         ('2', 'Documento anulado'),
         ('8', 'Corresponde al periodo anterior'),
         ('9', 'Se está corrigiendo una anotación de periodo anterior')
-    ], string='Estado de factura de venta')
+    ], string='Estado de factura de venta', default="1")
 
     exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
     cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')

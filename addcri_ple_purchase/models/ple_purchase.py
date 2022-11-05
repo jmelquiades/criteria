@@ -90,6 +90,15 @@ class PlePurchase(models.Model):
             amount_total = v['AMOUNT_TOTAL']
 
             retention, pay_invoice = self._get_retention(invoice)
+
+            # ! test
+            inv_lines = invoice.invoice_line_ids
+            tax_groups = inv_lines.tax_ids.tax_group_id
+            amount_total_taxes = tax_groups.mapped(lambda gt: (gt.name, sum(inv_lines.filtered(lambda il: gt in il.tax_ids.tax_group_id).mapped(lambda il: il.price_subtotal))))
+            amount_total_taxes = dict(amount_total_taxes)
+
+            # !
+            exchange_rate = invoice.exchange_rate
             values = {
                 'row': row,
                 'name': invoice.date.strftime('%Y%m00'),
@@ -111,7 +120,7 @@ class PlePurchase(models.Model):
                 'tax_gdm': sum_tax_gdm,
                 'base_gdng': sum_base_gdng,
                 'tax_gdng': sum_tax_gdng,
-                'amount_untaxed': invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # invoice.amount_untaxed,  # sum_amount_untaxed,
+                'amount_untaxed': amount_total_taxes.get('EXP', 0)*exchange_rate,  # !invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # ! invoice.amount_untaxed,  # sum_amount_untaxed,
                 'isc': sum_isc,
                 'another_taxes': sum_another_taxes,
                 'amount_taxed': invoice.currency_id._convert(invoice.amount_total - invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),

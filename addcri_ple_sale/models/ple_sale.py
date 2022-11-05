@@ -129,7 +129,7 @@ class PleSale(models.Model):
                 'customer_document_number': document_number,
                 'customer_name': customer_name,
                 'amount_export': sum_amount_export,
-                'amount_untaxed':  invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # invoice.amount_untaxed,  # sum_amount_untaxed,
+                'amount_untaxed': amount_total_taxes.get('IGV', 0)*exchange_rate,  # ! invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # ! invoice.amount_untaxed,  # sum_amount_untaxed,
                 'discount_tax_base': sum_discount_tax_base,
                 'sale_no_gravadas_igv': sum_sale_no_gravadas_igv,
                 'discount_igv': sum_discount_igv,
