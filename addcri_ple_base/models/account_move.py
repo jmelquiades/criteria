@@ -70,7 +70,7 @@ class AccountMove(models.Model):
         ('3', 'Otros activos no considerados en los numerales 1 y 2'),
         ('4', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
         ('5', 'Otros gastos no incluidos en el numeral 4'),
-    ], string='Tipo de adquisión', default='4')
+    ], string='Tipo de adquisión', default='1')
     contract_or_project = fields.Char('Contrato o proyecto')
     non_existing_supplier = fields.Boolean('Proveedor no habido')
     waived_exemption_from_igv = fields.Boolean('Renunció a exoneración de IGV')
