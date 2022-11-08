@@ -93,10 +93,10 @@ class PlePurchaseLine(models.Model):
     non_existing_supplier = fields.Boolean('Proveedor no habido')
     contract_or_project = fields.Char('Contrato o proyecto')
     adquisition_type = fields.Selection([
-        ('0', 'Mercadería, materia prima, suministro, envases y embalajes'),
-        ('1', 'Activo fijo'),
-        ('2', 'Otros activos no considerados en los numerales 1 y 2'),
-        ('3', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
-        ('4', 'Otros gastos no incluidos en el numeral 4'),
+        ('1', 'Mercadería, materia prima, suministro, envases y embalajes'),
+        ('2', 'Activo fijo'),
+        ('3', 'Otros activos no considerados en los numerales 1 y 2'),
+        ('4', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
+        ('5', 'Otros gastos no incluidos en el numeral 4'),
     ], string='Tipo de adquisión')
     l10n_pe_dte_is_retention = fields.Boolean('Sujeto a retención')
