@@ -61,7 +61,7 @@ class AccountMove(models.Model):
         return no_retention_amount, no_retention_amount_pay
 
     def _get_retention_amount(self):
-        retention_amount = self.l10n_pe_dte_amount_retention_base  # * Viene con moneda de la factura (fuente)
+        retention_amount = self.l10n_pe_dte_amount_retention  # * Viene con moneda de la factura (fuente)
         no_retention_amount = self.amount_total - retention_amount
         return retention_amount, no_retention_amount
 
