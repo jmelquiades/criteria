@@ -6,6 +6,8 @@ class AccountBatchPayment(models.Model):
     _inherit = 'account.batch.payment'
     _description = 'Account Batch Payment'
 
+    payment_type_id = fields.Many2one('account.payment.method', string='Tipo de pago')
+    arrival_journal_id = fields.Many2one('account.journal', string='Banco destino')
     txt_binary = fields.Binary('Txt Binary')
     txt_name = fields.Char('Txt Name')
     correlative_detraction_batch_payment = fields.Char('Correlative payment batch payment', default=lambda self: 'Nuevo')
