@@ -32,7 +32,7 @@ class AccountBatchPayment(models.Model):
         if self.correlative_detraction_batch_payment == 'Nuevo':
             self.correlative_detraction_batch_payment = self.env['ir.sequence'].next_by_code('seq.detraction.batch.payment')
         correlative = self.correlative_detraction_batch_payment
-        amount_total = sum(self.payment_ids.mapped(lambda p: int(p.move_id.l10n_pe_dte_detraction_amount)))
+        amount_total = sum(self.payment_ids.mapped(lambda p: int(p.reconciled_bill_ids[0].l10n_pe_dte_detraction_amount)))
         amount_total = str(amount_total).zfill(13)
         year = str(date.year)[:2]
         raw += f'{year}{correlative}{amount_total}00\r\n'
