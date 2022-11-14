@@ -19,7 +19,7 @@ class AccountBatchPayment(models.Model):
         )
         date = fields.Date.today()
         # correlative = '0001'
-        year = str(date.year)[:2]
+        year = str(date.year)[-2:]
         correlative = self.correlative_detraction_batch_payment
         self.txt_name = f'D{self.env.user.company_id.vat[:11]}{year}{correlative}.txt'
 
