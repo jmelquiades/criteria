@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 import base64
+from odoo.exceptions import UserError
 
 
 class AccountBatchPayment(models.Model):
@@ -20,11 +21,11 @@ class AccountBatchPayment(models.Model):
         # correlative = '0001'
         year = str(date.year)[:2]
         correlative = self.correlative_detraction_batch_payment
-        self.txt_name = f'D{self.env.user.company_id.vat}{year}{correlative}.txt'
+        self.txt_name = f'D{self.env.user.company_id.vat[:11]}{year}{correlative}.txt'
 
     def get_data(self):
         company = self.env.user.company_id
-        raw = f'*{company.vat}{company.name}'
+        raw = f'*{company.vat}{company.name[:35]}'
         spaces = len(raw)
         raw += ' ' * (48 - spaces)
         date = fields.Date.today()
@@ -32,7 +33,7 @@ class AccountBatchPayment(models.Model):
             self.correlative_detraction_batch_payment = self.env['ir.sequence'].next_by_code('seq.detraction.batch.payment')
         correlative = self.correlative_detraction_batch_payment
         amount_total = sum(self.payment_ids.mapped(lambda p: int(p.move_id.l10n_pe_dte_detraction_amount)))
-        amount_total = str(amount_total).zfill(15)
+        amount_total = str(amount_total).zfill(13)
         year = str(date.year)[:2]
         raw += f'{year}{correlative}{amount_total}00\r\n'
 
@@ -42,13 +43,18 @@ class AccountBatchPayment(models.Model):
                 # move = payment.move_id
                 partner = move.partner_id
                 date = move.date
-                line = f'{partner.l10n_latam_identification_type_id.l10n_pe_vat_code}{partner.vat}'
+                line = f'{partner.l10n_latam_identification_type_id.l10n_pe_vat_code}{partner.vat[:35]}'
                 spaces = len(line)
                 service = move.l10n_pe_dte_detraction_code
                 acc_number = payment.partner_bank_id.acc_number.replace('-', '')
+                if len(acc_number) != 11:
+                    raise UserError(f'El número de cuenta tiene {len(acc_number)} dígitos, debe de tener 11.')
+                acc_number = acc_number[:11]
                 op_code = '01'
-                amount = str(int(move.l10n_pe_dte_detraction_amount))
-                prefix = move.sequence_prefix.split()[-1].replace('-', '')
-                line += ' ' * (48 - spaces) + f'000000000{service}{acc_number}0000000000{amount}00{op_code}{date.year}{date.month}{move.l10n_latam_document_type_id.code}{prefix}{move.sequence_number}\r\n'
+                amount = str(int(move.l10n_pe_dte_detraction_amount)).zfill(13)
+                prefix = move.sequence_prefix.split()[-1].replace('-', '')[:2]
+                sequence = str(move.sequence_number)
+                sequence = sequence.zfill(8) if len(sequence) < 8 else sequence[-8:]
+                line += ' ' * (48 - spaces) + f'000000000{service}{acc_number}{amount}00{op_code}{date.year}{date.month}{move.l10n_latam_document_type_id.code}{prefix}{sequence}\r\n'
                 raw += line
         return raw
