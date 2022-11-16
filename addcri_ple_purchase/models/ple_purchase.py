@@ -75,7 +75,7 @@ class PlePurchase(models.Model):
         records = []
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
-            country_code, is_nodomicilied, partner_street = self._get_partner(invoice)
+            country_code, not_domiciled, partner_street = self._get_partner(invoice)
             origin_date_invoice, origin_document_code, origin_serie, origin_correlative, code_customs_id = self._get_data_origin(invoice)
             v = self._get_tax(invoice)
             sum_base_gdg = v['P_BASE_GDG']
@@ -137,7 +137,7 @@ class PlePurchase(models.Model):
                 'retention': retention,
                 'type_pay_invoice': pay_invoice,
                 'country_code': country_code,
-                'partner_nodomicilied': is_nodomicilied,
+                'partner_nodomicilied': not_domiciled,
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
                 # 'ple_purchase_id': self.id,
@@ -316,7 +316,7 @@ class PlePurchase(models.Model):
     def _get_partner(self, invoice):
         partner = invoice.partner_id
         country_code = partner.country_id.code
-        is_nodomicilied = partner.is_nodomicilied
+        not_domiciled = partner.not_domiciled
         partner_street = '{} {} {} {} {}'.format(
             partner.country_id.name or '',
             partner.state_id.name or '',
@@ -324,7 +324,7 @@ class PlePurchase(models.Model):
             partner.street or '',
             partner.street2 or ''
         )
-        return country_code, is_nodomicilied, partner_street.strip()
+        return country_code, not_domiciled, partner_street.strip()
 
     def _get_tax(self, invoice):
         values = {
