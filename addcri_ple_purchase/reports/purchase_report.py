@@ -88,10 +88,10 @@ class PurchaseReport(object):
                     'field_25': value['rent_neta'],
                     'field_26':  value['retention_rate'],
                     'field_27': value['tax_withheld'],
-                    'field_28':  value['cdi'] or '',
+                    'field_28':  '',
                     'field_29': value['exoneration_nodomicilied_code'] or '',
                     'field_30':  '',
-                    'field_31': value['taken_code'] or '',
+                    'field_31': value['cdi'] or '',
                     'field_32': value['application_article'] or '',
                     'field_33': value['type_rent_code'] or '',  # *
                     'field_36': value['not_domiciled_purchase_move_period'] or '',  # *

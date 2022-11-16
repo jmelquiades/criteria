@@ -155,6 +155,7 @@ class PlePurchase(models.Model):
                 # 'tax_withheld': invoice.tax_withheld,
                 # 'cdi': invoice.cdi,
                 # 'exoneration_nodomicilied_code': invoice.exoneration_nodomicilied_id and invoice.exoneration_nodomicilied_id.code or '',
+                'cdi': invoice.sunat_table_25_id and invoice.sunat_table_25_id.code or '',
                 'type_rent_code': invoice.sunat_table_31_id and invoice.sunat_table_31_id.code or '',
                 'not_domiciled_purchase_move_period': invoice.not_domiciled_purchase_move_period or '',
                 # 'taken_code': invoice.taken_id and invoice.taken_id.code or '',
