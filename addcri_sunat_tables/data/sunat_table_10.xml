@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="001" model="sunat.table.10">
+            <field name="name">Déposito en cuenta</field>
+            <field name="code">001</field>
+        </record>
+        <record id="002" model="sunat.table.10">
+            <field name="name">Giro</field>
+            <field name="code">002</field>
+        </record>
+        <record id="003" model="sunat.table.10">
+            <field name="name">Transferencia de fondos</field>
+            <field name="code">003</field>
+        </record>
+        <record id="004" model="sunat.table.10">
+            <field name="name">Orden de pago</field>
+            <field name="code">004</field>
+        </record>
+        <record id="005" model="sunat.table.10">
+            <field name="name">Tarjeta de débito</field>
+            <field name="code">005</field>
+        </record>
+        <record id="006" model="sunat.table.10">
+            <field name="name">Tarjeta de crédito emitida en el país por una empresa del sistema financiero</field>
+            <field name="code">006</field>
+        </record>
+        <record id="007" model="sunat.table.10">
+            <field name="name">Cheques con la cláusula de "no negociable", "intransferibles", "no a la orden" u otra equivalente, a que se refiere el inciso G) del artículo 5° de la ley</field>
+            <field name="code">007</field>
+        </record>
+        <record id="008" model="sunat.table.10">
+            <field name="name">Efectivo por operaciones en las que no existe obligación de utilizar medio de pago</field>
+            <field name="code">008</field>
+        </record>
+        <record id="009" model="sunat.table.10">
+            <field name="name">Efectivo, en los demás casos</field>
+            <field name="code">009</field>
+        </record>
+        <record id="010" model="sunat.table.10">
+            <field name="name">Medios de pago usados en comercio exterior</field>
+            <field name="code">010</field>
+        </record>
+        <record id="011" model="sunat.table.10">
+            <field name="name">Documentos emitidos por las EDPYMES y las cooperativas de ahorro y crédito no autorizadas a captar depósitos del público</field>
+            <field name="code">011</field>
+        </record>
+        <record id="012" model="sunat.table.10">
+            <field name="name">Tarjeta de crédito emitida en el país o en el exterior por una empresa no perteneciente al sistema financiero, cuyo objeto princial sea la emisión y administración de tarjetas de crédito</field>
+            <field name="code">012</field>
+        </record>
+        <record id="013" model="sunat.table.10">
+            <field name="name">Tarjetas de crédito emitidas en el exterior por empresas bancarias o financieras no domiciliadas</field>
+            <field name="code">013</field>
+        </record>
+        <record id="101" model="sunat.table.10">
+            <field name="name">Transferencias - Comercio exterior</field>
+            <field name="code">101</field>
+        </record>
+        <record id="102" model="sunat.table.10">
+            <field name="name">Cheques bancarios - Comercio exterior</field>
+            <field name="code">102</field>
+        </record>
+        <record id="103" model="sunat.table.10">
+            <field name="name">Orden de pago simple - Comercio exterior</field>
+            <field name="code">103</field>
+        </record>
+        <record id="104" model="sunat.table.10">
+            <field name="name">Orden de pago documentario - Comercio exterior</field>
+            <field name="code">104</field>
+        </record>
+        <record id="105" model="sunat.table.10">
+            <field name="name">Remesa simple - Comercio exterior</field>
+            <field name="code">105</field>
+        </record>
+        <record id="106" model="sunat.table.10">
+            <field name="name">Remesa documentaria - Comercio exterior</field>
+            <field name="code">106</field>
+        </record>
+        <record id="107" model="sunat.table.10">
+            <field name="name">Carta de crédito simple - Comercio exterior</field>
+            <field name="code">107</field>
+        </record>
+        <record id="108" model="sunat.table.10">
+            <field name="name">Carta de crédito documentario - Comercio exterior</field>
+            <field name="code">108</field>
+        </record>
+        <record id="999" model="sunat.table.10">
+            <field name="name">Otros medios de pago</field>
+            <field name="code">999</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="sunat_tables_menu" name="Tablas SUNAT" groups="account.group_account_manager" parent="account.menu_finance_configuration" sequence="10"/>
+</odoo>
