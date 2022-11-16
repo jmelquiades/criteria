@@ -155,9 +155,10 @@ class PlePurchase(models.Model):
                 # 'tax_withheld': invoice.tax_withheld,
                 # 'cdi': invoice.cdi,
                 # 'exoneration_nodomicilied_code': invoice.exoneration_nodomicilied_id and invoice.exoneration_nodomicilied_id.code or '',
-                # 'type_rent_code': invoice.type_rent_id and invoice.type_rent_id.code or '',
+                'type_rent_code': invoice.sunat_table_31_id and invoice.sunat_table_31_id.code or '',
+                'not_domiciled_purchase_move_period': invoice.not_domiciled_purchase_move_period or '',
                 # 'taken_code': invoice.taken_id and invoice.taken_id.code or '',
-                # 'application_article': invoice.application_article or ''
+                # 'application_article': invoice.sunat_table_ or ''
                 ###
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
@@ -238,7 +239,8 @@ class PlePurchase(models.Model):
                 'tax_withheld': line.tax_withheld,
                 'cdi': line.cdi,
                 'exoneration_nodomicilied_code': line.exoneration_nodomicilied_code,
-                'type_rent': line.type_rent_code,
+                'type_rent_code': line.type_rent_code,
+                'not_domiciled_purchase_move_period': line.not_domiciled_purchase_move_period,
                 'taken_code': line.taken_code,
                 'application_article': line.application_article,
                 'partner_nodomicilied': line.partner_nodomicilied,

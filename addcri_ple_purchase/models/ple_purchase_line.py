@@ -100,3 +100,8 @@ class PlePurchaseLine(models.Model):
         ('5', 'Otros gastos no incluidos en el numeral 4'),
     ], string='Tipo de adquisión')
     l10n_pe_dte_is_retention = fields.Boolean('Sujeto a retención')
+    # * not domiciled
+    not_domiciled_purchase_move_period = fields.Selection([
+        ('0', 'Anotación optativa sin efecto en el IGV corresponde al periodo.'),
+        ('9', 'Ajuste o rectificación en la anotación de la información de una operación registrada en un periodo anterior.')
+    ], string='Estado de factura de compra no domiciliado')

@@ -64,8 +64,8 @@ class PurchaseReport(object):
                     'field_1': value['period'],
                     'field_2': value['number_origin'],
                     'field_3': value['journal_correlative'],
-                    'field_4':  value['date_invoice'],
-                    'field_5': value['voucher_sunat_code'] or '',
+                    'field_4':  value['date_invoice'],  # *
+                    'field_5': value['voucher_sunat_code'] or '',  # *
                     'field_6': value['voucher_series'] or '0000',
                     'field_7':  value['correlative'] or '',
                     'field_8': '%.2f' % value['amount_untaxed'],
@@ -90,10 +90,11 @@ class PurchaseReport(object):
                     'field_27': value['tax_withheld'],
                     'field_28':  value['cdi'] or '',
                     'field_29': value['exoneration_nodomicilied_code'] or '',
-                    'field_30':  value['type_rent'] or '',
+                    'field_30':  '',
                     'field_31': value['taken_code'] or '',
                     'field_32': value['application_article'] or '',
-                    'field_33': value['ple_state'] or ''
+                    'field_33': value['type_rent_code'] or '',  # *
+                    'field_36': value['not_domiciled_purchase_move_period'] or '',  # *
                 }
                 data_8_2.append(record)
         return data_8_2
