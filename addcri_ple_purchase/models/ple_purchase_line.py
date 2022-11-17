@@ -59,7 +59,7 @@ class PlePurchaseLine(models.Model):
     tax_withheld = fields.Float(string='Impuesto retenido', digits=(12, 2),)
     cdi = fields.Char(string='CDI', help="Consigna Convenios para evitar la doble imposición según los parámetros de la tabla 25 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias. Si no hay convenio consignar 00")
     type_rent = fields.Char(string='Tipo de Renta', help="Consigna el tipo de Renta de la operación con el No domiciliado según los parámetros de la tabla 31 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias.")
-    partner_nodomicilied = fields.Boolean(string='No domiciliado')
+    not_domiciled = fields.Boolean(string='No domiciliado')
     inv_type_document_code = fields.Char(string='Código de Tipo de Comprobante')
     inv_serie = fields.Char(string='Serie de Comprabante')
     inv_correlative = fields.Char(string='Correlativo de Comprobante')

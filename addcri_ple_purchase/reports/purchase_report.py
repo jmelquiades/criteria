@@ -59,7 +59,7 @@ class PurchaseReport(object):
     def get_data_8_2(self, data):
         data_8_2 = []
         for value in data:
-            if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['partner_nodomicilied']:
+            if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['not_domiciled']:
                 record = {
                     'field_1': value['period'],
                     'field_2': value['number_origin'],
