@@ -18,7 +18,7 @@ class AccountBatchPayment(models.Model):
             values_content and values_content.encode() or '\n'.encode()
         )
         date = fields.Date.today()
-        year = str(date.year)[:2]
+        year = str(date.year)[-2:]
         correlative = self.correlative_detraction_batch_payment
         self.txt_name = f'D{self.env.user.company_id.vat[:11]}{year}{correlative}.txt'
 
@@ -39,7 +39,7 @@ class AccountBatchPayment(models.Model):
             raise UserError(message)
         amount_total = sum(self.payment_ids.mapped(lambda p: int(p.reconciled_bill_ids[0].l10n_pe_dte_detraction_amount)))
         amount_total = str(amount_total).zfill(13)
-        year = str(date.year)[:2]
+        year = str(date.year)[-2:]
         raw += f'{year}{correlative}{amount_total}00\r\n'
 
         for payment in self.payment_ids:
