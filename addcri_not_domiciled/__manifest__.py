@@ -8,7 +8,7 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'purchase'
+        'purchase', 'addcri_sunat_tables'
     ],
     'data': [
         'views/res_partner.xml',
