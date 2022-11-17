@@ -18,7 +18,6 @@ class AccountBatchPayment(models.Model):
             values_content and values_content.encode() or '\n'.encode()
         )
         date = fields.Date.today()
-        # correlative = '0001'
         year = str(date.year)[:2]
         correlative = self.correlative_detraction_batch_payment
         self.txt_name = f'D{self.env.user.company_id.vat[:11]}{year}{correlative}.txt'
@@ -32,6 +31,12 @@ class AccountBatchPayment(models.Model):
         if self.correlative_detraction_batch_payment == 'Nuevo':
             self.correlative_detraction_batch_payment = self.env['ir.sequence'].next_by_code('seq.detraction.batch.payment')
         correlative = self.correlative_detraction_batch_payment
+        payment_without_moves = self.payment_ids.filtered(lambda p: not p.reconciled_bill_ids)
+        if payment_without_moves:
+            message = f'Los siguientes pagos no tienen factura vinculada:\n'
+            for pwm in payment_without_moves:
+                message += f'- {pwm.name}\n'
+            raise UserError(message)
         amount_total = sum(self.payment_ids.mapped(lambda p: int(p.reconciled_bill_ids[0].l10n_pe_dte_detraction_amount)))
         amount_total = str(amount_total).zfill(13)
         year = str(date.year)[:2]
