@@ -13,6 +13,8 @@
     'data': [
         'security/ir.model.access.csv',
         'data/sunat_table_10.xml',
+        'data/sunat_table_25.xml',
+        'data/sunat_table_31.xml',
         'views/main_menu.xml',
         'views/sunat_table_10.xml',
         'views/sunat_table_25.xml',
