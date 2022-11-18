@@ -10,15 +10,15 @@
                     <div class="o_setting_left_pane"></div>
                     <div class="o_setting_right_pane">
                         <!-- <span class="fa fa-lg fa-building-o" title="Cuenta de detracciones" groups="account.group_account_manager"/> -->
-                        <span class="o_form_label">Cuenta de detracciones</span>
-                        <diw class="row">
-                            <label string="Ingresos" for="detraction_inbound_account_id" class="col-lg-3 o_light_label"/>
-                            <field name="detraction_inbound_account_id"/>
-                        </diw>
-                        <diw class="row">
-                            <label string="Egresos" for="detraction_outbound_account_id" class="col-lg-3 o_light_label"/>
+                        <span class="o_form_label">Cuenta para pago de detracciones</span>
+                        <div class="row">
+                            <label string="Detracciones por pagar" for="detraction_outbound_account_id" class="col-lg-3 o_light_label"/>
                             <field name="detraction_outbound_account_id"/>
-                        </diw>
+                        </div>
+                        <!-- <div class="row">
+                            <label string="Egresos" for="detraction_inbound_account_id" class="col-lg-3 o_light_label"/>
+                            <field name="detraction_inbound_account_id"/>
+                        </div> -->
                     </div>
                 </div>
             </xpath>
