@@ -104,7 +104,10 @@ class AccountMove(models.Model):
         else:
             journal = self._get_detraction_journal()
             lines = lines.filtered(lambda line: line.move_id != move)
-            detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id == journal)
+            if move.move_type == 'out_invoice':
+                detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id == journal)
+            elif move.move_type == 'in_invoice':
+                detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id != journal)
             no_detraction_no_reconciciled_lines = lines - detraction_no_reconciciled_lines
 
             # * Búsqueda de pagos
