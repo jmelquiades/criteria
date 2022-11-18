@@ -39,9 +39,16 @@ class AccountMove(models.Model):
                     j.base_payment_state = 'partial'
                 elif j.currency_id.is_zero(no_detraction_amount_pay - no_detraction_amount):
                     j.base_payment_state = 'in_payment'
-                    reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
+                    if j.move_type == 'out_invoice':
+                        reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id != journal)
+                    elif j.move_type == 'in_invoice':
+                        reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
                     if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
                         j.base_payment_state = 'paid'
+                    else:
+                        j.base_payment_state = 'unknown'
+                else:
+                    j.base_payment_state = 'unknown'
             elif j.l10n_pe_dte_is_retention:
                 no_retention_amount, no_retention_amount_pay = j._get_retention_amounts(False)
                 if j.currency_id.is_zero(no_retention_amount_pay):

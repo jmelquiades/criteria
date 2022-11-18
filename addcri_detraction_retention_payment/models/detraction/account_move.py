@@ -48,6 +48,10 @@ class AccountMove(models.Model):
                     reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
                     if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
                         j.detraction_payment_state = 'paid'
+                    else:
+                        j.detraction_payment_state = 'unknown'
+                else:
+                    j.detraction_payment_state = 'unknown'
             else:
                 j.detraction_payment_state = 'unknown'
 
