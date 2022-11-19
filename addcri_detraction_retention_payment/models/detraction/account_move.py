@@ -1,6 +1,6 @@
 from odoo import _, api, fields, models
 import math
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 DETRACTION_PAYMENT_STATE = [
     ('not_paid', 'No pagadas'),
@@ -67,15 +67,32 @@ class AccountMove(models.Model):
     @api.constrains('l10n_pe_dte_detraction_code', 'l10n_pe_dte_is_detraction')
     def _constrains_l10n_pe_dte_detraction_percent(self):
         if self.l10n_pe_dte_is_detraction and not self.l10n_pe_dte_detraction_code:
-            raise UserError('Definir el tipo de detracción')
+            raise ValidationError('Definir el tipo de detracción')
 
-    @api.constrains('l10n_pe_dte_operation_type', 'l10n_pe_dte_detraction_base')
+    def validate_l10n_pe_dte_detraction_base(self, vals):
+        if ('l10n_pe_dte_detraction_base' in vals or 'l10n_pe_dte_detraction_amount' in vals) and len(set(vals.keys()).difference(set(['l10n_pe_dte_detraction_base', 'l10n_pe_dte_detraction_amount']))):
+            l10n_pe_dte_detraction_base = vals.get('l10n_pe_dte_detraction_base', self.l10n_pe_dte_detraction_base) or self.l10n_pe_dte_detraction_base
+            l10n_pe_dte_operation_type = vals.get('l10n_pe_dte_operation_type', self.l10n_pe_dte_operation_type)
+            if l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004'] and l10n_pe_dte_detraction_base <= 700:  # ! Esos 700 debe ser parte de cnfiguración.
+                raise ValidationError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo.')
+
+    @api.model
+    def create(self, vals):
+        self.validate_l10n_pe_dte_detraction_base(vals)
+        return super(AccountMove, self).create(vals)
+
+    def write(self, vals):
+        self.validate_l10n_pe_dte_detraction_base(vals)
+        return super(AccountMove, self).write(vals)
+
+    @api.constrains('l10n_pe_dte_operation_type')
     def _constrains_l10n_pe_dte_operation_type_l10n_pe_dte_detraction_base(self):
+        self._onchange_detraction_percent()
         if self.l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004'] and self.l10n_pe_dte_detraction_base <= 700:  # ! Esos 700 debe ser parte de cnfiguración.
-            raise UserError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo.')
+            raise ValidationError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo.')
 
-    # @api.onchange('invoice_line_ids', 'l10n_pe_dte_operation_type', 'l10n_pe_dte_detraction_percent')  # ! esto debería de ser computado
-    @api.depends('invoice_line_ids', 'l10n_pe_dte_operation_type', 'l10n_pe_dte_detraction_percent', 'line_ids', 'currency_id', 'amount_total')  # ! esto debería de ser computado
+    @api.onchange('l10n_pe_dte_operation_type', 'l10n_pe_dte_detraction_percent')  # ! esto debería de ser computado
+    # @api.depends('invoice_line_ids', 'l10n_pe_dte_operation_type', 'l10n_pe_dte_detraction_percent', 'line_ids', 'currency_id', 'amount_total')  # ! esto debería de ser computado
     def _onchange_detraction_percent(self):
         # self._compute_amount()
         # self._compute_tax_totals_json()
@@ -83,6 +100,7 @@ class AccountMove(models.Model):
         for record in self:
             if record.l10n_pe_dte_is_detraction:
                 record.l10n_pe_dte_detraction_amount = round(record.l10n_pe_dte_detraction_amount, 0)
+                record.l10n_pe_dte_detraction_base = record.l10n_pe_dte_detraction_base
             else:
                 record.l10n_pe_dte_detraction_amount = 0
                 record.l10n_pe_dte_detraction_base = 0
