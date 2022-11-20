@@ -285,7 +285,7 @@ class PlePurchase(models.Model):
         self.txt_binary_8_2 = base64.b64encode(
             values_content2 and values_content2.encode() or '\n'.encode()
         )
-        self.txt_filename_8_2 = purchase_report_text.get_filename_8_1()
+        self.txt_filename_8_2 = purchase_report_text.get_filename_8_2()
 
     def get_reports_xlsx(self, data):
         purchase_report_xlsx = PurchaseReportXlsx(self, data)
