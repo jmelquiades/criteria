@@ -26,7 +26,7 @@ class AccountBatchPayment(models.Model):
         company = self.env.user.company_id
         raw = f'*{company.vat}{company.name[:35]}'
         spaces = len(raw)
-        raw += ' ' * (48 - spaces)
+        raw += ' ' * (47 - spaces)
         date = fields.Date.today()
         if self.correlative_detraction_batch_payment == 'Nuevo':
             self.correlative_detraction_batch_payment = self.env['ir.sequence'].next_by_code('seq.detraction.batch.payment')
@@ -60,6 +60,6 @@ class AccountBatchPayment(models.Model):
                 prefix = move.sequence_prefix.split()[-1].replace('-', '')[:4]
                 sequence = str(move.sequence_number)
                 sequence = sequence.zfill(8) if len(sequence) < 8 else sequence[-8:]
-                line += ' ' * (48 - spaces) + f'000000000{service}{acc_number}{amount}00{op_code}{date.year}{date.month}{move.l10n_latam_document_type_id.code}{prefix}{sequence}\r\n'
+                line += ' ' * (47 - spaces) + f'000000000{service}{acc_number}{amount}00{op_code}{date.year}{date.month.zfill(2)}{move.l10n_latam_document_type_id.code}{prefix}{sequence}\r\n'
                 raw += line
         return raw
