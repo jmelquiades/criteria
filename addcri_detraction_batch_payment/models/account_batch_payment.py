@@ -60,6 +60,6 @@ class AccountBatchPayment(models.Model):
                 prefix = move.sequence_prefix.split()[-1].replace('-', '')[:4]
                 sequence = str(move.sequence_number)
                 sequence = sequence.zfill(8) if len(sequence) < 8 else sequence[-8:]
-                line += ' ' * (47 - spaces) + f'000000000{service}{acc_number}{amount}00{op_code}{date.year}{date.month.zfill(2)}{move.l10n_latam_document_type_id.code}{prefix}{sequence}\r\n'
+                line += ' ' * (47 - spaces) + f'000000000{service}{acc_number}{amount}00{op_code}{date.year}{str(date.month).zfill(2)}{move.l10n_latam_document_type_id.code}{prefix}{sequence}\r\n'
                 raw += line
         return raw
