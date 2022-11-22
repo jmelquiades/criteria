@@ -47,7 +47,7 @@ class AccountBatchPayment(models.Model):
             if move:
                 # move = payment.move_id
                 partner = move.partner_id
-                date = move.date
+                date = move.invoice_date
                 line = f'{partner.l10n_latam_identification_type_id.l10n_pe_vat_code}{partner.vat[:35]}'
                 spaces = len(line)
                 service = move.l10n_pe_dte_detraction_code
