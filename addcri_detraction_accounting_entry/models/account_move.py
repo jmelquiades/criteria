@@ -1,5 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -10,19 +14,19 @@ class AccountMove(models.Model):
         super(AccountMove, self)._recompute_dynamic_lines(recompute_all_taxes, recompute_tax_base_amount)
         self.add_line_detraction()
 
-    # def _onchange_detraction_percent(self):
-    #     super(AccountMove, self)._onchange_detraction_percent()
-    #     if self.line_ids:
-    #         self._recompute_dynamic_lines()
+    def _onchange_detraction_percent(self):
+        super(AccountMove, self)._onchange_detraction_percent()
+        for record in self:
+            if record != record._origin:
+                record._recompute_dynamic_lines()
 
     def add_line_detraction(self):
         if not self.company_id.detraction_outbound_account_id:
             raise UserError('Configurar cuenta para pago de detracciones.')
 
         detraction_outbound_account = self.company_id.detraction_outbound_account_id
-        if self.l10n_pe_dte_is_detraction and self.state == 'draft':
+        if self.l10n_pe_dte_is_detraction and self.state == 'draft' and self.line_ids and self.move_type == 'in_invoice':
             merc = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id == detraction_outbound_account)
-
             if len(merc) > 1:
                 raise UserError('Hay más de un apunte contable con la cuenta de pago de detracciones.')
 
@@ -33,17 +37,22 @@ class AccountMove(models.Model):
                     'balance': balance,
                     'debit': 0.0,
                     'credit': balance,
+                    'amount_currency': -1 * balance,
+                    'price_unit': balance,
                     'exclude_from_invoice_tab': True,
                     'move_id': self.id
                 }
                 self.env['account.move.line'].new(values)
                 line_credit = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id != detraction_outbound_account and line.credit > 0)
-                line_credit.credit -= balance
-                line_credit._onchange_credit()
-                print('script')
+                if line_credit:
+                    line_credit.credit -= balance
+                    line_credit._onchange_credit()
+                    line_credit._get_fields_onchange_balance()
             else:
                 merc.balance = balance
                 merc.credit = balance
                 line_credit = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id != detraction_outbound_account and line.credit > 0)
-                line_credit.credit -= balance
-                line_credit._onchange_credit()
+                if line_credit:
+                    line_credit.credit -= balance
+                    line_credit._onchange_credit()
+                    line_credit._get_fields_onchange_balance()
