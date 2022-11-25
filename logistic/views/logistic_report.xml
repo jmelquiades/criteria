@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- QWeb Reports -->
-        <report
-            id="logistic_despatchs"
-            model="logistic.despatch"
-            string="Despatchs"
-            report_type="qweb-pdf"
-            name="logistic.report_despatch"
-            file="logistic.report_despatch"
-            attachment="(object.state == 'posted') and ((object.name or 'DSP').replace('/','_')+'.pdf')"
-            print_report_name="(object._get_report_base_filename())"
-            groups="logistic.group_user"
-        />
-    </data>
+    <!-- QWeb Reports -->
+    <record id="logistic_despatchs" model="ir.actions.report">
+        <field name="model">logistic.despatch</field>
+        <field name="report_name">Despatchs</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="name">logistic.report_despatch</field>
+        <field name="report_file">logistic.report_despatch</field>
+        <field name="attachment">(object.state == 'posted') and ((object.name or 'DSP').replace('/','_')+'.pdf')</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="groups_id" eval="[(4, ref('logistic.group_user'))]"/>
+    </record>
 </odoo>

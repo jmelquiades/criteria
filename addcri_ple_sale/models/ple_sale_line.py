@@ -104,7 +104,7 @@ class PleSaleLine(models.Model):
         string='Serie'
     )
     origin_correlative = fields.Char(
-        string='Correlativo',
+        string='Correlativo de origen',
     )
     contract_name = fields.Char(
         string='Identificador de Contrato y/o Proyecto'
@@ -132,7 +132,7 @@ class PleSaleLine(models.Model):
     ref = fields.Char('Referencia')
     # * me
 
-    move_period = fields.Selection([
+    sale_move_period = fields.Selection([
         ('0', 'Anotación sin efecto en el IGV'),
         ('1', 'Documento anulado'),
         ('2', 'Fecha del comprobante corresponde al periodo'),
@@ -145,3 +145,4 @@ class PleSaleLine(models.Model):
     tax_ina = fields.Float('Tax Ina')
     tax_exo = fields.Float('Tax Exo')
     tax_icbp = fields.Float('Tax Icbp')
+    cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')

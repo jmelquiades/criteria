@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_detraction" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.einvoice</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='detraction_journal']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane"></div>
+                    <div class="o_setting_right_pane">
+                        <!-- <span class="fa fa-lg fa-building-o" title="Cuenta de detracciones" groups="account.group_account_manager"/> -->
+                        <span class="o_form_label">Cuenta para pago de detracciones</span>
+                        <div class="row">
+                            <label string="Detracciones por pagar" for="detraction_outbound_account_id" class="col-lg-3 o_light_label"/>
+                            <field name="detraction_outbound_account_id"/>
+                        </div>
+                        <!-- <div class="row">
+                            <label string="Egresos" for="detraction_inbound_account_id" class="col-lg-3 o_light_label"/>
+                            <field name="detraction_inbound_account_id"/>
+                        </div> -->
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

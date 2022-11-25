@@ -8,24 +8,22 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'base', 'account', 'l10n_latam_base', 'addcri_exchange_rate_purchase'
+        'base', 'account', 'l10n_latam_base', 'addcri_exchange_rate_purchase', 'addcri_detraction_retention_payment', 'addcri_not_domiciled'
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/account_journal.xml',
         'views/account_move.xml',
-        # 'views/account_move_line.xml',
         'views/account_retention.xml',
         'views/code_customs.xml',
         'views/res_company.xml',
-        'views/res_partner.xml',
         "views/ple_base.xml"
     ],
     'demo': [
 
     ],
     'auto_install': False,
-    'application': False,
+    'application': True,
     'assets': {
 
     }

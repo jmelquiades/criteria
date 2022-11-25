@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="logistic_despatch_send_wizard_form" model="ir.ui.view">
             <field name="name">logistic.despatch.send.form</field>
             <field name="model">logistic.despatch.send</field>
@@ -11,36 +10,38 @@
                     <!-- truly invisible fields for control and options -->
                     <field name="composition_mode" invisible="1"/>
                     <field name="despatch_ids" invisible="1"/>
-                    <field name="email_from" invisible="1" />
+                    <field name="email_from" invisible="1"/>
                     <field name="mail_server_id" invisible="1"/>
                     <field name="composer_id" invisible="1"/>
                     <div name="option_print">
-                        <field name="is_print" />
-                        <b><label for="is_print"/></b>
-                        <div name="info_form" attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}" class="text-center text-muted d-inline-block">
-                            Preview as a PDF
-                        </div>
+                        <field name="is_print"/>
+                        <b>
+                            <label for="is_print"/>
+                        </b>
+                        <div name="info_form" attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}" class="text-center text-muted d-inline-block">Preview as a PDF</div>
                     </div>
                     <div name="option_email">
-                        <field name="is_email" />
-                        <b><label for="is_email"/></b>
+                        <field name="is_email"/>
+                        <b>
+                            <label for="is_email"/>
+                        </b>
                     </div>
                     <div class="text-left d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('despatch_without_email', '=', False)]}">
                         <field name="despatch_without_email" class="mr4"/>
                     </div>
-                    <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
+                    <div name="mail_form" attrs="{'invisible': [('is_email', '=', False)]}">
                         <!-- visible wizard -->
                         <div attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
                             <group>
                                 <label for="partner_ids" string="Recipients" groups="base.group_user"/>
                                 <div groups="base.group_user">
                                     <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
-                                        <strong>Email mass mailing</strong> on
+                                        <strong>Email mass mailing</strong>
+                                        on
                                         <span>the selected records</span>
                                     </span>
                                     <span>Followers of the document and</span>
-                                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
-                                        context="{'force_email':True, 'show_email':True}" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
+                                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
                                 </div>
                                 <field name="subject" placeholder="Subject..." attrs="{'required': [('is_email', '=', True), ('composition_mode', '=', 'comment')]}"/>
                             </group>
@@ -51,32 +52,21 @@
                                 <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
                             </group>
                             <group>
-                                <field name="template_id" options="{'no_create': True, 'no_edit': True}"
-                                    context="{'default_model': 'logistic.despatch'}"/>
+                                <field name="template_id" options="{'no_create': True, 'no_edit': True}" context="{'default_model': 'logistic.despatch'}"/>
                             </group>
                         </group>
                     </div>
-
                     <footer>
-                        <button string="Send &amp; Print"
-                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}"
-                            name="send_and_print_action" type="object" class="send_and_print btn-primary o_mail_send"/>
-                        <button string="Send"
-                            attrs="{'invisible': ['|', ('is_print', '=', True), ('is_email', '=', False)]}"
-                            name="send_and_print_action" type="object" class="send btn-primary o_mail_send"/>
-                        <button string="Print"
-                            attrs="{'invisible': ['|', ('is_print', '=', False), ('is_email', '=', True)]}"
-                            name="send_and_print_action" type="object" class="print btn-primary o_mail_send"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
-                        <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
-                            attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_email', '=', False)]}"
-                            class="pull-right btn-secondary" help="Save as a new template" />
+                        <button string="Send &amp; Print" attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}" name="send_and_print_action" type="object" class="send_and_print btn-primary o_mail_send"/>
+                        <button string="Send" attrs="{'invisible': ['|', ('is_print', '=', True), ('is_email', '=', False)]}" name="send_and_print_action" type="object" class="send btn-primary o_mail_send"/>
+                        <button string="Print" attrs="{'invisible': ['|', ('is_print', '=', False), ('is_email', '=', True)]}" name="send_and_print_action" type="object" class="print btn-primary o_mail_send"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template" attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_email', '=', False)]}" class="pull-right btn-secondary" help="Save as a new template"/>
                     </footer>
                 </form>
             </field>
         </record>
-
-       <act_window
+        <!-- <act_window
             name="Send &amp; print"
             id="despatch_send"
             res_model="logistic.despatch.send"
@@ -84,12 +74,17 @@
             binding_views="list"
             view_mode="form"
             target="new"
-            context="{
-                'default_template_id': ref('logistic.email_template_edi_despatch'),
-                'mark_despatch_as_sent': True,
-            }"
-            groups="logistic.group_user"/>
-
+            context=""
+            groups="logistic.group_user"/> -->
+        <record id="despatch_send" model="ir.actions.act_window">
+            <field name="name">Send &amp; print</field>
+            <field name="res_model">logistic.despatch.send</field>
+            <field name="binding_model_id" ref="model_logistic_despatch"/>
+            <field name="binding_view_types">list</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">new</field>
+            <field name="context">{ 'default_template_id': ref('logistic.email_template_edi_despatch'), 'mark_despatch_as_sent': True, }</field>
+            <field name="groups_id" eval="[(4, ref('logistic.group_user'))]"/>
+        </record>
     </data>
-
 </odoo>

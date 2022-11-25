@@ -15,7 +15,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
     _description = 'Account Move'
 
-    l10n_pe_dte_is_retention = fields.Boolean('Is retention?')
+    l10n_pe_dte_is_retention = fields.Boolean('Sujeto a retención')
     retention_payment_state = fields.Selection(RETENTION_PAYMENT_STATE, string='Estado de pago de retención', compute='_get_retention_payment_state')
 
     @api.constrains('l10n_pe_dte_is_retention', 'l10n_pe_dte_retention_type')
@@ -61,7 +61,7 @@ class AccountMove(models.Model):
         return no_retention_amount, no_retention_amount_pay
 
     def _get_retention_amount(self):
-        retention_amount = self.l10n_pe_dte_amount_retention_base  # * Viene con moneda de la factura (fuente)
+        retention_amount = self.l10n_pe_dte_amount_retention  # * Viene con moneda de la factura (fuente)
         no_retention_amount = self.amount_total - retention_amount
         return retention_amount, no_retention_amount
 

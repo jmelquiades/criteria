@@ -8,3 +8,4 @@ access_logistic_despatch_user,logistic.logistic.despatch.user,model_logistic_des
 access_logistic_despatch_line_all,logistic.logistic.despatch.line,model_logistic_despatch_line,,1,1,1,1
 access_logistic_expedition_manager,logistic.logistic.expedition.manager,model_logistic_expedition,logistic.group_manager,1,1,1,1
 access_logistic_expedition_user,logistic.logistic.expedition.user,model_logistic_expedition,logistic.group_user,1,1,0,0
+access_logistic_despatch_send_manager,logistic.despatch.send.manager,model_logistic_despatch_send,logistic.group_manager,1,1,1,1
