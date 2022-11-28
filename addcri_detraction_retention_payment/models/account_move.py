@@ -42,11 +42,11 @@ class AccountMove(models.Model):
                     if j.move_type == 'out_invoice':
                         reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id != journal)
                     elif j.move_type == 'in_invoice':
-                        reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
+                        reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.payment_id.payment_method_line_id.name != 'Detracciones')
                     if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
                         j.base_payment_state = 'paid'
-                    else:
-                        j.base_payment_state = 'unknown'
+                    # else:
+                    #     j.base_payment_state = 'unknown'
                 else:
                     j.base_payment_state = 'unknown'
             elif j.l10n_pe_dte_is_retention:

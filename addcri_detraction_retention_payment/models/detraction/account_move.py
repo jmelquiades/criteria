@@ -45,11 +45,14 @@ class AccountMove(models.Model):
                     j.detraction_payment_state = 'partial'
                 elif j.currency_id.is_zero(detraction_amount_pay - detraction_amount):
                     j.detraction_payment_state = 'in_payment'
-                    reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
+                    if j.move_type == 'out_invoice':
+                        reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.journal_id == journal)
+                    elif j.move_type == 'in_invoice':
+                        reconciled_payments = j._get_reconciled_payments().filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones')
                     if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
                         j.detraction_payment_state = 'paid'
-                    else:
-                        j.detraction_payment_state = 'unknown'
+                    # else:
+                    #     j.detraction_payment_state = 'unknown'
                 else:
                     j.detraction_payment_state = 'unknown'
             else:
@@ -129,7 +132,7 @@ class AccountMove(models.Model):
             if move.move_type == 'out_invoice':
                 detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id == journal)
             elif move.move_type == 'in_invoice':
-                detraction_no_reconciciled_lines = lines.filtered(lambda line: line.journal_id != journal)
+                detraction_no_reconciciled_lines = lines.filtered(lambda line: line.payment_id.payment_method_line_id.name == 'Detracciones')
             no_detraction_no_reconciciled_lines = lines - detraction_no_reconciciled_lines
 
             # * Búsqueda de pagos
@@ -159,7 +162,10 @@ class AccountMove(models.Model):
 
     def _get_info_aml_detraction(self, reconciled_amls, journal=False):
         self.warning_detraction_journal(journal)
-        detraction_reconciciled_lines = reconciled_amls.filtered(lambda line: line.journal_id == journal)
+        if self.move_type == 'out_invoice':
+            detraction_reconciciled_lines = reconciled_amls.filtered(lambda line: line.journal_id == journal)
+        elif self.move_type == 'in_invoice':
+            detraction_reconciciled_lines = reconciled_amls.filtered(lambda line: line.payment_id.payment_method_line_id.name == 'Detracciones')
         no_detraction_reconciciled_lines = reconciled_amls - detraction_reconciciled_lines
         return detraction_reconciciled_lines, no_detraction_reconciciled_lines
 
