@@ -42,8 +42,14 @@ class AccountPaymentRegister(models.TransientModel):
 
         # * Calculo de límites
         # ! j.payment_id and  se excluyé para tener en cuenta los otros mov. diferente de pagos (en prueba)
-        detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id == journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-        no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id != journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+        if move.move_type == 'out_invoice':
+            detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id == journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+            no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id != journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+        elif move.move_type == 'in_invoice':
+            detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+            no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+        else:
+            return data
 
         # * Update data
 
