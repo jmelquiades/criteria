@@ -54,7 +54,7 @@
                                     <field name="retention" optional="hide"/>
                                     <field name="type_pay_invoice" optional="hide"/>
                                     <field name="country_code" optional="hide"/>
-                                    <field name="partner_nodomicilied" optional="hide"/>
+                                    <field name="not_domiciled" optional="hide"/>
                                     <field name="ple_state" optional="hide"/>
                                     <field name="inv_type_document_code" optional="hide"/>
                                     <field name="isc" optional="hide"/>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sunat_table_25_view_form" model="ir.ui.view">
+        <field name="name">sunat.table.25.view.form</field>
+        <field name="model">sunat.table.25</field>
+        <field name="arch" type="xml">
+            <form string="Conv. Evit. Dob. Trib">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sunat_table_25_view_tree" model="ir.ui.view">
+        <field name="name">sunat.table.25.view.tree</field>
+        <field name="model">sunat.table.25</field>
+        <field name="arch" type="xml">
+            <tree string="Conv. Evit. Dob. Trib">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+    <record id="sunat_table_25_action" model="ir.actions.act_window">
+        <field name="name">Conv. Evit. Dob. Trib</field>
+        <field name="res_model">sunat.table.25</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p></p>
+        </field>
+    </record>
+    <menuitem id="sunat_table_25_menu" name="25 Conv. Evit. Dob. Trib" action="sunat_table_25_action" groups="account.group_account_manager" parent="sunat_tables_menu" sequence="25"/>
+</odoo>

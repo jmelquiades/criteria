@@ -46,17 +46,44 @@ class AccountMove(models.Model):
     voucher_number = fields.Char(string='Número de Pago')
     voucher_payment_date = fields.Date(string='Fecha pago')
 
-    # * me
+    # * ple ventas
 
-    move_period = fields.Selection([
+    sale_move_period = fields.Selection([
         ('0', 'Anotación sin efecto en el IGV'),
-        ('1', 'Documento anulado'),
-        ('2', 'Fecha del comprobante corresponde al periodo'),
+        ('1', 'Fecha del comprobante corresponde al periodo'),
+        ('2', 'Documento anulado'),
         ('8', 'Corresponde al periodo anterior'),
         ('9', 'Se está corrigiendo una anotación de periodo anterior')
-    ], string='Estado de factura')
+    ], string='Estado de factura de venta', default="1")
 
     exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+    cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')
+    contract_number = fields.Char('Número de contrato')
+    latest_consolidated_number = fields.Char('Último número consolidado')
+
+    # * ple comroas
+
+    initial_consolidated_number = fields.Char('Nùmero inicial consolidado')
+    adquisition_type = fields.Selection([
+        ('1', 'Mercadería, materia prima, suministro, envases y embalajes'),
+        ('2', 'Activo fijo'),
+        ('3', 'Otros activos no considerados en los numerales 1 y 2'),
+        ('4', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
+        ('5', 'Otros gastos no incluidos en el numeral 4'),
+    ], string='Tipo de adquisión', default='1')
+    contract_or_project = fields.Char('Contrato o proyecto')
+    non_existing_supplier = fields.Boolean('Proveedor no habido')
+    waived_exemption_from_igv = fields.Boolean('Renunció a exoneración de IGV')
+    vat_inconsistent = fields.Boolean('DNI inconsistente')
+    purchase_clearance = fields.Boolean('Liquidación de compra')
+    purchase_move_period = fields.Selection([
+        ('0', 'Anotación optativa sin efecto en el IGV'),
+        ('1', 'Fecha del documento corresponde al periodo en el que se anotó'),
+        ('6', 'Fecha de emisión es anterior al periodo de anotación dentro de los 12 meses'),
+        ('7', 'Fecha de emisión es anterior al periodo de anotación luego de los 12 meses'),
+        ('9', 'Es ajuste o anotación')
+    ], string='Estado de factura de compra', default='1')
+    purchase_ple_modification_date = fields.Datetime('Fecha de modificación de PLE de compras')
 
     @api.model
     def _convert_date_timezone(self, date_order, format_time='%Y-%m-%d %H:%M:%S'):

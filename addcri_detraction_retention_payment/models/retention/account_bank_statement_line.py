@@ -7,4 +7,4 @@ class AccountBankStatementLine(models.Model):
     _description = 'Account Bank Statement Line'
 
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', string='Tipo de documento')
-    l10n_latam_table_10_id = fields.Many2one('l10n_latam.table.10', string='Tabla 10')
+    l10n_latam_table_10_id = fields.Many2one('sunat.table.10', string='Tabla 10')

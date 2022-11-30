@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sunat_table_31_view_form" model="ir.ui.view">
+        <field name="name">sunat.table.31.view.form</field>
+        <field name="model">sunat.table.31</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de renta">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="article"/>
+                            <field name="ocde_code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sunat_table_31_view_tree" model="ir.ui.view">
+        <field name="name">sunat.table.31.view.tree</field>
+        <field name="model">sunat.table.31</field>
+        <field name="arch" type="xml">
+            <tree string="Tipo de renta">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="article"/>
+                <field name="ocde_code"/>
+            </tree>
+        </field>
+    </record>
+    <record id="sunat_table_31_action" model="ir.actions.act_window">
+        <field name="name">Tipo de renta</field>
+        <field name="res_model">sunat.table.31</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p></p>
+        </field>
+    </record>
+    <menuitem id="sunat_table_31_menu" name="31 Tipo de renta" action="sunat_table_31_action" groups="account.group_account_manager" parent="sunat_tables_menu" sequence="31"/>
+</odoo>

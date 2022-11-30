@@ -27,13 +27,13 @@ class PlePurchase(models.Model):
         string='Líneas'
     )
     xlsx_filename_8_1 = fields.Char()
-    xlsx_binary_8_1 = fields.Binary('Reporte XLSX')
+    xlsx_binary_8_1 = fields.Binary('Reporte XLSX 8.1')
     txt_filename_8_1 = fields.Char()
-    txt_binary_8_1 = fields.Binary('Reporte TXT')
+    txt_binary_8_1 = fields.Binary('Reporte TXT 8.1')
     xlsx_filename_8_2 = fields.Char()
-    xlsx_binary_8_2 = fields.Binary('Reporte XLSX')
+    xlsx_binary_8_2 = fields.Binary('Reporte XLSX 8.2')
     txt_filename_8_2 = fields.Char()
-    txt_binary_8_2 = fields.Binary('Reporte TXT')
+    txt_binary_8_2 = fields.Binary('Reporte TXT 8.2')
     error_dialog_8_1 = fields.Text(readonly=True)
     error_dialog_8_2 = fields.Text(readonly=True)
 
@@ -75,7 +75,7 @@ class PlePurchase(models.Model):
         records = []
         for invoice in list_invoices:
             date_due, ple_state, document_type, document_number, customer_name = self._get_data_invoice(invoice)
-            country_code, is_nodomicilied, partner_street = self._get_partner(invoice)
+            country_code, not_domiciled, partner_street = self._get_partner(invoice)
             origin_date_invoice, origin_document_code, origin_serie, origin_correlative, code_customs_id = self._get_data_origin(invoice)
             v = self._get_tax(invoice)
             sum_base_gdg = v['P_BASE_GDG']
@@ -90,6 +90,15 @@ class PlePurchase(models.Model):
             amount_total = v['AMOUNT_TOTAL']
 
             retention, pay_invoice = self._get_retention(invoice)
+
+            # ! test
+            inv_lines = invoice.invoice_line_ids
+            tax_groups = inv_lines.tax_ids.tax_group_id
+            amount_total_taxes = tax_groups.mapped(lambda gt: (gt.name, sum(inv_lines.filtered(lambda il: gt in il.tax_ids.tax_group_id).mapped(lambda il: il.price_subtotal))))
+            amount_total_taxes = dict(amount_total_taxes)
+
+            # !
+            exchange_rate = invoice.exchange_rate
             values = {
                 'row': row,
                 'name': invoice.date.strftime('%Y%m00'),
@@ -111,7 +120,7 @@ class PlePurchase(models.Model):
                 'tax_gdm': sum_tax_gdm,
                 'base_gdng': sum_base_gdng,
                 'tax_gdng': sum_tax_gdng,
-                'amount_untaxed': invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # invoice.amount_untaxed,  # sum_amount_untaxed,
+                'amount_untaxed': amount_total_taxes.get('EXP', 0)*exchange_rate,  # !invoice.currency_id._convert(invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),  # ! invoice.amount_untaxed,  # sum_amount_untaxed,
                 'isc': sum_isc,
                 'another_taxes': sum_another_taxes,
                 'amount_taxed': invoice.currency_id._convert(invoice.amount_total - invoice.amount_untaxed, self.env.user.company_id.currency_id, self.env.user.company_id, invoice.date, round=True),
@@ -128,11 +137,11 @@ class PlePurchase(models.Model):
                 'retention': retention,
                 'type_pay_invoice': pay_invoice,
                 'country_code': country_code,
-                'partner_nodomicilied': is_nodomicilied,
+                'not_domiciled': not_domiciled,
                 'ple_state': ple_state,
                 'invoice_id': invoice.id,
                 # 'ple_purchase_id': self.id,
-                'inv_type_document_code': invoice.l10n_latam_document_type_id.sequence,  # invoice.inv_type_document.code,
+                'inv_type_document_code': invoice.l10n_latam_document_type_id.code,  # invoice.inv_type_document.code,
                 # 'inv_serie': invoice.inv_serie,
                 # 'inv_year_dua_dsi': invoice.inv_year_dua_dsi,
                 # 'inv_retention_igv': invoice.inv_retention_igv,
@@ -146,13 +155,25 @@ class PlePurchase(models.Model):
                 # 'tax_withheld': invoice.tax_withheld,
                 # 'cdi': invoice.cdi,
                 # 'exoneration_nodomicilied_code': invoice.exoneration_nodomicilied_id and invoice.exoneration_nodomicilied_id.code or '',
-                # 'type_rent_code': invoice.type_rent_id and invoice.type_rent_id.code or '',
+                'cdi': invoice.sunat_table_25_id and invoice.sunat_table_25_id.code or '',
+                'type_rent_code': invoice.sunat_table_31_id and invoice.sunat_table_31_id.code or '',
+                'not_domiciled_purchase_move_period': invoice.not_domiciled_purchase_move_period or '',
                 # 'taken_code': invoice.taken_id and invoice.taken_id.code or '',
-                # 'application_article': invoice.application_article or ''
+                # 'application_article': invoice.sunat_table_ or ''
                 ###
                 'journal_name': invoice.journal_id.code,
                 'document_code': invoice.l10n_latam_document_type_id.code,
-                'ref': invoice.ref
+                'ref': invoice.ref,
+                # * me
+                'purchase_move_period': invoice.purchase_move_period,
+                'vat_inconsistent': invoice.vat_inconsistent,
+                'exchange_inconsistent': invoice.exchange_inconsistent,
+                'cancel_with_payment_method': invoice.cancel_with_payment_method,
+                'waived_exemption_from_igv': invoice.waived_exemption_from_igv,
+                'non_existing_supplier': invoice.non_existing_supplier,
+                'contract_or_project': invoice.contract_or_project,
+                'adquisition_type': invoice.adquisition_type,
+                'l10n_pe_dte_is_retention': invoice.l10n_pe_dte_is_retention,
             }
             records.append((0, 0, values))
             row += 1
@@ -219,13 +240,24 @@ class PlePurchase(models.Model):
                 'tax_withheld': line.tax_withheld,
                 'cdi': line.cdi,
                 'exoneration_nodomicilied_code': line.exoneration_nodomicilied_code,
-                'type_rent': line.type_rent_code,
+                'type_rent_code': line.type_rent_code,
+                'not_domiciled_purchase_move_period': line.not_domiciled_purchase_move_period,
                 'taken_code': line.taken_code,
                 'application_article': line.application_article,
-                'partner_nodomicilied': line.partner_nodomicilied,
+                'not_domiciled': line.not_domiciled,
                 'journal_name': line.journal_name,
                 'document_code': line.document_code,
-                'amount_taxed': line.amount_taxed
+                'amount_taxed': line.amount_taxed,
+                # * me
+                'purchase_move_period': line.purchase_move_period,
+                'vat_inconsistent': line.vat_inconsistent,
+                'exchange_inconsistent': line.exchange_inconsistent,
+                'cancel_with_payment_method': line.cancel_with_payment_method,
+                'waived_exemption_from_igv': line.waived_exemption_from_igv,
+                'non_existing_supplier': line.non_existing_supplier,
+                'contract_or_project': line.contract_or_project,
+                'adquisition_type': line.adquisition_type,
+                'l10n_pe_dte_is_retention': line.l10n_pe_dte_is_retention,
             }
             data.append(value)
         return data
@@ -253,7 +285,7 @@ class PlePurchase(models.Model):
         self.txt_binary_8_2 = base64.b64encode(
             values_content2 and values_content2.encode() or '\n'.encode()
         )
-        self.txt_filename_8_2 = purchase_report_text.get_filename_8_1()
+        self.txt_filename_8_2 = purchase_report_text.get_filename_8_2()
 
     def get_reports_xlsx(self, data):
         purchase_report_xlsx = PurchaseReportXlsx(self, data)
@@ -287,7 +319,7 @@ class PlePurchase(models.Model):
     def _get_partner(self, invoice):
         partner = invoice.partner_id
         country_code = partner.country_id.code
-        is_nodomicilied = partner.is_nodomicilied
+        not_domiciled = partner.not_domiciled
         partner_street = '{} {} {} {} {}'.format(
             partner.country_id.name or '',
             partner.state_id.name or '',
@@ -295,7 +327,7 @@ class PlePurchase(models.Model):
             partner.street or '',
             partner.street2 or ''
         )
-        return country_code, is_nodomicilied, partner_street.strip()
+        return country_code, not_domiciled, partner_street.strip()
 
     def _get_tax(self, invoice):
         values = {

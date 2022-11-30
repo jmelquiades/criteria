@@ -37,7 +37,7 @@ class PlePurchaseLine(models.Model):
     origin_date_invoice = fields.Date(string='Fecha Pago')
     origin_document_code = fields.Char(string='Tipo de comprobante')
     origin_serie = fields.Char(string='Serie')
-    origin_correlative = fields.Char(string='Correlativo',)
+    origin_correlative = fields.Char(string='Correlativo de origen',)
     origin_code_aduana = fields.Char(string='Código aduana')
     journal_correlative = fields.Char(string='Correlativo Asiento')
     voucher_number = fields.Char(string='Número de Pago')
@@ -59,7 +59,7 @@ class PlePurchaseLine(models.Model):
     tax_withheld = fields.Float(string='Impuesto retenido', digits=(12, 2),)
     cdi = fields.Char(string='CDI', help="Consigna Convenios para evitar la doble imposición según los parámetros de la tabla 25 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias. Si no hay convenio consignar 00")
     type_rent = fields.Char(string='Tipo de Renta', help="Consigna el tipo de Renta de la operación con el No domiciliado según los parámetros de la tabla 31 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias.")
-    partner_nodomicilied = fields.Boolean(string='No domiciliado')
+    not_domiciled = fields.Boolean(string='No domiciliado')
     inv_type_document_code = fields.Char(string='Código de Tipo de Comprobante')
     inv_serie = fields.Char(string='Serie de Comprabante')
     inv_correlative = fields.Char(string='Correlativo de Comprobante')
@@ -67,7 +67,7 @@ class PlePurchaseLine(models.Model):
     inv_retention_igv = fields.Float(string='Monto retención de IGV')
     hard_rent = fields.Float(string='Renta Bruta')
     exoneration_nodomicilied_code = fields.Char(string='Exoneración aplicada', help="Consigna la exoneración aplicada a No domiciliado según los parámetros de la tabla 33 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias.")
-    type_rent_code = fields.Char(string='Tipo de Renta')
+    type_rent_code = fields.Char(string='Código de tipo de Renta')
     taken_code = fields.Char(string='Modalidad de servicio prestado', help="Consigna la Modalidad del servicio prestado por el No domiciliado, según los parámetros de la tabla 32 del Anexo N°3 Aprobado por R.S.N° 286-2009/SUNAT y modificatorias.")
     application_article = fields.Char(string='Aplicación Art. 76°')
     retention = fields.Char(
@@ -77,3 +77,31 @@ class PlePurchaseLine(models.Model):
     journal_name = fields.Char('Nombre de diario')
     document_code = fields.Char('Código de Documento')
     ref = fields.Char('Referencia')
+
+    # * me
+    purchase_move_period = fields.Selection([
+        ('0', 'Anotación optativa sin efecto en el IGV'),
+        ('1', 'Fecha del documento corresponde al periodo en el que se anotó'),
+        ('6', 'Fecha de emisión es anterior al periodo de anotación dentro de los 12 meses'),
+        ('7', 'Fecha de emisión es anterior al periodo de anotación luego de los 12 meses'),
+        ('9', 'Es ajuste o anotación')
+    ], string='Estado de factura de compra')
+    vat_inconsistent = fields.Boolean('DNI inconsistente')
+    exchange_inconsistent = fields.Boolean('Inconsistencia en Tipo de cambio')
+    cancel_with_payment_method = fields.Boolean('Cancelado con medio de pago')
+    waived_exemption_from_igv = fields.Boolean('Renunció a exoneración de IGV')
+    non_existing_supplier = fields.Boolean('Proveedor no habido')
+    contract_or_project = fields.Char('Contrato o proyecto')
+    adquisition_type = fields.Selection([
+        ('1', 'Mercadería, materia prima, suministro, envases y embalajes'),
+        ('2', 'Activo fijo'),
+        ('3', 'Otros activos no considerados en los numerales 1 y 2'),
+        ('4', 'Gastos de educación, recreación, salud, culturales, representación, capacitación, de viaje, mantenimiento de vehículos y de premios'),
+        ('5', 'Otros gastos no incluidos en el numeral 4'),
+    ], string='Tipo de adquisión')
+    l10n_pe_dte_is_retention = fields.Boolean('Sujeto a retención')
+    # * not domiciled
+    not_domiciled_purchase_move_period = fields.Selection([
+        ('0', 'Anotación optativa sin efecto en el IGV corresponde al periodo.'),
+        ('9', 'Ajuste o rectificación en la anotación de la información de una operación registrada en un periodo anterior.')
+    ], string='Estado de factura de compra no domiciliado')

@@ -6,9 +6,9 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
     _description = 'Account Payment Register'
 
-    retention_amount_residual = fields.Float('Detraction amount')
-    no_retention_amount_residual = fields.Float('Detraction amount')
-    is_retention = fields.Boolean('Is Detraction')
+    retention_amount_residual = fields.Float('Retention amount residual')
+    no_retention_amount_residual = fields.Float('No retention amount residual')
+    is_retention = fields.Boolean('Is retention')
 
     @api.constrains('journal_id', 'amount', 'is_retention')
     def _constrains_journal_amount_retention(self):

@@ -7,7 +7,7 @@ class PurchaseReport(object):
     def get_data_8_1(self, data):
         data_8_1 = []
         for value in data:
-            if value['voucher_sunat_code'] not in ['91', '97', '98']:
+            if value['document_code'] not in ['91', '97', '98']:
                 record = {
                     'field_1': value['period'],
                     'field_2': value['period'].replace('00', '') + value['journal_name'] + value['voucher_series'] + '-' + value['correlative'].zfill(8),
@@ -42,15 +42,15 @@ class PurchaseReport(object):
                     'field_31': '-',
                     'field_32': '01/01/0001',  # * fecha de retencion
                     'field_33': '0',
-                    'field_34': '',
-                    'field_35': '',  # or 0
-                    'field_36': '',
-                    'field_37': '',
-                    'field_38': '',
-                    'field_39': '',
-                    'field_40': '',
-                    'field_41': '',
-                    'field_42': '1',
+                    'field_34': '1' if value['l10n_pe_dte_is_retention'] == True else '',
+                    'field_35': value['adquisition_type'] if value['purchase_move_period'] else '',
+                    'field_36': value['contract_or_project'] or '',
+                    'field_37': '1' if value['exchange_inconsistent'] == True else '',
+                    'field_38': '1' if value['non_existing_supplier'] == True else '',
+                    'field_39': '1' if value['waived_exemption_from_igv'] == True else '',
+                    'field_40': '1' if value['vat_inconsistent'] == True else '',
+                    'field_41': '1' if value['cancel_with_payment_method'] == True else '',
+                    'field_42': value['purchase_move_period'] if value['purchase_move_period'] else '',
                     'field_43': ''
                 }
                 data_8_1.append(record)
@@ -59,13 +59,13 @@ class PurchaseReport(object):
     def get_data_8_2(self, data):
         data_8_2 = []
         for value in data:
-            if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['partner_nodomicilied']:
+            if value['document_code'] in ['00', '91', '97', '98'] and value['not_domiciled']:
                 record = {
                     'field_1': value['period'],
                     'field_2': value['number_origin'],
                     'field_3': value['journal_correlative'],
-                    'field_4':  value['date_invoice'],
-                    'field_5': value['voucher_sunat_code'] or '',
+                    'field_4':  value['date_invoice'],  # *
+                    'field_5': value['voucher_sunat_code'] or '',  # *
                     'field_6': value['voucher_series'] or '0000',
                     'field_7':  value['correlative'] or '',
                     'field_8': '%.2f' % value['amount_untaxed'],
@@ -88,12 +88,13 @@ class PurchaseReport(object):
                     'field_25': value['rent_neta'],
                     'field_26':  value['retention_rate'],
                     'field_27': value['tax_withheld'],
-                    'field_28':  value['cdi'] or '',
+                    'field_28':  '',
                     'field_29': value['exoneration_nodomicilied_code'] or '',
-                    'field_30':  value['type_rent'] or '',
-                    'field_31': value['taken_code'] or '',
+                    'field_30':  '',
+                    'field_31': value['cdi'] or '',
                     'field_32': value['application_article'] or '',
-                    'field_33': value['ple_state'] or ''
+                    'field_33': value['type_rent_code'] or '',  # *
+                    'field_36': value['not_domiciled_purchase_move_period'] or '',  # *
                 }
                 data_8_2.append(record)
         return data_8_2

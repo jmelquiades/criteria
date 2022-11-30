@@ -34,11 +34,11 @@ class LogisticDespatch(models.Model):
         return lst
 
     l10n_latam_country_code = fields.Char("Country Code (LATAM)",
-        related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
+                                          related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
     l10n_pe_dte_shipment_reason = fields.Selection('get_l10n_pe_dte_shipment_reason', string='Reason', required=True, readonly=True, states={
-                                       'draft': [('readonly', False)], }, default='01')
+        'draft': [('readonly', False)], }, default='01')
     l10n_pe_dte_transport_mode = fields.Selection('get_l10n_pe_dte_transport_mode', string='Mode', required=True, readonly=True, states={
-                                      'draft': [('readonly', False)], }, default='02')
+        'draft': [('readonly', False)], }, default='02')
     l10n_pe_dte_status = fields.Selection([
         ('not_sent', 'Pending To Be Sent'),
         ('ask_for_status', 'Ask For Status'),
@@ -80,14 +80,14 @@ class LogisticDespatch(models.Model):
     - Not sent: the DTE has not been sent to the partner but it has sent to SII.
     - Sent: The DTE has been sent to the partner.""")
     l10n_pe_dte_file = fields.Many2one('ir.attachment', string='DTE file', copy=False)
-    l10n_pe_dte_file_link = fields.Char(string='DTE file', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_file_link = fields.Char(string='DTE file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_hash = fields.Char(string='DTE Hash', copy=False)
     l10n_pe_dte_pdf_file = fields.Many2one('ir.attachment', string='DTE PDF file', copy=False)
-    l10n_pe_dte_pdf_file_link = fields.Char(string='DTE PDF file', compute='_compute_l10n_pe_dte_links')
-    l10n_pe_dte_cdr_file = fields.Many2one('ir.attachment', string='CDR file', copy=False)
-    l10n_pe_dte_cdr_file_link = fields.Char(string='CDR file', compute='_compute_l10n_pe_dte_links')
-    l10n_pe_dte_cdr_void_file = fields.Many2one('ir.attachment', string='CDR Void file', copy=False)
-    l10n_pe_dte_cdr_void_file_link = fields.Char(string='CDR Void file', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_pdf_file_link = fields.Char(string='DTE PDF file link', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_cdr_file = fields.Many2one('ir.attachment', string='DTE CDR file', copy=False)
+    l10n_pe_dte_cdr_file_link = fields.Char(string='CDR file link', compute='_compute_l10n_pe_dte_links')
+    l10n_pe_dte_cdr_void_file = fields.Many2one('ir.attachment', string='DTE CDR Void file', copy=False)
+    l10n_pe_dte_cdr_void_file_link = fields.Char(string='CDR Void file link', compute='_compute_l10n_pe_dte_links')
     l10n_pe_dte_invoice_number = fields.Char(string='Numero de Factura')
     l10n_pe_dte_is_einvoice = fields.Boolean('Is E-invoice')
 
@@ -107,22 +107,22 @@ class LogisticDespatch(models.Model):
                 if not self.delivery_address_id.zip:
                     raise ValidationError("El ubigeo de la direccion de llegada es obligatorio")
                 move.l10n_pe_dte_is_einvoice = True
-            if move.l10n_pe_dte_is_einvoice and move.company_id.l10n_pe_dte_send_interval_unit=="immediately":
+            if move.l10n_pe_dte_is_einvoice and move.company_id.l10n_pe_dte_send_interval_unit == "immediately":
                 move.l10n_pe_dte_action_send()
         return res
-    
+
     def l10n_pe_dte_action_send(self):
-        #override this method for custom integration
+        # override this method for custom integration
         pass
 
     def l10n_pe_dte_action_check(self):
-        #override this method for custom integration
+        # override this method for custom integration
         pass
 
     def l10n_pe_dte_action_cancel(self):
-        #override this method for custom integration
+        # override this method for custom integration
         pass
-    
+
     def _l10n_pe_prepare_dte(self):
         sequence = self.name.split('-')
         serial = sequence[0]
@@ -132,7 +132,7 @@ class LogisticDespatch(models.Model):
             'enviar': True,
             'serie': serial,
             'numero': number,
-            'nombre_de_archivo': '%s-09-%s' % (self.company_id.vat,self.name),
+            'nombre_de_archivo': '%s-09-%s' % (self.company_id.vat, self.name),
             'motivo_de_envio': self.l10n_pe_dte_shipment_reason,
             'modo_de_transporte': self.l10n_pe_dte_transport_mode,
             'tipo_de_guia': '09',
@@ -150,32 +150,32 @@ class LogisticDespatch(models.Model):
             'bultos_paquetes': self.packages,
 
             'origen_ubigeo': self.origin_address_id.zip.replace('PE', '') if self.origin_address_id.zip else False,
-            #'origen_direccion': self.origin_address_id.street,
+            # 'origen_direccion': self.origin_address_id.street,
             'origen_direccion': (self.origin_address_id.street_name or '') \
-                                + (self.origin_address_id.street_number and (' ' + self.origin_address_id.street_number) or '') \
-                                + (self.origin_address_id.street_number2 and (' ' + self.origin_address_id.street_number2) or '') \
-                                + (self.origin_address_id.street2 and (' ' + self.origin_address_id.street2) or '') \
-                                + (self.origin_address_id.l10n_pe_district and ', ' + self.origin_address_id.l10n_pe_district.name or '') \
-                                + (self.origin_address_id.city_id and ', ' + self.origin_address_id.city_id.name or '') \
-                                + (self.origin_address_id.state_id and ', ' + self.origin_address_id.state_id.name or '') \
-                                + (self.origin_address_id.country_id and ', ' + self.origin_address_id.country_id.name or ''),
+            + (self.origin_address_id.street_number and (' ' + self.origin_address_id.street_number) or '') \
+            + (self.origin_address_id.street_number2 and (' ' + self.origin_address_id.street_number2) or '') \
+            + (self.origin_address_id.street2 and (' ' + self.origin_address_id.street2) or '') \
+            + (self.origin_address_id.l10n_pe_district and ', ' + self.origin_address_id.l10n_pe_district.name or '') \
+            + (self.origin_address_id.city_id and ', ' + self.origin_address_id.city_id.name or '') \
+            + (self.origin_address_id.state_id and ', ' + self.origin_address_id.state_id.name or '') \
+            + (self.origin_address_id.country_id and ', ' + self.origin_address_id.country_id.name or ''),
             'destino_ubigeo': self.delivery_address_id.zip.replace('PE', '') if self.delivery_address_id.zip else False,
-            #'destino_direccion': self.delivery_address_id.street ,
+            # 'destino_direccion': self.delivery_address_id.street ,
             'destino_direccion': (self.delivery_address_id.street_name or '') \
-                                + (self.delivery_address_id.street_number and (' ' + self.delivery_address_id.street_number) or '') \
-                                + (self.delivery_address_id.street_number2 and (' ' + self.delivery_address_id.street_number2) or '') \
-                                + (self.delivery_address_id.street2 and (' ' + self.delivery_address_id.street2) or '') \
-                                + (self.delivery_address_id.l10n_pe_district and ', ' + self.delivery_address_id.l10n_pe_district.name or '') \
-                                + (self.delivery_address_id.city_id and ', ' + self.delivery_address_id.city_id.name or '') \
-                                + (self.delivery_address_id.state_id and ', ' + self.delivery_address_id.state_id.name or '') \
-                                + (self.delivery_address_id.country_id and ', ' + self.delivery_address_id.country_id.name or ''),
-            #'observaciones': self.note,
+            + (self.delivery_address_id.street_number and (' ' + self.delivery_address_id.street_number) or '') \
+            + (self.delivery_address_id.street_number2 and (' ' + self.delivery_address_id.street_number2) or '') \
+            + (self.delivery_address_id.street2 and (' ' + self.delivery_address_id.street2) or '') \
+            + (self.delivery_address_id.l10n_pe_district and ', ' + self.delivery_address_id.l10n_pe_district.name or '') \
+            + (self.delivery_address_id.city_id and ', ' + self.delivery_address_id.city_id.name or '') \
+            + (self.delivery_address_id.state_id and ', ' + self.delivery_address_id.state_id.name or '') \
+            + (self.delivery_address_id.country_id and ', ' + self.delivery_address_id.country_id.name or ''),
+            # 'observaciones': self.note,
             'items': []
         }
         if self.l10n_pe_dte_invoice_number:
             _despatch['numero_de_factura_referencia'] = self.l10n_pe_dte_invoice_number
         if self.note:
-            if self.note!='':
+            if self.note != '':
                 _despatch['observaciones'] = self.note
         if self.vehicle_id:
             _despatch.update({
@@ -200,7 +200,7 @@ class LogisticDespatch(models.Model):
             for line in self.line_ids:
                 _item = {
                     'cantidad': line.quantity,
-                    'descripcion': line.name.replace('[%s] ' % line.product_id.default_code,'') if line.product_id else line.name,
+                    'descripcion': line.name.replace('[%s] ' % line.product_id.default_code, '') if line.product_id else line.name,
                     'codigo': line.product_id.default_code or '',
                     'codigo_producto_sunat': line.product_id.l10n_pe_edi_unspsc or '',
                     'unidad_de_medida': line.product_id.uom_id.l10n_pe_edi_unece or 'NIU',

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sunat_table_10_group_account_invoice,sunat.table.10.group.account.manager,model_sunat_table_10,account.group_account_manager,1,1,1,1
+access_sunat_table_25_group_account_manager,sunat.table.25.group.account.manager,model_sunat_table_25,account.group_account_manager,1,1,1,1
+access_sunat_table_31_group_account_manager,sunat.table.31.group.account.manager,model_sunat_table_31,account.group_account_manager,1,1,1,1
+

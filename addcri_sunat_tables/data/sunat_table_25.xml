@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="table_25_00" model="sunat.table.25">
+            <field name="name">Ninguno</field>
+            <field name="code">00</field>
+        </record>
+        <record id="table_25_01" model="sunat.table.25">
+            <field name="name">Canadá</field>
+            <field name="code">01</field>
+        </record>
+        <record id="table_25_02" model="sunat.table.25">
+            <field name="name">Chile</field>
+            <field name="code">02</field>
+        </record>
+        <record id="table_25_03" model="sunat.table.25">
+            <field name="name">Comunidad andina de naciones (CAN)</field>
+            <field name="code">03</field>
+        </record>
+        <record id="table_25_04" model="sunat.table.25">
+            <field name="name">Brasil</field>
+            <field name="code">04</field>
+        </record>
+        <record id="table_25_05" model="sunat.table.25">
+            <field name="name">Estados unidos mexicanos</field>
+            <field name="code">05</field>
+        </record>
+        <record id="table_25_06" model="sunat.table.25">
+            <field name="name">República de Corea</field>
+            <field name="code">06</field>
+        </record>
+        <record id="table_25_07" model="sunat.table.25">
+            <field name="name">Confederación Suiza</field>
+            <field name="code">07</field>
+        </record>
+        <record id="table_25_08" model="sunat.table.25">
+            <field name="name">Portugal</field>
+            <field name="code">08</field>
+        </record>
+        <record id="table_25_09" model="sunat.table.25">
+            <field name="name">Otros</field>
+            <field name="code">09</field>
+        </record>
+    </data>
+</odoo>

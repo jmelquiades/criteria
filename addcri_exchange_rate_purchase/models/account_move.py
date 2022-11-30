@@ -10,7 +10,7 @@ class AccountMove(models.Model):
     _description = 'Account Move'
 
     exchange_rate = fields.Float('Tipo de cambio',  digits=(12, 3), store=True, compute='_get_exchange_rate', readonly=False)
-    if_foreign_currency = fields.Boolean('Foreign Currency', compute='_get_if_foreign_currency')
+    if_foreign_currency = fields.Boolean('Is foreign currency?', compute='_get_if_foreign_currency')
 
     @api.depends('currency_id', 'company_id.currency_id')
     def _get_if_foreign_currency(self):

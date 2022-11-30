@@ -343,7 +343,7 @@ class PurchaseReportXlsx(object):
         total_inv_retention_igv = 0
 
         for value in self.data_8_2:
-            # if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['partner_nodomicilied']:
+            # if value['voucher_sunat_code'] in ['00', '91', '97', '98'] and value['not_domiciled']:
             # ws.write(row_i + i, 0, i + 1, style_content)
             # ws.write(row_i + i, 1, value['period'] or '', style_content)
             # ws.write(row_i + i, 2, value['number_origin'] or '', style_content)

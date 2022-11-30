@@ -40,8 +40,8 @@ class SaleReport(object):
                 'field_31': value['origin_correlative'] if value['document_code'] in ['07', '08', '87', '88'] and 1 == 1 else '',  # '',
                 'field_32': '',
                 'field_33': '1' if value['exchange_inconsistent'] == True else '',
-                'field_34': '',
-                'field_35':  value['move_period'] if value['move_period'] else '',
+                'field_34': '1' if value['cancel_with_payment_method'] == True else '',
+                'field_35':  value['sale_move_period'] if value['sale_move_period'] else '',
                 'field_36': ''
             }
             data_14_1.append(record)

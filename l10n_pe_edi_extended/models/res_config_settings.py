@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = 'res.config.settings'
 
-    l10n_pe_country_code = fields.Char(related='company_id.country_id.code', string='Country Code')
+    l10n_pe_country_code = fields.Char(related='company_id.country_id.code', string='Country Code PE')
     l10n_pe_dte_service_provider = fields.Selection(related='company_id.l10n_pe_dte_service_provider', readonly=False)
     l10n_pe_dte_resolution_number = fields.Char(related='company_id.l10n_pe_dte_resolution_number', readonly=False)
     l10n_pe_dte_authorization_message = fields.Char(related='company_id.l10n_pe_dte_authorization_message', readonly=False)

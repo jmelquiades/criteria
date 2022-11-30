@@ -7,4 +7,4 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    detraction_journal_id = fields.Many2one('account.journal', string='Detraction Journal', copy=True, groups="account.group_account_user")
+    detraction_journal_id = fields.Many2one('account.journal', string='Detraction Journal', copy=True, groups="account.group_account_manager")

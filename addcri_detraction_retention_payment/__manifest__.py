@@ -11,16 +11,17 @@
         'account',
         'l10n_pe_edi_extended_detraction',
         'l10n_latam_invoice_document',
-        'l10n_pe_edi_extended'
+        'l10n_pe_edi_extended',
+        'addcri_sunat_tables'
     ],
     'data': [
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         # * Retention
-        'data/l10n_latam_table_10.xml',
+        # 'data/l10n_latam_table_10.xml',
         'views/retention/res_partner.xml',
         'views/retention/res_config_settings.xml',
         'views/retention/account_bank_statement.xml',
-        'views/retention/l10n_latam_table_10.xml',
+        # 'views/retention/l10n_latam_table_10.xml',
         'views/retention/account_move.xml',
         # * Detraction
         'views/detraction/account_move.xml',

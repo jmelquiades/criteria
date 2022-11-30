@@ -7,14 +7,14 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='invoicing_settings']" position="after">
                 <h2>Diario de detracción</h2>
-                <div class="row mt16 o_settings_container" name="rucsearch_setting_container">
-                    <div class="col-12 col-lg-6 o_setting_box" id="detraction_journal">
+                <div class="row mt16 o_settings_container" name="detraction_journal_setting_container" id="detraction_journal">
+                    <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
                             <!-- <field name="detraction_journal_id"/> -->
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="detraction_journal_id"/>
-                            <span class="fa fa-lg fa-building-o" title="Diario de pago de detracción." groups="account.group_account_user"/>
+                            <span class="fa fa-lg fa-building-o" title="Diario de pago de detracción." groups="account.group_account_manager"/>
                             <div class="text-muted">Diario en el cual se reconocerá como de detracción</div>
                             <field name="detraction_journal_id"/>
                         </div>
