@@ -43,16 +43,17 @@ class AccountMove(models.Model):
                     'move_id': self.id
                 }
                 self.env['account.move.line'].new(values)
-                line_credit = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id != detraction_outbound_account and line.credit > 0)
-                if line_credit:
-                    line_credit.credit -= balance
-                    line_credit._onchange_credit()
-                    line_credit._get_fields_onchange_balance()
             else:
                 merc.balance = balance
                 merc.credit = balance
-                line_credit = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id != detraction_outbound_account and line.credit > 0)
-                if line_credit:
-                    line_credit.credit -= balance
-                    line_credit._onchange_credit()
-                    line_credit._get_fields_onchange_balance()
+
+            # Update
+            line_credit = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id != detraction_outbound_account and line.credit > 0)
+            if line_credit:
+                line_credit.credit -= balance
+                line_credit._onchange_credit()
+                line_credit._get_fields_onchange_balance()
+
+            # Only synchronize one2many in onchange.
+            if self != self._origin:
+                self.invoice_line_ids = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
