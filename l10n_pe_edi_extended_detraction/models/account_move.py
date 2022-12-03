@@ -111,9 +111,8 @@ class AccountInvoice(models.Model):
             self._onchange_detraction_percent()
 
     @api.onchange('invoice_line_ids', 'currency_id', 'l10n_pe_dte_detraction_percent')
-    # @api.depends('l10n_pe_dte_detraction_percent', 'line_ids', 'currency_id', 'amount_total')
+    # @api.depends('invoice_line_ids', 'currency_id', 'l10n_pe_dte_detraction_percent', 'amount_total')
     def _onchange_detraction_percent(self):
-        # self._compute_amount()
         for record in self:
             currency_rate_tmp = 1
             total_untaxed = 0.0
