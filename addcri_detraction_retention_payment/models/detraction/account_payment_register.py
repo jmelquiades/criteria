@@ -17,13 +17,21 @@ class AccountPaymentRegister(models.TransientModel):
             if not journal:
                 raise UserError('Configurar el diario de pagos de detracción.')
 
+            move = self.line_ids.move_id
             detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
             no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
 
-            if self.journal_id == journal and self.amount > detraction_amount_residual:
-                raise UserError('No puede pagar este monto en detracción.')
-            elif self.journal_id != journal and self.amount > no_detraction_amount_residual:
-                raise UserError('No puede pagar este monto en este diario (detracción)')
+            if move.move_type == 'out_invoice':
+                if self.journal_id == journal and self.amount > detraction_amount_residual:
+                    raise UserError('No puede pagar este monto en detracción.')
+                elif self.journal_id != journal and self.amount > no_detraction_amount_residual:
+                    raise UserError('No puede pagar este monto en este diario (detracción)')
+
+            elif move.move_type == 'in_invoice':
+                if self.payment_method_line_id.name == 'Detracciones' and self.amount > detraction_amount_residual:
+                    raise UserError('No puede pagar este monto en detracción.')
+                elif self.payment_method_line_id.name != 'Detracciones' and self.amount > no_detraction_amount_residual:
+                    raise UserError('No puede pagar este monto en este diario (detracción)')
 
     def _get_wizard_values_from_batch(self, batch_result):
         data = super()._get_wizard_values_from_batch(batch_result)
@@ -47,7 +55,7 @@ class AccountPaymentRegister(models.TransientModel):
             no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id != journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
         elif move.move_type == 'in_invoice':
             detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+            no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name != 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
         else:
             return data
 
