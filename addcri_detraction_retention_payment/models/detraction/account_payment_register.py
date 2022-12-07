@@ -10,7 +10,7 @@ class AccountPaymentRegister(models.TransientModel):
     no_detraction_amount_residual = fields.Float('No detraction amount')
     is_detraction = fields.Boolean('Is Detraction')
 
-    @api.constrains('journal_id', 'amount', 'is_detraction')
+    @api.constrains('journal_id', 'amount', 'is_detraction', 'payment_method_line_id')
     def _constrains_journal_amount_detraction(self):
         journal = self.env.user.company_id.detraction_journal_id
         if self.is_detraction:
