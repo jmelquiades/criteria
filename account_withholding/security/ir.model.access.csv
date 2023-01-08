@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_move_withholding_line_user,account.move.withholding.line.user,model_account_move_withholding_line,,1,1,1,1
+access_account_payment_register_withholding_line_user,account.payment.register.withholding.line.user,model_account_payment_register_withholding_line,,1,1,1,1

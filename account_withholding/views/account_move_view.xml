@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="model">account.move</field>
+            <field name="name">account.move.form.withholding</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <field name="invoice_date" position="after">
+                    <field name="is_withholding_receipt" invisible="1"/>
+                    <field name="withholding_date" attrs="{'invisible':[('is_withholding_receipt','=', False)]}"/>
+                </field>
+                <xpath expr="//div[@class='o_td_label']/label[@for='partner_id'][1]" position="after">
+                    <label for="partner_id" string="Vendor" style="font-weight:bold;" attrs="{'invisible':[('is_withholding_receipt','=', False)]}"/>
+                </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt','entry'))]}</attribute>
+                </field>
+                <page id="invoice_tab" position="after">
+                    <page id="withholding_tab" string="Withholding Lines" attrs="{'invisible':[('is_withholding_receipt','=', False)]}">
+                        <field name="withholding_line_ids" widget="section_and_note_one2many" mode="tree,kanban" context="{'default_move_type': context.get('default_move_type'), 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}">
+                            <tree editable="bottom">
+                                <field name="tax_id" domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}" optional="show"/>
+                                <field name="invoice_id"/>
+                                <field name="account_id"/>
+                                <field name="amount_base"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']" position="after">
+                    <field name="withholding_line_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_out_withholding_receipt_tree" model="ir.ui.view">
+            <field name="name">account.out.withholding.receipt.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="banner_route">/account/account_invoice_onboarding</attribute>
+                </xpath>
+                <field name="currency_id" position="attributes">
+                    <attribute name="string">Withholding Currency</attribute>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+                <field name="invoice_date" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="invoice_date_due" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="amount_untaxed_signed" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="amount_total_in_currency_signed" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="payment_state" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="invoice_date" position="after">
+                    <field name="withholding_date"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_move_out_withholding_receipt_type" model="ir.actions.act_window">
+            <field name="name">Withholding Receipts</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="view_out_withholding_receipt_tree"/>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="domain">[('move_type', '=', 'entry'),('is_withholding_receipt','=',True)]</field>
+            <field name="context">{'default_move_type': 'entry','default_is_withholding_receipt': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a withholding receipt
+              </p><p>
+                Create withholding receipts, register payments and keep track of the discussions with your vendors.
+              </p>
+            </field>
+        </record>
+        <menuitem parent="account.menu_finance_payables" id="menu_action_move_out_withholding_receipt_type" action="action_move_out_withholding_receipt_type" sequence="10"/>
+    </data>
+</odoo>

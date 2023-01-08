@@ -11,7 +11,6 @@
 
     'author': "Conflux",
     'website': "https://conflux.pe",
-    'license': 'LGPL-3',
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/data/ir_module_category_data.xml
@@ -20,7 +19,7 @@
     'version': '15.0.1.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['account', 'base', 'web', 'uom', 'account_debit_note', 'l10n_pe_extended', 'l10n_latam_base', 'l10n_latam_invoice_document'],
+    'depends': ['account', 'base', 'web', 'uom','account_debit_note','l10n_pe_extended','l10n_latam_base','l10n_latam_invoice_document'],
 
     # always loaded
     'data': [
@@ -37,7 +36,7 @@
         'views/product_uom_view.xml',
         'views/product_view.xml',
         'views/res_config_settings_view.xml',
-        # 'views/account_report.xml',
+        #'views/account_report.xml',
         'views/report_invoice.xml',
         'wizards/account_debit_note_view.xml',
         'wizards/account_invoice_refund_view.xml',

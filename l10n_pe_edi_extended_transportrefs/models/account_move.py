@@ -16,15 +16,13 @@ class AccountInvoice(models.Model):
             res['remission_guides'] = []
             for guide in self.l10n_pe_dte_transportref_ids:
                 res['remission_guides'].append({
-                    'type': guide.ref_type,
+                    'type':guide.ref_type,
                     'number': '%s-%s' % (guide.ref_serial, guide.ref_number),
                 })
         return res
 
-
 class AccountInvoiceTransportReferences(models.Model):
     _name = 'account.move.transportref'
-    _description = 'account.move.transportref'
 
     move_id = fields.Many2one(
         'account.move', string='Invoice', ondelete='cascade', index=True)
