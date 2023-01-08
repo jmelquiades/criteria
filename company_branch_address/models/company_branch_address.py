@@ -6,7 +6,6 @@ from odoo import models, fields, api, _
 
 class CompanyBranch(models.Model):
     _name = 'res.company.branch.address'
-    _description = 'res.company.branch.address'
 
     code = fields.Char('Codigo', required=True)
     name = fields.Char('Nombre', required=True)
@@ -32,9 +31,9 @@ class CompanyBranch(models.Model):
         return {
             "user_company_branch_addresss": {
                 'current_company_branch_address': (user.default_company_branch_address_id.id, user.default_company_branch_address_id.name),
-                'allowed_company_branch_addresss': [(comp.id, comp.name) for comp in user.company_branch_address_ids if user.company_id.id == comp.company_id.id]} if display_switch_company_menu else False
-        }
+                'allowed_company_branch_addresss': [(comp.id, comp.name) for comp in user.company_branch_address_ids if user.company_id.id==comp.company_id.id]} if display_switch_company_menu else False
+            }
 
     @api.model
     def get_user_company_branch_addresses(self):
-        return [{'id': comp.id, 'name': comp.name} for comp in self.env.user.company_branch_address_ids if self.env.user.company_id.id == comp.company_id.id]
+        return [{'id':comp.id, 'name':comp.name} for comp in self.env.user.company_branch_address_ids if self.env.user.company_id.id==comp.company_id.id]

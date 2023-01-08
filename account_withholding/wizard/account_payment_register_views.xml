@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_register_form" model="ir.ui.view">
+            <field name="name">account.payment.register.retention</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form" />
+            <field name="arch" type="xml">
+                <field name="communication" position="after">
+                    <field name="apply_withholding"/>
+                </field>
+                <group name="group3" position="after">
+                    <field name="withholdin_line_ids" attrs="{'invisible':[('apply_withholding','=',False)]}">
+                        <tree editable="bottom" create="false">
+                            <field name="invoice_id"/>
+                            <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id)]" options="{'no_create': True}" optional="show"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_balance" sum="Total"/>
+                            <field name="amount" readonly="1" sum="Total"/>
+                        </tree>
+                    </field>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>
