@@ -38,7 +38,7 @@ class AccountMove(models.Model):
     def _get_detraction_payment_state(self):
         for j in self:
             journal = self._get_detraction_journal()
-            if j.l10n_pe_dte_is_detraction:
+            if j.l10n_pe_dte_is_detraction and j.move_type in ('out_invoice', 'in_invoice'):
                 detraction_amount, detraction_amount_pay = j._get_detraction_amounts()
                 if j.currency_id.is_zero(detraction_amount_pay):
                     j.detraction_payment_state = 'not_paid'
@@ -123,7 +123,7 @@ class AccountMove(models.Model):
         lines = self.env['account.move.line'].browse(line_id)
         lines += self.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
         move = self
-        if not self.l10n_pe_dte_is_detraction:
+        if not self.l10n_pe_dte_is_detraction or move.move_type not in ('out_invoice', 'in_invoice'):
             return super().js_assign_outstanding_line(line_id)
         else:
             journal = self._get_detraction_journal()
