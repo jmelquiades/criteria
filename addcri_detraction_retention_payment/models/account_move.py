@@ -31,7 +31,7 @@ class AccountMove(models.Model):
     def _get_base_payment_state(self):
         for j in self:
             journal = self._get_detraction_journal()
-            if j.l10n_pe_dte_is_detraction:
+            if j.l10n_pe_dte_is_detraction and j.move_type in ('out_invoice', 'in_invoice'):
                 no_detraction_amount, no_detraction_amount_pay = j._get_detraction_amounts(False)
                 if j.currency_id.is_zero(no_detraction_amount_pay):
                     j.base_payment_state = 'not_paid'
