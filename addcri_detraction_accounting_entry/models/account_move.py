@@ -14,6 +14,7 @@ class AccountMove(models.Model):
         super(AccountMove, self)._recompute_dynamic_lines(recompute_all_taxes, recompute_tax_base_amount)
         self.add_line_detraction()
 
+    @api.onchange('l10n_pe_dte_detraction_percent', 'currency_id')
     def _onchange_detraction_percent(self):
         super(AccountMove, self)._onchange_detraction_percent()
         for record in self:
@@ -38,26 +39,28 @@ class AccountMove(models.Model):
                 raise UserError('Hay más de un apunte contable con la cuenta de pago de detracciones.')
 
             balance = self.l10n_pe_dte_detraction_amount
+            amount_currency = -1 * self.company_currency_id._convert(balance, self.currency_id, self.company_id, fields.Date.today())
             if not merc:
                 values = {
                     'account_id': detraction_outbound_account.id,
                     'balance': balance,
                     'debit': 0.0,
                     'credit': balance,
-                    'amount_currency': -1 * balance,
+                    'amount_currency': amount_currency,
                     'price_unit': balance,
                     'exclude_from_invoice_tab': True,
-                    'move_id': self.id
+                    'move_id': self.id,
+                    'currency_id': self.currency_id.id
                 }
                 self.env['account.move.line'].new(values)
             else:
                 merc.balance = balance
                 merc.credit = balance
+                merc.currency_id = self.currency_id.id
 
-            # Update
-            # line_credit = self.line_ids.filtered(lambda line: line.exclude_from_invoice_tab and line.account_id != detraction_outbound_account and line.credit > 0)
             if line_credit:
                 line_credit.credit -= balance
+                line_credit.amount_currency -= amount_currency
                 line_credit._onchange_credit()
                 line_credit._get_fields_onchange_balance()
 
