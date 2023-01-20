@@ -47,13 +47,10 @@ class ResCurrency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            manual_rate = dict(self._context).get('manual_rate', False)
-            if manual_rate:
-                if exchange_rate == 0:
-                    raise
+            if exchange_rate != 0:
                 to_amount = from_amount * exchange_rate
             else:
-                to_amount = from_amount * self._get_conversion_purchase_rate(self, to_currency, company, date)
+                to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
@@ -84,10 +81,7 @@ class ResCurrency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            manual_rate = dict(self._context).get('manual_rate', False)
-            if manual_rate:
-                if exchange_rate == 0:
-                    raise
+            if exchange_rate != 0:
                 to_amount = from_amount * exchange_rate
             else:
                 to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
