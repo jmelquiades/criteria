@@ -41,8 +41,8 @@ class AccountPaymentRegister(models.TransientModel):
         journal = self.env.user.company_id.detraction_journal_id
         if is_detraction and not journal:
             raise UserError('Configurar el diario de detracciones.')
-        detraction_amount = sum(lines.mapped('move_id.l10n_pe_dte_detraction_amount'))  # * Viene con moneda de la factura (fuente)
-        no_detraction_amount = sum(lines.mapped('move_id.amount_total_signed')) - detraction_amount  # * Viene con moneda de la factura (fuente)
+        detraction_amount = sum(lines.mapped('move_id.l10n_pe_dte_detraction_amount'))  # * Viene con moneda de la empresa
+        no_detraction_amount = abs(sum(lines.mapped('move_id.amount_total_signed'))) - detraction_amount  # * Viene con moneda de la empresa
 
         # * Búsqueda de pagos
 

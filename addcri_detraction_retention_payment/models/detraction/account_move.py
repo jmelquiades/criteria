@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 import math
 from odoo.exceptions import UserError, ValidationError
 
@@ -130,13 +130,13 @@ class AccountMove(models.Model):
 
             # * Calculo de límites
             # ! j.payment_id and en ambs filtered de abajo retirado
-            detraction_amount_pay = abs(sum(detraction_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            no_detraction_amount_pay = abs(sum(no_detraction_lines.mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+            detraction_amount_pay = abs(sum(detraction_lines.mapped(lambda a: a.move_id.amount_total_signed)))  # * Viene con moneda de la empresa
+            no_detraction_amount_pay = abs(sum(no_detraction_lines.mapped(lambda a: a.move_id.amount_total_signed)))  # * Viene con moneda de la empresa
             # detraction_amount = self.l10n_pe_dte_detraction_amount  # * Viene con moneda de la factura (fuente)
             # no_detraction_amount = self.amount_total - detraction_amount  # * Viene con moneda de la factura (fuente)
             detraction_amount, no_detraction_amount = self._get_detraction_amount()
 
-            if detraction_amount < detraction_amount_pay or no_detraction_amount < no_detraction_amount_pay:
+            if not tools.float_is_zero(detraction_amount - detraction_amount_pay, precision_rounding=1) or not tools.float_is_zero(no_detraction_amount - no_detraction_amount_pay, precision_rounding=1):
                 raise UserError('No tiene permitido conciliar estos montos, verifique el monto de pago destinado a detracción.')
             return super().js_assign_outstanding_line(line_id)
 
@@ -166,8 +166,8 @@ class AccountMove(models.Model):
             raise UserError('Configurar el diario de detracciones.')
 
     def _get_detraction_amount(self):
-        detraction_amount = self.l10n_pe_dte_detraction_amount  # * Viene con moneda de la factura (fuente)
-        no_detraction_amount = self.amount_total - detraction_amount
+        detraction_amount = self.l10n_pe_dte_detraction_amount  # * Viene con moneda de la empresa
+        no_detraction_amount = abs(self.amount_total_signed) - detraction_amount
         return detraction_amount, no_detraction_amount
 
     def _get_detraction_journal(self):
