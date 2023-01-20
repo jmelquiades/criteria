@@ -74,8 +74,9 @@ class AccountInvoice(models.Model):
             ("999","Otros medios de pago"),
         ], string='Medio de pago detraccion')
     l10n_pe_dte_detraction_percent = fields.Float(string='Porcentaje detraccion')
-    l10n_pe_dte_detraction_base = fields.Float(string='Base detraccion')
-    l10n_pe_dte_detraction_amount = fields.Float(string='Importe detraccion')
+    l10n_pe_dte_detraction_base = fields.Monetary(string='Base detraccion', currency_field='company_currency_id')
+    l10n_pe_dte_detraction_amount = fields.Monetary(string='Importe detraccion', currency_field='company_currency_id')
+    company_currency_id = fields.Many2one('res.currency', string='Currency of company', related='company_id.currency_id')
 
     @api.onchange('l10n_pe_dte_detraction_code')
     def _onchange_detraction_code(self):
@@ -108,10 +109,10 @@ class AccountInvoice(models.Model):
                            "039": 10,
                            "041": 15, }
             self.l10n_pe_dte_detraction_percent = porcentajes.get(self.l10n_pe_dte_detraction_code, 0)
-            self._onchange_detraction_percent()
+            self.onchange_detraction_percent()
 
-    @api.onchange('l10n_pe_dte_detraction_percent')
-    def _onchange_detraction_percent(self):
+    @api.onchange('l10n_pe_dte_detraction_percent', 'currency_id', 'exchange_rate', 'invoice_line_ids')
+    def onchange_detraction_percent(self):
         currency_rate_tmp = 1
         total_untaxed = 0.0
         total_untaxed_currency = 0.0
@@ -123,7 +124,7 @@ class AccountInvoice(models.Model):
         if self.currency_id.name!='PEN':
             currency_rate_tmp = abs(total_untaxed/total_untaxed_currency) if total_untaxed_currency!=0 else 1
         self.l10n_pe_dte_detraction_base = self.amount_total if self.currency_id.name == 'PEN' else self.amount_total*currency_rate_tmp
-        self.l10n_pe_dte_detraction_amount = round(self.l10n_pe_dte_detraction_percent*self.l10n_pe_dte_detraction_base/100,2)
+        self.l10n_pe_dte_detraction_amount = round(self.l10n_pe_dte_detraction_percent*self.l10n_pe_dte_detraction_base/100,0)
 
     def l10n_pe_dte_credit_amount_single_fee(self):
         res = super(AccountInvoice, self).l10n_pe_dte_credit_amount_single_fee()
