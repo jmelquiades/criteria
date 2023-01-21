@@ -136,7 +136,7 @@ class AccountMove(models.Model):
             # no_detraction_amount = self.amount_total - detraction_amount  # * Viene con moneda de la factura (fuente)
             detraction_amount, no_detraction_amount = self._get_detraction_amount()
 
-            if not tools.float_is_zero(detraction_amount - detraction_amount_pay, precision_rounding=1) or not tools.float_is_zero(no_detraction_amount - no_detraction_amount_pay, precision_rounding=1):
+            if (not tools.float_is_zero(detraction_amount - detraction_amount_pay, precision_rounding=1) and detraction_amount < detraction_amount_pay) or (not tools.float_is_zero(no_detraction_amount - no_detraction_amount_pay, precision_rounding=1) and no_detraction_amount < no_detraction_amount_pay):
                 raise UserError('No tiene permitido conciliar estos montos, verifique el monto de pago destinado a detracción.')
             return super().js_assign_outstanding_line(line_id)
 
