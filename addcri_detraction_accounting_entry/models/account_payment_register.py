@@ -6,17 +6,6 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
     _description = 'Register Payment'
 
-    # @api.depends('can_edit_wizard')
-    # def _compute_group_payment(self):
-    #     super(AccountPaymentRegister, self)._compute_group_payment()
-    #     for wizard in self:
-    #         if wizard.can_edit_wizard and wizard.group_payment:
-    #             batches = wizard._get_batches()
-    #             wizard.group_payment = len(batches[0]['lines'].move_id) == 1
-    #         else:
-    #             wizard.group_payment = False
-
-    # @api.depends('line_ids')
     def _compute_from_lines(self):
         ''' Load initial values from the account.moves passed through the context. '''
         for wizard in self:
@@ -48,3 +37,15 @@ class AccountPaymentRegister(models.TransientModel):
 
                 wizard.can_edit_wizard = False
                 wizard.can_group_payments = any(len(batch_result['lines']) != 1 for batch_result in batches)
+
+
+    def _create_payment_vals_from_wizard(self):
+        payment_vals = super(AccountPaymentRegister, self)._create_payment_vals_from_wizard()
+        if self.payment_method_line_id.name == 'Detracciones':
+            payment_vals.update(
+                {
+                'destination_account_id': self.company_id.detraction_outbound_account_id.id
+                }
+            )
+        return payment_vals
+
