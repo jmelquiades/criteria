@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_journal" name="Report journal" inherit_id="account.report_journal">
+        <xpath expr="//div[hasclass('article')]/div/table/thead/tr" position="inside">
+            <th style="text-align: right;">Amount</th>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr" position="inside">
+            <td>
+                <span t-esc="aml.amount_currency"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>
