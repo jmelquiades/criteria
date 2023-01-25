@@ -13,7 +13,8 @@
     'data': [
         'templates/report_journal.xml',
         'views/action_server.xml',
-        'views/menu.xml'
+        'views/menu.xml',
+        'wizards/account_print_journal.xml'
     ],
     'demo': [
         

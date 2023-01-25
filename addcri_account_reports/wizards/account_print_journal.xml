@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_report_print_journal_view_inherit_addcri_account_reports" model="ir.ui.view">
+        <field name="name">account.print.journal.view.form.inherit</field>
+        <field name="model">account.print.journal</field>
+        <field name="inherit_id" ref="account_reports.account_report_print_journal_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="only_form_l10n_pe" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='target_move']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('only_form_l10n_pe', '=', True)]}">{'invisible':
+                    [('only_form_l10n_pe', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_ids']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('only_form_l10n_pe', '=', True)]}">{'invisible':
+                    [('only_form_l10n_pe', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_currency']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('only_form_l10n_pe', '=', True)]}">{'invisible':
+                    [('only_form_l10n_pe', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sort_selection']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('only_form_l10n_pe', '=', True)]}">{'invisible':
+                    [('only_form_l10n_pe', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
