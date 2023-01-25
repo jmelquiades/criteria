@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_journal" name="Report journal" inherit_id="account.report_journal">
-        <xpath expr="//div[hasclass('article')]/div/table/thead/tr" position="inside">
-            <th style="text-align: right;">Amount</th>
+        <xpath expr="//div[hasclass('article')]/div/table/thead/tr/th[@style='min-width: 350px']"
+            position="replace">
+            <th style="min-width: 350px">Denominación</th>
         </xpath>
-        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr" position="inside">
-            <td>
-                <span t-esc="aml.amount_currency"/>
-            </td>
+        <xpath expr="//div[hasclass('article')]/div/table/thead/tr/th[@style='min-width: 150px']"
+            position="replace">
+            <th style="min-width: 150px">Glosa</th>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/t[1]" position="before">
+            <t t-set="last_glosa" t-value=""/>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr/t[@t-set='partner_name']"
+            position="after">
+            <t t-set="glosa" t-value="aml.sudo().move_id.glosa or ''"/>
+        </xpath>
+        <!--  -->
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr/t[1]/t[3]" position="inside">
+            <t t-set="last_glosa" t-value=""/>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr/t[2]/t[3]" position="inside">
+            <t t-set="last_glosa" t-value=""/>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr/t[2]/t[5]" position="inside">
+            <t t-set="last_glosa" t-value=""/>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr/t[@t-if][2]" position="replace">
+            <t t-if="last_glosa == glosa and o.type != 'general'">
+                <td/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]/div/table/tbody/tr/t[@t-else][2]" position="replace">
+            <t t-else="">
+                <td>
+                    <span t-esc="glosa"/>
+                </td>
+                <t t-set="last_glosa" t-value="glosa"/>
+            </t>
         </xpath>
     </template>
 </odoo>
