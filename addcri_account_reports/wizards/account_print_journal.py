@@ -6,22 +6,17 @@ class AccountPrintJournal(models.TransientModel):
     _inherit = "account.print.journal"
     _description = "Account Print Journal"
 
-    only_form_l10n_pe = fields.Boolean('Solo se muestran en vista formulario de vistas de l10n_pe')
+    report_l10n_pe = fields.Boolean('Solo se muestran en vista formulario de vistas de l10n_pe')
     report_name = fields.Char('Nombre del reporte')
 
     def l10n_report(self, journals=False):
-        date = fields.Date.today()
-        # date_from = date.replace(day=1)
-        # date_to = (date + relativedelta(months=1)).replace(day=1)
         journal_ids = self.journal_ids.search([]).ids
-        only_form_l10n_pe = True
-        report_name = 'Libro diario'
+        report_l10n_pe = True
+        report_name = 'Libro Diario'
         record = {
             'target_move': 'posted',
             'sort_selection': 'move_name',
-            # 'date_from': date_from,
-            # 'date_to': date_to,
-            'only_form_l10n_pe': only_form_l10n_pe,
+            'report_l10n_pe': report_l10n_pe,
             'journal_ids': [(6, 0, journal_ids)],
             'report_name': report_name
         }
@@ -44,6 +39,14 @@ class AccountPrintJournal(models.TransientModel):
     
     def pre_print_report(self, data):
         data = super(AccountPrintJournal, self).pre_print_report(data)
-        if self.report_name:
+        if self.report_name and self.report_l10n_pe:
             data['report_name'] = self.report_name
+            data['report_l10n_pe'] = self.report_l10n_pe
         return data
+    
+    def _print_report(self, data):
+        if self.report_name and self.report_l10n_pe:
+            data = self.pre_print_report(data)
+            data['form'].update({'sort_selection': self.sort_selection})
+            return self.env.ref('addcri_account_reports.action_report_journal_l10n_pe').with_context(landscape=True).report_action(self, data=data)
+        return super(AccountPrintJournal, self)._print_report(data=data)

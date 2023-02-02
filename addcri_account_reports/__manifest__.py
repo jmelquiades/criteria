@@ -8,11 +8,12 @@
     'license': 'LGPL-3',
     'category': '',
     'depends': [
-        'account_reports'
+        'account_reports', 'account', 'web'
     ],
     'data': [
-        'templates/report_journal.xml',
+        'views/report_journal_l10n_pe.xml',
         'views/action_server.xml',
+        'views/action_report.xml',
         'views/menu.xml',
         'wizards/account_print_journal.xml'
     ],
