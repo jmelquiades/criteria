@@ -8,21 +8,45 @@
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="report_l10n_pe" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='target_move']" position="attributes">
+            <!-- <xpath expr="//field[@name='target_move']" position="attributes">
                 <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
                     [('report_l10n_pe', '=', True)]}</attribute>
-            </xpath>
+            </xpath> -->
             <xpath expr="//field[@name='journal_ids']" position="attributes">
                 <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
                     [('report_l10n_pe', '=', True)]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='amount_currency']" position="attributes">
+            <xpath expr="//field[@name='date_from']" position="attributes">
                 <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
                     [('report_l10n_pe', '=', True)]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='sort_selection']" position="attributes">
+            <xpath expr="//field[@name='date_to']" position="attributes">
                 <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
                     [('report_l10n_pe', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_to']" position="after">
+                <field name="position_month" attrs="{'invisible': [('report_l10n_pe', '=', False)]}"/>
+                <field name="position_year" attrs="{'invisible': [('report_l10n_pe', '=', False)]}"/>
+            </xpath>
+            <!-- <xpath expr="//field[@name='amount_currency']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
+                    [('report_l10n_pe', '=', True)]}</attribute>
+            </xpath> -->
+            <!-- <xpath expr="//field[@name='sort_selection']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
+                    [('report_l10n_pe', '=', True)]}</attribute>
+            </xpath> -->
+            <!-- <xpath expr="//footer/button[@name='check_report']" position="attributes">
+                <attribute name="attrs" value="{'invisible': [('report_l10n_pe', '=', True)]}">{'invisible':
+                    [('report_l10n_pe', '=', True)]}</attribute>
+            </xpath> -->
+            <xpath expr="//footer/button[@name='check_report']" position="attributes">
+                <attribute name="string" value="Descargar PDF">Descargar PDF</attribute>
+            </xpath>
+            <xpath expr="//footer/button[@name='check_report']" position="after">
+                <button name="view_invoices" string="En pantalla" type="object" default_focus="1"
+                    class="oe_highlight" data-hotkey="w"
+                    attrs="{'invisible': [('report_l10n_pe', '=', False)]}"/>
             </xpath>
         </field>
     </record>
