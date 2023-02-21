@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sequence_invoice_name" model="ir.sequence">
+        <field name="name">BILL Secuencia</field>
+        <field name="code">account.journal.BILL.Secuencia</field>
+        <field name="implementation">no_gap</field>
+        <field name="prefix">%(range_month)s-</field>
+        <field name="use_date_range">1</field>
+        <field name="padding">6</field>
+        <field name="number_increment">1</field>
+    </record>
+    <record id="sequence_invoice_test" model="ir.sequence">
+        <field name="name">Secuencia test</field>
+        <field name="code">account.journal.Secuencia.test</field>
+        <field name="implementation">no_gap</field>
+        <field name="prefix">%(range_month)s-</field>
+        <field name="use_date_range">1</field>
+        <field name="padding">6</field>
+        <field name="number_increment">1</field>
+    </record>
+    
+    
+    <record id="sequence_invoice_Boleta" model="ir.sequence">
+            <field name="name">Boleta Electrónica (B001)</field>
+            <field name="code">B001</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">B001-</field>
+            <field name="use_date_range">0</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+    </record>
+    <record id="sequence_invoice_Boleta_2" model="ir.sequence">
+            <field name="name">Boleta Electrónica (B002)</field>
+            <field name="code">B002</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">B002-</field>
+            <field name="use_date_range">0</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+    </record>
+    <record id="sequence_invoice_Factura" model="ir.sequence">
+            <field name="name">Factura Electrónica (F001)</field>
+            <field name="code">F001</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">F001-</field>
+            <field name="use_date_range">0</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+    </record>
+    <record id="sequence_invoice_Factura_2" model="ir.sequence">
+            <field name="name">Factura Electrónica (F002)</field>
+            <field name="code">F002</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">F002-</field>
+            <field name="use_date_range">0</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+    </record>
+</odoo>

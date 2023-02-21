@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sequence_serie_boleta" model="it.invoice.serie">
+        <field name="name">Boleta Electrónica B001</field>
+        <field name="type_document">2</field>
+        <field name="sequence">53</field>
+        <field name="is_manual">0</field>
+        <field name="company_id">1</field>
+    </record>
+    <record id="sequence_serie_factura" model="it.invoice.serie">
+        <field name="name">Factura Electrónica F001</field>
+        <field name="type_document">1</field>
+        <field name="sequence">55</field>
+        <field name="is_manual">0</field>
+        <field name="company_id">1</field>
+    </record>
+    <record id="sequence_serie_factura_2" model="it.invoice.serie">
+        <field name="name">Factura Electrónica F002</field>
+        <field name="type_document">1</field>
+        <field name="sequence">55</field>
+        <field name="is_manual">0</field>
+        <field name="company_id">1</field>
+    </record>
+</odoo>

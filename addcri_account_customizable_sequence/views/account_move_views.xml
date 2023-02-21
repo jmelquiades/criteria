@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="account_move_inherit_module_name" model="ir.ui.view">
+    <field name="name">account.move.view.form.inherit</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='payment_reference']" position="after">
+
+            <field name="serie" attrs="{'required': [('type_journal', '=','sale')],
+                                'readonly': ['|',('state', '!=', 'draft'),('posted_before', '=', True)],
+                                'invisible': [('type_journal', 'not in', ['sale'])]}"  
+                                domain="[('type_document', 'in', [l10n_latam_document_type_id])]" 
+                                options="{'no_create': True}"/>
+            <field name="voucher_number" force_save="1" placeholder="Voucher number" attrs="{'required': [('type_journal', '=','purchase')],
+                                        'invisible':[('type_journal', 'not in', ['sale'])],
+                                        'readonly':['|',('state', '!=', 'draft'),('type_journal', '=', 'sale')]}"/>
+
+            <label for="Serie_purchase" attrs="{'invisible':[('type_journal', '!=', 'purchase')]}"/>
+            <div name="type_document_serie" class="d-flex" attrs="{'invisible':[('type_journal', '!=', 'purchase')]}" >         
+                <field name="Serie_purchase" placeholder="Serie" attrs="{
+                    'readonly': [('state', '!=', 'draft')],
+                    'required': [('type_journal', '=','purchase')]
+                    }"/>
+                <span class="oe_inline o_form_label mx-3  oe_read_only">-</span>
+                <span class="oe_inline o_form_label mr-3 ml-4 oe_edit_only">-</span>
+                <field name="voucher_number" placeholder="Voucher number" attrs="{
+                    'readonly': [('state', '!=', 'draft')],
+                    'invisible':[('type_journal', 'not in', ['sale','purchase'])]}"/>
+            </div>
+            
+            <field name="journal_id" invisible="1"/>
+            <field name="type_journal" invisible="1"/>
+            <field name="sequence_id" invisible="1"/>
+            
+        </xpath>
+        <xpath expr="//field[@name='name']" position="replace">
+            <field name="name" readonly='1'/>
+        </xpath>
+        <xpath expr="//field[@name='l10n_latam_document_type_id']" position="replace">
+            <!-- <field name="l10n_latam_document_type_id" attrs="{'required': [('partner_id', '!=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': [('posted_before', '=', True)]}" domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/> -->
+             <field name="l10n_latam_document_type_id" attrs="{'required': [('partner_id', '!=', False), ('type_journal', '=', 'sale')], 'readonly': [('posted_before', '=', True)]}" domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/>
+        </xpath>
+
+        <!-- add required -->
+        <field name="partner_id" position="attributes">
+            <attribute name="attrs">{'required': [('type_journal','in',['sale','purchase'])],'invisible': [('type_journal','=','general')]}
+            </attribute>
+        </field>
+        <field name="invoice_date" position="attributes">
+            <attribute name="attrs">{
+                'required': [('type_journal','in',['sale','purchase'])],
+                'invisible': [('type_journal','=','general')]}
+            </attribute>
+        </field>
+    </field>
+</record>
+
+<record id="account_move_inherit_module_document_doc_number" model="ir.ui.view">
+    <field name="name">account.move.view.form.inherit.number</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+    <field name="arch" type="xml">
+        <field name="l10n_latam_document_number" position="attributes">
+            <attribute name="attrs">{
+                'invisible': True,
+                }
+            </attribute>
+        </field>
+    </field>
+</record>
+
+</odoo>
