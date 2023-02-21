@@ -8,3 +8,4 @@ from . import account_tax
 from . import account_journal
 from . import invoice_payment_fee
 from . import account_move
+from . import ir_config_parameter
