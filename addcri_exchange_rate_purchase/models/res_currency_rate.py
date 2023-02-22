@@ -48,7 +48,7 @@ class ResCurrencyRate(models.Model):
         last_rate = self.env['res.currency.rate']._get_last_purchase_rates_for_companies(self.company_id | self.env.company)
         for currency_rate in self:
             company = currency_rate.company_id or self.env.company
-            currency_rate.company_purchase_rate = (currency_rate.purchase_rate or self._get_latest_purchase_rate().purchase_rate or 1.0) / last_rate[company]
+            currency_rate.company_purchase_rate = (currency_rate.purchase_rate or currency_rate._get_latest_purchase_rate().purchase_rate or 1.0) / last_rate[company]
 
     @api.onchange('company_purchase_rate')
     def _inverse_company_purchase_rate(self):
@@ -79,7 +79,7 @@ class ResCurrencyRate(models.Model):
     @api.depends('currency_id', 'company_id', 'name')
     def _compute_purchase_rate(self):
         for currency_rate in self:
-            currency_rate.purchase_rate = currency_rate.purchase_rate or self._get_latest_purchase_rate().purchase_rate or 1.0
+            currency_rate.purchase_rate = currency_rate.purchase_rate or currency_rate._get_latest_purchase_rate().purchase_rate or 1.0
 
     @api.onchange('company_purchase_rate')
     def _onchange_purchase_rate_warning(self):
