@@ -7,6 +7,8 @@ class ResCurrency(models.Model):
 
     # * Purchase
 
+    notification_mail = fields.Char('Notification Mail', required=True)
+
     def _get_purchase_rates(self, company, date):
         if not self.ids:
             return {}

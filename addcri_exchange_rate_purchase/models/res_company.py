@@ -258,6 +258,19 @@ class ResCompany(models.Model):
         Currency = self.env['res.currency']
         CurrencyRate = self.env['res.currency.rate']
 
+        template_id = self.env.ref('mail.mail_notification_light')
+        template_values = {
+            'email_to': '${object.email|safe}',
+            'email_cc': False,
+            'auto_delete': False,
+            'partner_to': False,
+            'scheduled_date': False,
+            'body': '',
+            'subject': 'Actualización de tipo de cambio',
+        }
+
+        user = self.env.user
+
         today = fields.Date.today()
         for company in self:
             rate_info = parsed_data.get(company.currency_id.name, None)
@@ -272,11 +285,22 @@ class ResCompany(models.Model):
 
                 currency_object = Currency.search([('name', '=', currency)])
                 already_existing_rate = CurrencyRate.search([('currency_id', '=', currency_object.id), ('name', '=', date_rate), ('company_id', '=', company.id)])
+
+                email = currency_object.notification_mail
+                
+
                 if already_existing_rate:
                     already_existing_rate.purchase_rate = rate_value
+                    status = 'exitosa'
                 # ! comentado para evitar el error de que no exista ya que no tendría el tipo de cambio venta y eso generaría errores por las funciones pre existentes en el tipo de cambio venta.
                 # else:
                 #     CurrencyRate.create({'currency_id': currency_object.id, 'purchase_rate': rate_value, 'name': date_rate, 'company_id': company.id})
+                else:
+                    status = 'fallida'
+
+                template_values.update({'body': f'Actualización {status} de moneda {currency_object.name} de la fecha {date_rate}'})
+                template_id.with_context(lang=user.lang).send_mail(res_id=user.id, force_send=True, raise_exception=True, email_values=email)
+
 
     def _parse_bcrp_data(self, available_currencies):
         return self._parse_bcrp_sale_data(available_currencies)
