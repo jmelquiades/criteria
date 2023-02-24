@@ -11,6 +11,7 @@
         'currency_rate_live'
     ],
     'data': [
+        'data/mail_template.xml',
         'data/update_records.xml',
         'data/update_rate_currency_after_install.xml',
         'data/ir_cron.xml',

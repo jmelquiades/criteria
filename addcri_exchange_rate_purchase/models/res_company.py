@@ -258,9 +258,11 @@ class ResCompany(models.Model):
         Currency = self.env['res.currency']
         CurrencyRate = self.env['res.currency.rate']
 
-        template_id = self.env.ref('mail.mail_notification_light')
+        user = self.env.user
+        template_id = self.env.ref('addcri_exchange_rate_purchase.status_update_currency_rate')
         template_values = {
-            'email_to': '${object.email|safe}',
+            'email_from': user.email_formatted,
+            'email_to': False,
             'email_cc': False,
             'auto_delete': False,
             'partner_to': False,
@@ -268,10 +270,7 @@ class ResCompany(models.Model):
             'body': '',
             'subject': 'Actualización de tipo de cambio',
         }
-
-        user = self.env.user
-
-        today = fields.Date.today()
+        
         for company in self:
             rate_info = parsed_data.get(company.currency_id.name, None)
 
@@ -298,8 +297,11 @@ class ResCompany(models.Model):
                 else:
                     status = 'fallida'
 
-                template_values.update({'body': f'Actualización {status} de moneda {currency_object.name} de la fecha {date_rate}'})
-                template_id.with_context(lang=user.lang).send_mail(res_id=user.id, force_send=True, raise_exception=True, email_values=email)
+                template_values.update({
+                        'body': f'Actualización {status} de moneda {currency_object.name} de la fecha {date_rate}',
+                        'email_to': email
+                     })
+                template_id.with_context(lang=user.lang).send_mail(res_id=currency_object.id, force_send=True, raise_exception=True)
 
 
     def _parse_bcrp_data(self, available_currencies):
