@@ -200,7 +200,7 @@ class ResCompany(models.Model):
             'subject': 'Actualización de tipo de cambio',
         }
         for currency_odoo_code, currency_pe_code in foreigns.items():
-            currency_object =  self.env['res.currency'].search([('name', '=', currency_odoo_code), ('company_id', '=', self.id)])
+            currency_object =  self.env['res.currency'].search([('name', '=', currency_odoo_code)])
             if currency_odoo_code not in available_currency_names:
                 continue
             second_pe_str = date_pe.strftime(bcrp_date_format_url)
