@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
                 <field name="exchange_currency_manual"
-                    attrs="{'invisible': [('is_internal_transfer', '=', False)], 'required': [('is_internal_transfer', '=', True)]}"/>
+                    attrs="{'required': [('is_internal_transfer', '=', True)]}"/>
             </xpath>
         </field>
     </record>

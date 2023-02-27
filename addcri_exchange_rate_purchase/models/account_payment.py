@@ -36,7 +36,7 @@ class AccountPayment(models.Model):
         else:
             liquidity_amount_currency = write_off_amount_currency = 0.0
 
-        if not self.is_internal_transfer:
+        if not self.is_internal_transfer and not self.exchange_currency_manual:
             if self.payment_type == 'inbound':
                 convert = getattr(self.currency_id, '_convert_purchase')
             elif self.payment_type == 'outbound':
