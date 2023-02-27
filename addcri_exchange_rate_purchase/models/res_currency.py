@@ -52,7 +52,7 @@ class ResCurrency(models.Model):
             if exchange_rate != 0:
                 to_amount = from_amount * exchange_rate
             else:
-                to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
+                to_amount = from_amount * self._get_conversion_purchase_rate(self, to_currency, company, date)
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
