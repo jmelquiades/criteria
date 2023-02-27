@@ -17,7 +17,8 @@
         'data/ir_cron.xml',
         'views/res_currency.xml',
         'views/account_move.xml',
-        'views/account_payment.xml'
+        'views/account_payment.xml',
+        'views/account_payment_register.xml'
     ],
     'demo': [
 
