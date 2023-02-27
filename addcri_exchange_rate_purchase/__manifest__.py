@@ -1,5 +1,5 @@
 {
-    'name': 'Tipo de cambio compra y venta',
+    'name': 'Gestión de moneda extranjera',
     'version': '1.202210251',
     'description': '',
     'summary': '',
@@ -17,6 +17,7 @@
         'data/ir_cron.xml',
         'views/res_currency.xml',
         'views/account_move.xml',
+        'views/account_payment.xml'
     ],
     'demo': [
 
