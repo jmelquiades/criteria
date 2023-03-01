@@ -8,6 +8,7 @@
             <xpath expr="//field[@name='date']" position="after">
                 <field name="exchange_currency_manual"
                     attrs="{'required': [('is_internal_transfer', '=', True)]}"/>
+                <field name="onchange_exchange_currency" invisible="1"/>
             </xpath>
         </field>
     </record>

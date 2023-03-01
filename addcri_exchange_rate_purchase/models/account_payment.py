@@ -5,7 +5,30 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
     _description = 'Account Payment'
 
-    exchange_currency_manual = fields.Float('Tipo de cambio manual')
+    exchange_currency_manual = fields.Float('Tipo de cambio')
+    onchange_exchange_currency = fields.Boolean('Onchange Exchange Currency', default=False)
+
+    @api.onchange('date', 'payment_type', 'currency_id')
+    def _onchange_date_payment(self):
+        if self.payment_type == 'inbound':
+            self.exchange_currency_manual = self.currency_id._get_conversion_purchase_rate(self.currency_id, self.company_id.currency_id, self.company_id, self.date)
+        elif self.payment_type == 'outbound':
+            self.exchange_currency_manual = self.currency_id._get_conversion_sale_rate(self.currency_id, self.company_id.currency_id, self.company_id, self.date)
+        else:
+            self.exchange_currency_manual = self.currency_id._get_conversion_rate(self.currency_id, self.company_id.currency_id, self.company_id, self.date)
+
+
+    @api.onchange('exchange_currency_manual')
+    def _onchange_exchange_currency_manual(self):
+        if self.payment_type == 'inbound' and self.exchange_currency_manual != self.currency_id._get_conversion_purchase_rate(self.currency_id, self.company_id.currency_id, self.company_id, self.date):
+            self.onchange_exchange_currency = True
+        elif self.payment_type == 'outbound' and self.exchange_currency_manual != self.currency_id._get_conversion_sale_rate(self.currency_id, self.company_id.currency_id, self.company_id, self.date):
+            self.onchange_exchange_currency = True
+        elif self.payment_type not in ('inbound', 'outbound') and self.exchange_currency_manual != self.currency_id._get_conversion_rate(self.currency_id, self.company_id.currency_id, self.company_id, self.date):
+            self.onchange_exchange_currency = True
+        else:
+            self.onchange_exchange_currency = False
+        
     
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current payment.
@@ -36,7 +59,7 @@ class AccountPayment(models.Model):
         else:
             liquidity_amount_currency = write_off_amount_currency = 0.0
 
-        if not self.is_internal_transfer and not self.exchange_currency_manual:
+        if not self.is_internal_transfer and not self.onchange_exchange_currency:
             if self.payment_type == 'inbound':
                 convert = getattr(self.currency_id, '_convert_purchase')
             elif self.payment_type == 'outbound':
