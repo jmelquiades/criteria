@@ -10,20 +10,20 @@ class AccountPaymentRegister(models.TransientModel):
     no_retention_amount_residual = fields.Float('No retention amount residual')
     is_retention = fields.Boolean('Is retention')
 
-    @api.constrains('journal_id', 'amount', 'is_retention')
-    def _constrains_journal_amount_retention(self):
-        journal = self.env.user.company_id.retention_journal_id
-        if self.is_retention:
-            if not journal:
-                raise UserError('Configurar el diario de pagos de retención.')
+    # @api.constrains('journal_id', 'amount', 'is_retention')
+    # def _constrains_journal_amount_retention(self):
+    #     journal = self.env.user.company_id.retention_journal_id
+    #     if self.is_retention:
+    #         if not journal:
+    #             raise UserError('Configurar el diario de pagos de retención.')
 
-            retention_amount_residual = self.source_currency_id._convert(self.retention_amount_residual, self.currency_id, self.company_id, self.payment_date)
-            no_retention_amount_residual = self.source_currency_id._convert(self.no_retention_amount_residual, self.currency_id, self.company_id, self.payment_date)
+    #         retention_amount_residual = self.source_currency_id._convert(self.retention_amount_residual, self.currency_id, self.company_id, self.payment_date)
+    #         no_retention_amount_residual = self.source_currency_id._convert(self.no_retention_amount_residual, self.currency_id, self.company_id, self.payment_date)
 
-            if self.journal_id == journal and self.amount > retention_amount_residual:
-                raise UserError('No puede pagar este monto en retención.')
-            elif self.journal_id != journal and self.amount > no_retention_amount_residual:
-                raise UserError('No puede pagar este monto en este diario (retención)')
+    #         if self.journal_id == journal and self.amount > retention_amount_residual:
+    #             raise UserError('No puede pagar este monto en retención.')
+    #         elif self.journal_id != journal and self.amount > no_retention_amount_residual:
+    #             raise UserError('No puede pagar este monto en este diario (retención)')
 
     def _get_wizard_values_from_batch(self, batch_result):
         data = super()._get_wizard_values_from_batch(batch_result)

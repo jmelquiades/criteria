@@ -9,7 +9,8 @@
                 <attribute name="attrs">{'readonly': [('state', 'not in', 'draft')]}</attribute>
             </xpath>
             <xpath expr="//group[@id='pe_dte_detraction']" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'not in', ['1001', '1002', '1003', '1004'])], 'readonly': [('state', 'not in', 'draft')]}</attribute>
+                <attribute name="attrs">{'invisible': [('l10n_pe_dte_operation_type', 'not in',
+                    ['1001', '1002', '1003', '1004'])], 'readonly': [('state', 'not in', 'draft')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='l10n_pe_dte_detraction_code']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'not in', 'draft')]}</attribute>
@@ -18,7 +19,8 @@
                 <attribute name="readonly">1</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='l10n_pe_dte_detraction_payment_method']" position="attributes">
+            <xpath expr="//field[@name='l10n_pe_dte_detraction_payment_method']"
+                position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'not in', 'draft')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='l10n_pe_dte_detraction_base']" position="attributes">
@@ -31,14 +33,17 @@
             </xpath>
         </field>
     </record>
-    <record id="view_invoice_tree_inherit_detraction" model="ir.ui.view">
+    <!-- <record id="view_invoice_tree_inherit_detraction" model="ir.ui.view">
         <field name="name">account.move.view.list.inherit</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_state']" position="before">
-                <field name="detraction_payment_state" widget="badge" decoration-danger="detraction_payment_state == 'not_paid'" decoration-warning="detraction_payment_state in ('partial', 'in_payment')" decoration-info="detraction_payment_state == 'unknown'" decoration-success="detraction_payment_state == 'paid'" optional="show" string="P. Detracción"/>
+                <field name="detraction_payment_state" widget="badge" decoration-danger="detraction_payment_state
+    == 'not_paid'" decoration-warning="detraction_payment_state in ('partial', 'in_payment')"
+    decoration-info="detraction_payment_state == 'unknown'"
+    decoration-success="detraction_payment_state == 'paid'" optional="show" string="P. Detracción"/>
             </xpath>
         </field>
-    </record>
+    </record> -->
 </odoo>

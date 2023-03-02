@@ -10,28 +10,28 @@ class AccountPaymentRegister(models.TransientModel):
     no_detraction_amount_residual = fields.Float('No detraction amount')
     is_detraction = fields.Boolean('Is Detraction')
 
-    @api.constrains('journal_id', 'amount', 'is_detraction', 'payment_method_line_id')
-    def _constrains_journal_amount_detraction(self):
-        journal = self.env.user.company_id.detraction_journal_id
-        if self.is_detraction:
-            if not journal:
-                raise UserError('Configurar el diario de pagos de detracción.')
+    # @api.constrains('journal_id', 'amount', 'is_detraction', 'payment_method_line_id')
+    # def _constrains_journal_amount_detraction(self):
+    #     journal = self.env.user.company_id.detraction_journal_id
+    #     if self.is_detraction:
+    #         if not journal:
+    #             raise UserError('Configurar el diario de pagos de detracción.')
 
-            move = self.line_ids.move_id
-            detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
-            no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
+    #         move = self.line_ids.move_id
+    #         detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
+    #         no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
 
-            if move.move_type == 'out_invoice':
-                if self.journal_id == journal and self.amount > detraction_amount_residual:
-                    raise UserError('No puede pagar este monto en detracción.')
-                elif self.journal_id != journal and self.amount > no_detraction_amount_residual:
-                    raise UserError('No puede pagar este monto en este diario (detracción)')
+    #         if move.move_type == 'out_invoice':
+    #             if self.journal_id == journal and self.amount > detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en detracción.')
+    #             elif self.journal_id != journal and self.amount > no_detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en este diario (detracción)')
 
-            elif move.move_type == 'in_invoice':
-                if self.payment_method_line_id.name == 'Detracciones' and self.amount > detraction_amount_residual:
-                    raise UserError('No puede pagar este monto en detracción.')
-                elif self.payment_method_line_id.name != 'Detracciones' and self.amount > no_detraction_amount_residual:
-                    raise UserError('No puede pagar este monto en este diario (detracción)')
+    #         elif move.move_type == 'in_invoice':
+    #             if self.payment_method_line_id.name == 'Detracciones' and self.amount > detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en detracción.')
+    #             elif self.payment_method_line_id.name != 'Detracciones' and self.amount > no_detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en este diario (detracción)')
 
     def _get_wizard_values_from_batch(self, batch_result):
         data = super()._get_wizard_values_from_batch(batch_result)
