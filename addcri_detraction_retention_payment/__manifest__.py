@@ -28,7 +28,7 @@
         'views/detraction/account_payment_register.xml',
         'views/detraction/res_config_settings.xml',
         # * Base
-        'views/account_move.xml'
+        # 'views/account_move.xml'
 
     ],
     'demo': [
