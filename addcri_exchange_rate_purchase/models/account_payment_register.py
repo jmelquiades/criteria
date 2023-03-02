@@ -6,7 +6,7 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
     _description = 'Register Payment'
 
-    exchange_currency_manual = fields.Float('Tipo de cambio')
+    exchange_currency_manual = fields.Float('Tipo de cambio',  digits=(12, 3))
     onchange_exchange_currency = fields.Boolean('Onchange Exchange Currency', default=False)
 
     def _create_payment_vals_from_wizard(self):

@@ -5,7 +5,7 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
     _description = 'Account Payment'
 
-    exchange_currency_manual = fields.Float('Tipo de cambio')
+    exchange_currency_manual = fields.Float('Tipo de cambio',  digits=(12, 3))
     onchange_exchange_currency = fields.Boolean('Onchange Exchange Currency', default=False)
 
     @api.onchange('date', 'payment_type', 'currency_id')
