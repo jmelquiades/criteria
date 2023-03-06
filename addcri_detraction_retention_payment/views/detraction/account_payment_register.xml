@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_account_payment_register_form_inherit_detraction_retention_payment" model="ir.ui.view">
+    <record id="view_account_payment_register_form_inherit_detraction_retention_payment"
+        model="ir.ui.view">
         <field name="name">account.payment.register.view.form.inherit</field>
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
@@ -9,6 +10,7 @@
                 <field name="detraction_amount_residual" invisible="1"/>
                 <field name="no_detraction_amount_residual" invisible="1"/>
                 <field name="is_detraction" invisible="1"/>
+                <field name="detraction"/>
             </xpath>
         </field>
     </record>

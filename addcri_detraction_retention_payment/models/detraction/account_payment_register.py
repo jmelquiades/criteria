@@ -9,6 +9,7 @@ class AccountPaymentRegister(models.TransientModel):
     detraction_amount_residual = fields.Float('Detraction amount')
     no_detraction_amount_residual = fields.Float('No detraction amount')
     is_detraction = fields.Boolean('Is Detraction')
+    detraction = fields.Boolean('Pago de Detracción')
 
     # @api.constrains('journal_id', 'amount', 'is_detraction', 'payment_method_line_id')
     # def _constrains_journal_amount_detraction(self):
@@ -77,3 +78,13 @@ class AccountPaymentRegister(models.TransientModel):
         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
             reconciled_lines.mapped('matched_credit_ids.credit_move_id')
         return reconciled_amls
+    
+    def _create_payment_vals_from_wizard(self):
+        payment_vals = super(AccountPaymentRegister, self)._create_payment_vals_from_wizard()
+        if self.detraction:
+            payment_vals.update(
+                {
+                'detraction': self.detraction
+                }
+            )
+        return payment_vals
