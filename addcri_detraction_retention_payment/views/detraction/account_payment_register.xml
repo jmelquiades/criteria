@@ -6,11 +6,12 @@
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='line_ids']" position="after">
+            <xpath expr="//field[@name='payment_method_line_id']" position="after">
                 <field name="detraction_amount_residual" invisible="1"/>
                 <field name="no_detraction_amount_residual" invisible="1"/>
                 <field name="is_detraction" invisible="1"/>
                 <field name="detraction"/>
+                <field name="invoice_date" invisible="1"/>
             </xpath>
         </field>
     </record>

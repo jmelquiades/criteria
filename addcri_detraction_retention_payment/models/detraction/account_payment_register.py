@@ -10,6 +10,7 @@ class AccountPaymentRegister(models.TransientModel):
     no_detraction_amount_residual = fields.Float('No detraction amount')
     is_detraction = fields.Boolean('Is Detraction')
     detraction = fields.Boolean('Pago de Detracción')
+    invoice_date = fields.Date('Invoice Date')
 
     # @api.constrains('journal_id', 'amount', 'is_detraction', 'payment_method_line_id')
     # def _constrains_journal_amount_detraction(self):
@@ -33,6 +34,11 @@ class AccountPaymentRegister(models.TransientModel):
     #                 raise UserError('No puede pagar este monto en detracción.')
     #             elif self.payment_method_line_id.name != 'Detracciones' and self.amount > no_detraction_amount_residual:
     #                 raise UserError('No puede pagar este monto en este diario (detracción)')
+
+    @api.onchange('detraction')
+    def _onchange_detraction(self):
+        if self.detraction:
+            self.payment_date = self.invoice_date
 
     def _get_wizard_values_from_batch(self, batch_result):
         data = super()._get_wizard_values_from_batch(batch_result)
@@ -68,7 +74,8 @@ class AccountPaymentRegister(models.TransientModel):
         data.update({
             'detraction_amount_residual': detraction_amount_residual,
             'no_detraction_amount_residual': no_detraction_amount_residual,
-            'is_detraction': is_detraction
+            'is_detraction': is_detraction,
+            'invoice_date': move.invoice_date,
         })
         return data
 
@@ -84,7 +91,8 @@ class AccountPaymentRegister(models.TransientModel):
         if self.detraction:
             payment_vals.update(
                 {
-                'detraction': self.detraction
+                'detraction': self.detraction,
+                'date': self.invoice_date
                 }
             )
         return payment_vals

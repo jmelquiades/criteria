@@ -12,7 +12,8 @@
         'l10n_pe_edi_extended_detraction',
         'l10n_latam_invoice_document',
         'l10n_pe_edi_extended',
-        'addcri_sunat_tables'
+        'addcri_sunat_tables',
+        'addcri_exchange_rate_purchase'
     ],
     'data': [
         # 'security/ir.model.access.csv',
