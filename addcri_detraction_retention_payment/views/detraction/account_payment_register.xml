@@ -10,7 +10,7 @@
                 <field name="detraction_amount_residual" invisible="1"/>
                 <field name="no_detraction_amount_residual" invisible="1"/>
                 <field name="is_detraction" invisible="1"/>
-                <field name="detraction"/>
+                <field name="detraction" attrs="{'invisible': [('is_detraction', '=', False)]}"/>
                 <field name="invoice_date" invisible="1"/>
             </xpath>
         </field>
