@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_journal_group_tab,account.journal.tab,model_account_journal,,1,1,1,1
+access_it_invoice_serie,it.invoice.serie,model_it_invoice_serie,,1,1,1,1

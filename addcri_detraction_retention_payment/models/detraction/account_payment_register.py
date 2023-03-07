@@ -9,21 +9,36 @@ class AccountPaymentRegister(models.TransientModel):
     detraction_amount_residual = fields.Float('Detraction amount')
     no_detraction_amount_residual = fields.Float('No detraction amount')
     is_detraction = fields.Boolean('Is Detraction')
+    detraction = fields.Boolean('Pago de Detracción')
+    invoice_date = fields.Date('Invoice Date')
 
-    @api.constrains('journal_id', 'amount', 'is_detraction')
-    def _constrains_journal_amount_detraction(self):
-        journal = self.env.user.company_id.detraction_journal_id
-        if self.is_detraction:
-            if not journal:
-                raise UserError('Configurar el diario de pagos de detracción.')
+    # @api.constrains('journal_id', 'amount', 'is_detraction', 'payment_method_line_id')
+    # def _constrains_journal_amount_detraction(self):
+    #     journal = self.env.user.company_id.detraction_journal_id
+    #     if self.is_detraction:
+    #         if not journal:
+    #             raise UserError('Configurar el diario de pagos de detracción.')
 
-            detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
-            no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
+    #         move = self.line_ids.move_id
+    #         detraction_amount_residual = self.source_currency_id._convert(self.detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
+    #         no_detraction_amount_residual = self.source_currency_id._convert(self.no_detraction_amount_residual, self.currency_id, self.company_id, self.payment_date)
 
-            if self.journal_id == journal and self.amount > detraction_amount_residual:
-                raise UserError('No puede pagar este monto en detracción.')
-            elif self.journal_id != journal and self.amount > no_detraction_amount_residual:
-                raise UserError('No puede pagar este monto en este diario (detracción)')
+    #         if move.move_type == 'out_invoice':
+    #             if self.journal_id == journal and self.amount > detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en detracción.')
+    #             elif self.journal_id != journal and self.amount > no_detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en este diario (detracción)')
+
+    #         elif move.move_type == 'in_invoice':
+    #             if self.payment_method_line_id.name == 'Detracciones' and self.amount > detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en detracción.')
+    #             elif self.payment_method_line_id.name != 'Detracciones' and self.amount > no_detraction_amount_residual:
+    #                 raise UserError('No puede pagar este monto en este diario (detracción)')
+
+    @api.onchange('detraction')
+    def _onchange_detraction(self):
+        if self.detraction:
+            self.payment_date = self.invoice_date
 
     def _get_wizard_values_from_batch(self, batch_result):
         data = super()._get_wizard_values_from_batch(batch_result)
@@ -33,8 +48,8 @@ class AccountPaymentRegister(models.TransientModel):
         journal = self.env.user.company_id.detraction_journal_id
         if is_detraction and not journal:
             raise UserError('Configurar el diario de detracciones.')
-        detraction_amount = sum(lines.mapped('move_id.l10n_pe_dte_detraction_amount'))  # * Viene con moneda de la factura (fuente)
-        no_detraction_amount = sum(lines.mapped('move_id.amount_total')) - detraction_amount  # * Viene con moneda de la factura (fuente)
+        detraction_amount = sum(lines.mapped('move_id.l10n_pe_dte_detraction_amount'))  # * Viene con moneda de la empresa
+        no_detraction_amount = abs(sum(lines.mapped('move_id.amount_total_signed'))) - detraction_amount  # * Viene con moneda de la empresa
 
         # * Búsqueda de pagos
 
@@ -47,7 +62,7 @@ class AccountPaymentRegister(models.TransientModel):
             no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.journal_id != journal).mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
         elif move.move_type == 'in_invoice':
             detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
-            no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name == 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
+            no_detraction_amount_pay = abs(sum(reconciled_amls.filtered(lambda j: j.payment_id.payment_method_line_id.name != 'Detracciones').mapped(lambda a: a.amount_currency)))  # * Viene con moneda del movimiento
         else:
             return data
 
@@ -59,7 +74,8 @@ class AccountPaymentRegister(models.TransientModel):
         data.update({
             'detraction_amount_residual': detraction_amount_residual,
             'no_detraction_amount_residual': no_detraction_amount_residual,
-            'is_detraction': is_detraction
+            'is_detraction': is_detraction,
+            'invoice_date': move.invoice_date,
         })
         return data
 
@@ -69,3 +85,14 @@ class AccountPaymentRegister(models.TransientModel):
         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
             reconciled_lines.mapped('matched_credit_ids.credit_move_id')
         return reconciled_amls
+    
+    def _create_payment_vals_from_wizard(self):
+        payment_vals = super(AccountPaymentRegister, self)._create_payment_vals_from_wizard()
+        if self.detraction:
+            payment_vals.update(
+                {
+                'detraction': self.detraction,
+                'date': self.invoice_date
+                }
+            )
+        return payment_vals

@@ -1,5 +1,5 @@
 {
-    'name': 'String glosa',
+    'name': 'Cambios menores Odoo',
     'version': '1.0',
     'description': '',
     'summary': '',
@@ -11,7 +11,8 @@
         'account'
     ],
     'data': [
-        'views/account_move.xml'
+        'views/account_move.xml',
+        'views/account_payment.xml',
     ],
     'demo': [
 

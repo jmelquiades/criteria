@@ -98,7 +98,11 @@ class PlePurchase(models.Model):
             amount_total_taxes = dict(amount_total_taxes)
 
             # !
-            exchange_rate = invoice.exchange_rate
+            if hasattr(invoice, 'exchange_rate'):
+                exchange_rate = invoice.exchange_rate
+            else:
+                exchange_rate = invoice.currency_id._convert(1, invoice.company_id.currency_id, invoice.company_id, invoice.date or fields.Date.context_today(self))
+
             values = {
                 'row': row,
                 'name': invoice.date.strftime('%Y%m00'),

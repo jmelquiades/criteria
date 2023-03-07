@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_journal_l10n_pe" model="ir.actions.report">
+        <field name="name"></field>
+        <field name="model">account.print.journal</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">addcri_account_reports.report_journal_l10n_pe</field>
+        <field name="report_file">addcri_account_reports.report_journal_l10n_pe</field>
+        <field name="binding_model_id" ref="model_account_print_journal"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

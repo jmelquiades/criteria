@@ -44,7 +44,7 @@
                     <widget name="web_ribbon" title="Cancelled" bg_color="bg-danger" attrs="{'invisible': ['|','|',('l10n_pe_dte_void_status', '!=', 'accepted'), ('state', '!=', 'cancel'), ('l10n_pe_dte_is_einvoice', '=', 'False')]}"/>
                 </widget>
                 <div class="oe_button_box" position="inside">
-                    <button type="object" class="oe_stat_button" name="l10n_pe_dte_action_send" icon="fa-cloud-upload" attrs="{'invisible':['|','|',('l10n_pe_dte_status','!=','not_sent'),('state','not in',['posted']),('move_type', 'not in', ['out_invoice','out_refund'])]}">
+                    <button type="object" class="oe_stat_button" name="l10n_pe_dte_action_send" icon="fa-cloud-upload" attrs="{'invisible':['|','|',('l10n_pe_dte_status','!=','not_sent'),('state','not in',['posted']),('move_type', 'not in', ['out_invoice','out_refund','entry'])]}">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Send to</span>
                             <span class="o_stat_text">SUNAT</span>

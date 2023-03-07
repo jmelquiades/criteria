@@ -28,8 +28,17 @@ class AccountMove(models.Model):
 
     @api.onchange('exchange_rate')
     def _onchange_price_subtotal_from_exchange_rate(self):
-        lines = (self.line_ids | self.invoice_line_ids).with_context(manual_rate=True)
+        lines = (self.line_ids | self.invoice_line_ids)
         lines._onchange_price_subtotal()
+
+
+    def _recompute_dynamic_lines(self, recompute_all_taxes=False, recompute_tax_base_amount=False):
+        super(AccountMove, self)._recompute_dynamic_lines(recompute_all_taxes, recompute_tax_base_amount)
+        self._onchange_price_subtotal_from_exchange_rate()
+
+    # def _onchange_invoice_line_ids(self):
+    #     super(AccountMove, self)._onchange_invoice_line_ids()
+    #     self._onchange_price_subtotal_from_exchange_rate()
 
     # def _recompute_tax_lines(self, recompute_tax_base_amount=False, tax_rep_lines_to_recompute=None):
     #     """ Compute the dynamic tax lines of the journal entry.

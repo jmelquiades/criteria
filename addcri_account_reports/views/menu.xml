@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="l10n_pe_menu" name="Localización peruana" parent="account.menu_finance_reports"
+        sequence="100"/>
+    <menuitem id="diary_book_menu" name="Libro Diario" action="action_diary_book_l10n_report"
+        parent="l10n_pe_menu" sequence="1"/>
+</odoo>

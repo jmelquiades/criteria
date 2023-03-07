@@ -5,11 +5,17 @@
         <field name="model">res.currency</field>
         <field name="inherit_id" ref="base.view_currency_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_subunit_label']" position="after">
+                <field name="notification_mail"/>
+            </xpath>
             <xpath expr="//field[@name='rate_ids']/tree/field[@name='rate']" position="after">
                 <!-- * Purchase -->
-                <field name="company_purchase_rate" digits="[12,12]" optional="hide" string="Unidad por PEN (compra)"/>
-                <field name="inverse_company_purchase_rate" digits="[12,12]" optional="show" string="PEN por unidad (compra)"/>
-                <field name="purchase_rate" digits="[12,12]" optional="hide" string="Tasa técnica (compra)"/>
+                <field name="company_purchase_rate" digits="[12,12]" optional="hide"
+                    string="Unidad por PEN (compra)"/>
+                <field name="inverse_company_purchase_rate" digits="[12,12]" optional="show"
+                    string="PEN por unidad (compra)"/>
+                <field name="purchase_rate" digits="[12,12]" optional="hide"
+                    string="Tasa técnica (compra)"/>
             </xpath>
         </field>
     </record>

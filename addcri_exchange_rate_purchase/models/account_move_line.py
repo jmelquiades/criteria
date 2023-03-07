@@ -45,10 +45,6 @@ class AccountMoveLine(models.Model):
         else:
             sign = 1
 
-        manual_rate = dict(self._context).get('manual_rate', False)
-        if manual_rate:
-            currency.with_context(manual_rate=manual_rate)
-
         amount_currency = price_subtotal * sign
         if move_type in self.move_id.get_inbound_types():
             balance = currency._convert_purchase(amount_currency, company.currency_id, company, date or fields.Date.context_today(self), exchange_rate=self.move_id.exchange_rate)
@@ -59,6 +55,7 @@ class AccountMoveLine(models.Model):
         res['balance'] = balance
         res['debit'] = balance > 0.0 and balance or 0.0
         res['credit'] = balance < 0.0 and -balance or 0.0
+
         return res
 
     # @api.onchange('quantity', 'discount', 'price_unit', 'tax_ids')

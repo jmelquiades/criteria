@@ -7,6 +7,8 @@ class ResCurrency(models.Model):
 
     # * Purchase
 
+    notification_mail = fields.Char('Notification Mail', required=True)
+
     def _get_purchase_rates(self, company, date):
         if not self.ids:
             return {}
@@ -47,10 +49,7 @@ class ResCurrency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            manual_rate = dict(self._context).get('manual_rate', False)
-            if manual_rate:
-                if exchange_rate == 0:
-                    raise
+            if exchange_rate != 0:
                 to_amount = from_amount * exchange_rate
             else:
                 to_amount = from_amount * self._get_conversion_purchase_rate(self, to_currency, company, date)
@@ -84,10 +83,7 @@ class ResCurrency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            manual_rate = dict(self._context).get('manual_rate', False)
-            if manual_rate:
-                if exchange_rate == 0:
-                    raise
+            if exchange_rate != 0:
                 to_amount = from_amount * exchange_rate
             else:
                 to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)

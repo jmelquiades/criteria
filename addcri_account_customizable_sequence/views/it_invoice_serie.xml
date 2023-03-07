@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_it_invoice_serie_form" model="ir.ui.view" >
+        <field name="name">Serie de Comprobantes</field>
+        <field name="model">it.invoice.serie</field>
+        <field name="arch" type="xml">
+          <form> 
+                <sheet>
+                    <group>
+                          <group>
+                            <field name="name"/>
+                            <field name="type_document" options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                          </group>
+                          <group>
+                            <field name="is_manual" widget="boolean_toggle"/>
+                            <field name="company_id" options="{'no_create': True}"/>
+                          </group>
+                    </group>
+                </sheet>
+          </form>  
+        </field>
+
+    </record>
+
+    <record id="view_it_invoice_serie_tree" model="ir.ui.view">
+      <field name="name">Serie de Comprobantes</field>
+      <field name="model">it.invoice.serie</field>
+      <field name="arch" type="xml">
+            <tree string="Document Type">
+              <field name="name"/>
+              <field name="type_document" options="{'no_create': True}"/>
+              <field name="sequence" options="{'no_create': True}"/>
+              <field name="is_manual" widget="boolean_toggle"/>
+              <field name="company_id" options="{'no_create': True}"/>
+            </tree>
+      </field>
+    </record>
+
+    <!-- <record id="view_it_invoice_serie_filter" model="ir.ui.view">
+      <field name="name">Serie de Comprobantes</field>
+      <field name="model">it.invoice.serie</field>
+      <field name="arch" type="xml">
+            <search string="Document Type">
+              <field name="name"/>
+              <field name="type_document" options="{'no_create': True}"/>
+              <field name="secuence" options="{'no_create': True}"/>
+              <field name="is_manual" widget="boolean_toggle"/>
+              <field name="company_id" options="{'no_create': True}"/>
+            </search>
+      </field>
+    </record> -->
+
+    <record id="action_menu_serie_comprobantes" model="ir.actions.act_window">
+      <field name="name">Serie de Comprobantes</field>
+      <field name="res_model">it.invoice.serie</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem 
+    id="menu_serie_comprobantes" 
+    name="Serie de Comprobantes" 
+    action="action_menu_serie_comprobantes"
+    parent="account.account_account_menu" 
+    sequence="80"/>
+
+</odoo> 

@@ -22,16 +22,15 @@
 {
     "name": "Company Branch Address",
     "description": "Agrega gestion de establecimientos anexos a la empresa matriz",
-    'license': 'LGPL-3',
     "depends": ["base"],
     "data": [
-        'security/res_company_branch_address_security.xml',
+    	'security/res_company_branch_address_security.xml',
         "security/ir.model.access.csv",
-        # 'security/ir.model.access.csv',
+    	#'security/ir.model.access.csv',
         'views/company_branch_address_view.xml',
         'views/res_users_view.xml',
-        # 'views/template.xml'
-    ],
+        #'views/template.xml'
+        ],
     'qweb': [],
     'application': False,
 }

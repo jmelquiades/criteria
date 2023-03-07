@@ -187,7 +187,20 @@ class ResCompany(models.Model):
         date_backup_pe = date_pe
         result = {}
         dates_null_rate = []
+        user = self.env.user
+        template_id = self.env.ref('addcri_exchange_rate_purchase.status_update_currency_rate')
+        template_values = {
+            'email_from': user.email_formatted,
+            'email_to': False,
+            'email_cc': False,
+            'auto_delete': False,
+            'partner_to': False,
+            'scheduled_date': False,
+            'body': '',
+            'subject': 'Actualización de tipo de cambio',
+        }
         for currency_odoo_code, currency_pe_code in foreigns.items():
+            currency_object =  self.env['res.currency'].search([('name', '=', currency_odoo_code)])
             if currency_odoo_code not in available_currency_names:
                 continue
             second_pe_str = date_pe.strftime(bcrp_date_format_url)
@@ -204,10 +217,20 @@ class ResCompany(models.Model):
                     res.raise_for_status()
                     series = res.json()
                 except Exception as e:
+                    template_values.update({
+                        'body': f'Obtención de datos de SUNAT fallida de moneda {currency_odoo_code}',
+                        'email_to': currency_object.notification_mail
+                     })
+                    template_id.with_context(lang=user.lang).send_mail(res_id=currency_object.id, force_send=True, raise_exception=True)
                     _logger.error(e)
                     rate = 1
                     continue
                 else:
+                    template_values.update({
+                        'body': f'Obtención de datos de SUNAT exitosa de moneda {currency_odoo_code}',
+                        'email_to': currency_object.notification_mail
+                     })
+                    template_id.with_context(lang=user.lang).send_mail(res_id=currency_object.id, force_send=True, raise_exception=True)
                     if series.get('periods', False):
                         print(url)
                         date_rate_str = series['periods'][-1]['name']
@@ -258,7 +281,19 @@ class ResCompany(models.Model):
         Currency = self.env['res.currency']
         CurrencyRate = self.env['res.currency.rate']
 
-        today = fields.Date.today()
+        user = self.env.user
+        template_id = self.env.ref('addcri_exchange_rate_purchase.status_update_currency_rate')
+        template_values = {
+            'email_from': user.email_formatted,
+            'email_to': False,
+            'email_cc': False,
+            'auto_delete': False,
+            'partner_to': False,
+            'scheduled_date': False,
+            'body': '',
+            'subject': 'Actualización de tipo de cambio',
+        }
+
         for company in self:
             rate_info = parsed_data.get(company.currency_id.name, None)
 
@@ -272,11 +307,25 @@ class ResCompany(models.Model):
 
                 currency_object = Currency.search([('name', '=', currency)])
                 already_existing_rate = CurrencyRate.search([('currency_id', '=', currency_object.id), ('name', '=', date_rate), ('company_id', '=', company.id)])
+
+                email = currency_object.notification_mail
+                
+
                 if already_existing_rate:
                     already_existing_rate.purchase_rate = rate_value
+                    status = 'exitosa'
                 # ! comentado para evitar el error de que no exista ya que no tendría el tipo de cambio venta y eso generaría errores por las funciones pre existentes en el tipo de cambio venta.
                 # else:
                 #     CurrencyRate.create({'currency_id': currency_object.id, 'purchase_rate': rate_value, 'name': date_rate, 'company_id': company.id})
+                else:
+                    status = 'fallida'
+
+                template_values.update({
+                        'body': f'Actualización {status} de moneda {currency_object.name} de la fecha {date_rate}',
+                        'email_to': email
+                     })
+                template_id.with_context(lang=user.lang).send_mail(res_id=currency_object.id, force_send=True, raise_exception=True)
+
 
     def _parse_bcrp_data(self, available_currencies):
         return self._parse_bcrp_sale_data(available_currencies)
