@@ -100,6 +100,39 @@ class AccountMove(models.Model):
             action['context'].update(is_detraction=True)
         return action
 
+    def js_assign_outstanding_line(self, line_id):
+        ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
+        invoice.
+
+        :param line_id: The id of the line to reconcile with the current invoice.
+        '''
+        self.ensure_one()
+        
+        lines = self.get_account_move_line(line_id)
+        lines += self.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
+        return lines.reconcile()
+
+    def get_account_move_line(self, line_id):
+        lines = self.env['account.move.line'].browse(line_id)
+        payment = lines.move_id.payment_id
+        if payment.detraction:
+            payment.write({'date':  self.invoice_date})
+            write_off_amount_currency = payment.amount
+            if self.payment_type == 'outbound':
+                write_off_amount_currency *= -1
+            liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = payment._prepare_vals_debit_credit_amount_currency(write_off_amount_currency)
+            new_data = {
+                'liquidity_amount_currency': liquidity_amount_currency,
+                'liquidity_balance': liquidity_balance,
+                'write_off_balance': write_off_balance,
+                'counterpart_amount_currency': counterpart_amount_currency,
+                'counterpart_balance': counterpart_balance,
+                'currency_id': currency_id,
+            }
+            payment.write(new_data)
+        return lines
+   
+
     # def js_assign_outstanding_line(self, line_id):
     #     ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
     #     invoice.
