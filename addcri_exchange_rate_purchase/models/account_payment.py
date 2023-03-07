@@ -28,27 +28,8 @@ class AccountPayment(models.Model):
             self.onchange_exchange_currency = True
         else:
             self.onchange_exchange_currency = False
-        
-    
-    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
-        ''' Prepare the dictionary to create the default account.move.lines for the current payment.
-        :param write_off_line_vals: Optional dictionary to create a write-off account.move.line easily containing:
-            * amount:       The amount to be added to the counterpart amount.
-            * name:         The label to set on the line.
-            * account_id:   The account on which create the write-off.
-        :return: A list of python dictionary to be passed to the account.move.line's 'create' method.
-        '''
-        self.ensure_one()
-        write_off_line_vals = write_off_line_vals or {}
 
-        if not self.outstanding_account_id:
-            raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %s payment method in the %s journal.",
-                self.payment_method_line_id.name, self.journal_id.display_name))
-
-        # Compute amounts.
-        write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
-
+    def _prepare_vals_debit_credit_amount_currency(self, write_off_amount_currency):
         if self.payment_type == 'inbound':
             # Receive money.
             liquidity_amount_currency = self.amount
@@ -90,6 +71,30 @@ class AccountPayment(models.Model):
         counterpart_amount_currency = -liquidity_amount_currency - write_off_amount_currency
         counterpart_balance = -liquidity_balance - write_off_balance
         currency_id = self.currency_id.id
+
+        return liquidity_amount_currency, liquidity_balance, write_off_balance, counterpart_amount_currency, counterpart_balance, currency_id
+        
+    
+    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
+        ''' Prepare the dictionary to create the default account.move.lines for the current payment.
+        :param write_off_line_vals: Optional dictionary to create a write-off account.move.line easily containing:
+            * amount:       The amount to be added to the counterpart amount.
+            * name:         The label to set on the line.
+            * account_id:   The account on which create the write-off.
+        :return: A list of python dictionary to be passed to the account.move.line's 'create' method.
+        '''
+        self.ensure_one()
+        write_off_line_vals = write_off_line_vals or {}
+
+        if not self.outstanding_account_id:
+            raise UserError(_(
+                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %s payment method in the %s journal.",
+                self.payment_method_line_id.name, self.journal_id.display_name))
+
+        # Compute amounts.
+        write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
+
+        liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = self._prepare_vals_debit_credit_amount_currency(self, write_off_line_vals, write_off_amount_currency)
 
         if self.is_internal_transfer:
             if self.payment_type == 'inbound':
