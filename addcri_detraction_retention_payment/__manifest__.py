@@ -26,6 +26,7 @@
         'views/retention/account_move.xml',
         # * Detraction
         'views/detraction/account_move.xml',
+        'views/detraction/account_payment.xml',
         'views/detraction/account_payment_register.xml',
         'views/detraction/res_config_settings.xml',
         # * Base
