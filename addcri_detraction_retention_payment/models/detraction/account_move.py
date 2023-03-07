@@ -115,7 +115,7 @@ class AccountMove(models.Model):
     def get_account_move_line(self, line_id):
         lines = self.env['account.move.line'].browse(line_id)
         payment = lines.move_id.payment_id
-        if payment.detraction:
+        if payment.detraction and self.l10n_pe_dte_is_detraction:
             payment.write({'date':  self.invoice_date})
             write_off_amount_currency = payment.amount
             if self.payment_type == 'outbound':
@@ -130,6 +130,8 @@ class AccountMove(models.Model):
                 'currency_id': currency_id,
             }
             payment.write(new_data)
+        elif payment.detraction  and not self.l10n_pe_dte_is_detraction:
+            UserError('Está tratando de pagar con un pago de detracción una factura que no es de detracción.')
         return lines
    
 
