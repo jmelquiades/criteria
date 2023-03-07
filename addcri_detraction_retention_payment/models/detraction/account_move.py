@@ -121,15 +121,42 @@ class AccountMove(models.Model):
             if payment.payment_type == 'outbound':
                 write_off_amount_currency *= -1
             liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = payment._prepare_vals_debit_credit_amount_currency(write_off_amount_currency)
-            new_data = {
-                'liquidity_amount_currency': liquidity_amount_currency,
-                'liquidity_balance': liquidity_balance,
-                'write_off_balance': write_off_balance,
-                'counterpart_amount_currency': counterpart_amount_currency,
-                'counterpart_balance': counterpart_balance,
+            # !
+
+            outstanding_line = payment.line_ids.filter(lambda r: r.account_id == payment.outstanding_account_id.id)
+            destination_line = payment.line_ids.filter(lambda r: r.account_id == payment.destination_account_id.id)
+            
+            # Liquidity line.
+            outstanding_data = {
+                'date_maturity': payment.date,
+                'amount_currency': liquidity_amount_currency,
                 'currency_id': currency_id,
+                'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
+
             }
-            payment.write(new_data)
+            # Receivable / Payable.
+            destination_data = {
+                'date_maturity': payment.date,
+                'amount_currency': counterpart_amount_currency,
+                'currency_id': currency_id,
+                'debit': counterpart_balance if counterpart_balance > 0.0 else 0.0,
+                'credit': -counterpart_balance if counterpart_balance < 0.0 else 0.0,
+            }
+
+            outstanding_line.write(outstanding_data)
+            destination_line.write(destination_data)
+       
+            # !
+            # new_data = {
+            #     'liquidity_amount_currency': liquidity_amount_currency,
+            #     'liquidity_balance': liquidity_balance,
+            #     'write_off_balance': write_off_balance,
+            #     'counterpart_amount_currency': counterpart_amount_currency,
+            #     'counterpart_balance': counterpart_balance,
+            #     'currency_id': currency_id,
+            # }
+            # payment.write(new_data)
         elif payment.detraction  and not self.l10n_pe_dte_is_detraction:
             UserError('Está tratando de pagar con un pago de detracción una factura que no es de detracción.')
         return lines
