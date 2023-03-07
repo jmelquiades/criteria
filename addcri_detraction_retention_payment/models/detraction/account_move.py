@@ -118,7 +118,7 @@ class AccountMove(models.Model):
         if payment.detraction and self.l10n_pe_dte_is_detraction:
             payment.write({'date':  self.invoice_date})
             write_off_amount_currency = payment.amount
-            if self.payment_type == 'outbound':
+            if payment.payment_type == 'outbound':
                 write_off_amount_currency *= -1
             liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = payment._prepare_vals_debit_credit_amount_currency(write_off_amount_currency)
             new_data = {
