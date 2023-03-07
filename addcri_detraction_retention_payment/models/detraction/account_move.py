@@ -123,8 +123,8 @@ class AccountMove(models.Model):
             liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = payment._prepare_vals_debit_credit_amount_currency(write_off_amount_currency)
             # !
 
-            outstanding_line = payment.line_ids.filter(lambda r: r.account_id == payment.outstanding_account_id.id)
-            destination_line = payment.line_ids.filter(lambda r: r.account_id == payment.destination_account_id.id)
+            outstanding_line = payment.line_ids.filtered(lambda r: r.account_id == payment.outstanding_account_id.id)
+            destination_line = payment.line_ids.filtered(lambda r: r.account_id == payment.destination_account_id.id)
             
             # Liquidity line.
             outstanding_data = {
