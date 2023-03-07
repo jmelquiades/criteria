@@ -94,7 +94,7 @@ class AccountPayment(models.Model):
         # Compute amounts.
         write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
 
-        liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = self._prepare_vals_debit_credit_amount_currency(self, write_off_line_vals, write_off_amount_currency)
+        liquidity_amount_currency, liquidity_balance, write_off_balance,  counterpart_amount_currency, counterpart_balance, currency_id = self._prepare_vals_debit_credit_amount_currency(self, write_off_amount_currency)
 
         if self.is_internal_transfer:
             if self.payment_type == 'inbound':
