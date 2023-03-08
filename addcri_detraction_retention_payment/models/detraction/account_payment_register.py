@@ -35,10 +35,10 @@ class AccountPaymentRegister(models.TransientModel):
     #             elif self.payment_method_line_id.name != 'Detracciones' and self.amount > no_detraction_amount_residual:
     #                 raise UserError('No puede pagar este monto en este diario (detracción)')
 
-    @api.onchange('detraction')
-    def _onchange_detraction(self):
-        if self.detraction:
-            self.payment_date = self.invoice_date
+    # @api.onchange('detraction')
+    # def _onchange_detraction(self):
+    #     if self.detraction:
+    #         self.payment_date = self.invoice_date
 
     def _get_wizard_values_from_batch(self, batch_result):
         data = super()._get_wizard_values_from_batch(batch_result)
@@ -92,7 +92,7 @@ class AccountPaymentRegister(models.TransientModel):
             payment_vals.update(
                 {
                 'detraction': self.detraction,
-                'date': self.invoice_date
+                'invoice_date': self.invoice_date
                 }
             )
         return payment_vals

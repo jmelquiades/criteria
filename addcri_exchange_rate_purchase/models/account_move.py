@@ -84,7 +84,7 @@ class AccountMove(models.Model):
                         abs(line.amount_residual),
                         move.currency_id,
                         move.company_id,
-                        line.date if not line.move_id.payment_id.detraction else move.invoice_date,
+                        line.date,
                     )
 
                 if move.currency_id.is_zero(amount):
