@@ -30,13 +30,13 @@ class AccountPayment(models.Model):
                 write_off_amount_currency,
                 self.company_id.currency_id,
                 self.company_id,
-                self.date if not self.detraction else self.invoice_date,
+                self.date if not self.detraction or not self.invoice_date else self.invoice_date,
             )
             liquidity_balance = convert(
                 liquidity_amount_currency,
                 self.company_id.currency_id,
                 self.company_id,
-                self.date if not self.detraction else self.invoice_date,
+                self.date if not self.detraction or not self.invoice_date else self.invoice_date,
             )
         else:
             if self.currency_id != self.company_id.currency_id:

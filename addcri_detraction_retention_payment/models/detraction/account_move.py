@@ -117,7 +117,7 @@ class AccountMove(models.Model):
         lines = self.env['account.move.line'].browse(line_id)
         payment = lines.move_id.payment_id
         if payment.detraction and self.l10n_pe_dte_is_detraction:
-            payment.write({'date':  self.invoice_date})
+            payment.write({'invoice_date':  self.invoice_date})
             write_off_amount_currency = payment.amount
             if payment.payment_type == 'outbound':
                 write_off_amount_currency *= -1
