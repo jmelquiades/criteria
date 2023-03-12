@@ -1,0 +1,139 @@
+<odoo>
+    <data>
+
+        <template id="custom_header">
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-2">
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                                 style="max-height:45px;" alt="Logo"/>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <small>
+                                    <span class="font-weight-bold" t-field="company.name"/>
+                                </small>
+                            </div>
+                            <div class="row">
+                                <span t-field="company.street"/>
+                                -
+                                <span t-field="company.city"/>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <small>
+                                    <span t-field="company.phone"/>
+                                </small>
+                            </div>
+                            <div class="row">
+                                <span t-field="company.email"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="custom_page">
+            <xpath expr="//div[@class='page']" position="replace">
+                <div class="page">
+                    <h2>Listado Facturas</h2>
+                    <p>Desde
+                        <t t-esc="date_from"/>
+                        hasta
+                        <t t-esc="date_to"/>
+                    </p>
+                    <table class="table table-striped table-bordered">
+                        <thead style='text-align:center;vertical-align: baseline' border='1'>
+                            <tr>
+                                <th t-att-rowspan="2" scope="col">LIBRO</th>
+                                <th t-att-rowspan="2" scope="col">TD</th>
+                                <th t-att-rowspan="2" scope="col">NUMERO</th>
+                                <th t-att-rowspan="2" scope="col">NRO CORRELATIVO</th>
+                                <th t-att-rowspan="2" scope="col">FECHA</th>
+                                <th t-att-rowspan="2" scope="col">DESCRIPCION O GLOSA</th>
+                                <th t-att-colspan="2" scope="col">MOVIMIENTOS</th> 
+                            </tr>
+                            <tr>
+                                <th scope="col">DEUDOR</th>
+                                <th scope="col">ACREEDOR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total" t-value="0"/>
+                            <t t-foreach="docs" t-as="d">
+                                <tr>
+                                    <!-- <t t-debug="pdb"></t> -->
+                                    <td>
+                                        <t>LIBRO</t>
+                                    </td>
+                                    <td>
+                                        <t>TD</t>
+                                    </td>
+                                    <td>
+                                        <t t-if="d['voucher_number']==False"></t>
+                                        <t t-else="" t-esc="d['voucher_number']"></t>
+                                    </td>
+                                    <td>
+                                        <t t-if="d['name']==False"></t>
+                                        <t t-else="" t-esc="d['name']"></t>
+                                    </td>
+                                    <td class="text-center">
+                                        <t t-if="d['invoice_date']==False"></t>
+                                        <t t-else="" t-esc="d['invoice_date'].strftime('%d/%m/%Y')"></t>
+                                    </td>
+                                    <td>
+                                        <t t-if="d['glosa']==False"></t>
+                                        <t t-else="" t-esc="d['glosa']"></t>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="d['amount_residual']==False"></t>
+                                        <t t-else="" t-esc="d['amount_residual']"></t>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="d['amount_total']==False"></t>
+                                        <t t-else="" t-esc="d['amount_total']"></t>
+                                    </td>
+                                    <t t-set="total" t-value="total + d['amount_total']"/> 
+                                    <!-- <t t-if="d['amount_total'] &lt; 0">
+                                        <td t-esc="str(d['amount_total']) + 'S'" class="text-right text-danger"/>
+                                    </t>
+                                    <t t-else="">
+                                        <td t-esc="str(d['amount_total']) + 'S'" class="text-right"/>
+                                    </t> -->
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <!-- <div class="text-right">
+                        <p>Total pedidos:<span t-esc="total" class="font-weight-bold"/>€</p>
+                    </div> -->
+                </div>
+            </xpath>
+        </template>
+
+        <template id="custom_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="text-center">
+                        <small>
+                            <span t-field="company.email"/>
+                        </small>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="report_libro_mayor">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <t t-call="addcri_account_report_libro_mayor.custom_header"/>
+                    <t t-call="addcri_account_report_libro_mayor.custom_page"/>
+                    <t t-call="addcri_account_report_libro_mayor.custom_footer"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

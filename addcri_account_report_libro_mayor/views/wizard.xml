@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="wizard_libro_mayor_report_view" model="ir.ui.view">
+            <field name="name">report.libro.mayor.form</field>
+            <field name="model">report.libro.mayor</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                      <group>
+                        <field name="company_id"/>
+                        <!-- <field name="fiscal_year"/> -->
+                      </group>
+                      <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                      </group>
+                    </group>
+                  <footer>
+                      <button name="get_report" string="Generate" type="object" default_focus="1" class="oe_highlight" data-hotkey="q"/>
+                      <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z" />
+                  </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_menu_report_libro_mayor" model="ir.actions.act_window">
+          <field name="name">Reporte Libro Mayor</field>
+          <field name="res_model">report.libro.mayor</field>
+          <field name="view_id" ref="wizard_libro_mayor_report_view"/>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+        </record>
+
+        <menuitem id="account_report_Libro_mayor_menu" 
+        name="Reporte Libro Mayor" 
+        action="action_menu_report_libro_mayor"
+        parent="account.account_reports_management_menu" 
+        sequence="60"/>
+    </data>
+</odoo>

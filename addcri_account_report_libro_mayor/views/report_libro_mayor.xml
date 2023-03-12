@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+
+         <record id="action_client_report_libro_mayor" model="ir.actions.client">
+            <field name="name">Reporte Libro Mayor</field>
+            <field name="tag">account_report</field>
+            <field name="target">main</field>
+            <field name="context" eval="{'model':'report.libro.mayor'}"/>
+        </record>
+
+        <menuitem id="menu_account_report_Libro_mayor" 
+        name="Reporte Libro Mayor" 
+        action="action_client_report_libro_mayor"
+        parent="account.account_reports_management_menu" 
+        sequence="60"/>
+    </data>
+</odoo>

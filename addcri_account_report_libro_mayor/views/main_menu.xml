@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_menu_report_libro_mayor" model="ir.actions.act_window">
+      <field name="name">Reporte Libro Mayor</field>
+      <field name="res_model">report.libro.mayor</field>
+      <field name="view_id" ref="wizard_libro_mayor_report_view"/>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem id="account_report_Libro_mayor_menu" 
+    name="Reporte Libro Mayor" 
+    groups="account.group_account_manager"
+    action="action_menu_report_libro_mayor"
+    parent="account.account_reports_management_menu" 
+    sequence="60"/>
+
+</odoo>

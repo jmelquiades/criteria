@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="action_report_libro_mayor" model="ir.actions.report">
+            <field name="name">Report Libro Mayor</field>
+            <field name="model">report.libro.mayor</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">addcri_account_report_libro_mayor.main_template</field>
+            <field name="report_file">addcri_account_report_libro_mayor.main_template</field>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'lista_data'</field>
+        </record>
+    </data>
+</odoo>
