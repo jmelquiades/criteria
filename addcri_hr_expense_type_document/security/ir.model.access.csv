@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_expense_extended,hr.expense.manager,model_hr_expense,,1,1,1,1
+access_l10n_latam_document_type_extended,l10n_latam_document_type.manager,model_l10n_latam_document_type,,1,1,1,1
