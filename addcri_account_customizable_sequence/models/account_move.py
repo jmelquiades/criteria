@@ -61,38 +61,38 @@ class AccountMove_Extended(models.Model):
     
     def action_post(self):
         #inherit for modif. (sequence and serie)
-            sequense=''
-            sequense_serie=''
-            if self['journal_id']:
-                obj_account_journal = self.env['account.journal'].search([('id', '=', self['journal_id'].id)])
-                obj_sequence=obj_account_journal['sequence_seat']
-                if not obj_sequence:
-                    raise ValidationError(("Por favor, establezca la secuencia del asiento contable en el diario %s:\n%s") % (obj_account_journal['name'],'(Localización PERU - Secuencia del Asiento)'))
-                else:
-                    if obj_sequence.use_date_range:
-                        self._validate_sequence_date_range(obj_sequence)
+        sequense=''
+        sequense_serie=''
+        if self['journal_id']:
+            obj_account_journal = self.env['account.journal'].search([('id', '=', self['journal_id'].id)])
+            obj_sequence=obj_account_journal['sequence_seat']
+            if not obj_sequence:
+                raise ValidationError(("Por favor, establezca la secuencia del asiento contable en el diario %s:\n%s") % (obj_account_journal['name'],'(Localización PERU - Secuencia del Asiento)'))
+            else:
+                if obj_sequence.use_date_range:
+                    self._validate_sequence_date_range(obj_sequence)
 
-                if self['journal_id'].type=='purchase':
-                    if not self.posted_before:
-                        sequense=obj_sequence.next_by_code(obj_sequence.code)
-                    else:
-                        sequense=self['name']    
+            if self['journal_id'].type=='purchase':
+                if not self.posted_before:
+                    sequense=obj_sequence.next_by_code(obj_sequence.code)
+                else:
+                    sequense=self['name']    
+                sequense_serie=self['voucher_number']
+            else:
+                if not self.posted_before:
+                    sequense=obj_sequence.next_by_code(obj_sequence.code)
+                    if self['serie']:
+                        obj_serie= self.env['it.invoice.serie'].search([('id', '=', self['serie'].id)])
+                        obj_sequence_serie = self.env['ir.sequence'].search([('id', '=', obj_serie.sequence.id)])
+                        sequense_serie=obj_sequence_serie.next_by_code(obj_sequence_serie.code)
+                else:
+                    sequense=self['name']
                     sequense_serie=self['voucher_number']
-                else:
-                    if not self.posted_before:
-                        sequense=obj_sequence.next_by_code(obj_sequence.code)
-                        if self['serie']:
-                            obj_serie= self.env['it.invoice.serie'].search([('id', '=', self['serie'].id)])
-                            obj_sequence_serie = self.env['ir.sequence'].search([('id', '=', obj_serie.sequence.id)])
-                            sequense_serie=obj_sequence_serie.next_by_code(obj_sequence_serie.code)
-                    else:
-                        sequense=self['name']
-                        sequense_serie=self['voucher_number']
 
-            self['name'] = sequense
-            self['l10n_latam_document_number'] =  sequense_serie
-            self['voucher_number'] = sequense_serie
-            return super(AccountMove_Extended, self).action_post()
+        self['name'] = sequense
+        self['l10n_latam_document_number'] =  sequense_serie
+        self['voucher_number'] = sequense_serie
+        return super(AccountMove_Extended, self).action_post()
     
     # override this method comput *********
     @api.depends('journal_id', 'partner_id', 'company_id', 'move_type')
