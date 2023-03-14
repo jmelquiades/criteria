@@ -22,6 +22,9 @@
                 
                 
             </xpath>
+            <xpath expr="//field[@name='reference']" position="attributes">
+                    <attribute name="string">Número de comprobante</attribute>
+            </xpath>
         </field>
     </record>
 
