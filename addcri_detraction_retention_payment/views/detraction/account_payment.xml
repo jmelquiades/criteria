@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
-                <field name="detraction"/>
+                <!-- <field name="detraction" /> -->
+                <field name="detraction" attrs="{'invisible':[('is_internal_transfer','=',True)]}"/>
             </xpath>
         </field>
     </record>

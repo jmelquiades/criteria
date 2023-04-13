@@ -8,6 +8,7 @@ class AccountPayment(models.Model):
     invoice_date = fields.Date('Invoice Date')
 
     def _prepare_vals_debit_credit_amount_currency(self, write_off_amount_currency):
+
         if self.payment_type == 'inbound':
             # Receive money.
             liquidity_amount_currency = self.amount
@@ -51,3 +52,10 @@ class AccountPayment(models.Model):
         currency_id = self.currency_id.id
 
         return liquidity_amount_currency, liquidity_balance, write_off_balance, counterpart_amount_currency, counterpart_balance, currency_id
+    
+    
+    @api.onchange('is_internal_transfer')
+    def _onchange_is_internal_transfer(self):
+        for rec in self:
+            if rec.is_internal_transfer:
+                rec.detraction = False

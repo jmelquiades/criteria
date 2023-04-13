@@ -78,7 +78,7 @@ class AccountMove(models.Model):
             l10n_pe_dte_detraction_base = vals.get('l10n_pe_dte_detraction_base', self.l10n_pe_dte_detraction_base) or self.l10n_pe_dte_detraction_base
             l10n_pe_dte_operation_type = vals.get('l10n_pe_dte_operation_type', self.l10n_pe_dte_operation_type)
             if l10n_pe_dte_operation_type in ['1001', '1002', '1003', '1004'] and l10n_pe_dte_detraction_base <= 700:  # ! Esos 700 debe ser parte de cnfiguración.
-                raise ValidationError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo.')
+                raise ValidationError('Esta operación no puede estar sujeta a detracción ya que el monto total no excede el monto mínimo: (700)')
 
     @api.model
     def create(self, vals):
@@ -440,3 +440,19 @@ class AccountMove(models.Model):
                     credit_line = None
 
         return partials_vals_list
+
+    # add Hquilla 12.04.2023
+    @api.onchange('l10n_pe_dte_detraction_percent', 'currency_id', 'exchange_rate', 'invoice_line_ids','invoice_date')
+    def onchange_detraction_percent(self):
+        super(AccountMove, self).onchange_detraction_percent()
+        # Modifica la base de detracción  para una venta con detracción
+        # EL TIPO DE CAMBIO QUE SE APLICA PARA LOS ACTIVOS (VENTA) ES DE COMPRA
+        # TOMA COMO REFERENCIA LA FECHA DE EMISION DEL DOCUMENTO
+        for record in self:
+            if  record['journal_id'].type=='sale':
+                if record.line_ids and record.l10n_pe_dte_is_detraction and record.currency_id.name!='PEN':
+                    currency_rate_purchase = record.company_id.currency_id._get_conversion_sale_rate(record.currency_id, record.company_id.currency_id, record.company_id, record.date)
+                    self.l10n_pe_dte_detraction_base = self.amount_total*currency_rate_purchase
+                    self.l10n_pe_dte_detraction_amount = round(self.l10n_pe_dte_detraction_percent*self.l10n_pe_dte_detraction_base/100,0)
+
+                

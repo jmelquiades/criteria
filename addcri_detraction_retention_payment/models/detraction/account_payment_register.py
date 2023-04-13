@@ -96,3 +96,9 @@ class AccountPaymentRegister(models.TransientModel):
                 }
             )
         return payment_vals
+    
+    # @api.onchange('detraction')
+    # def _onchange_detraction(self):
+    #     for rec in self:
+    #         if rec.detraction:
+    #             rec.amount = rec.detraction_amount_residual
